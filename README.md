@@ -10,4 +10,4 @@ Contracts schematic could be found here :
 (https://github.com/sonm-io/Contracts-scheme)
 
 HubWallet contract
-(https://github.com/sonm-io/Smart-dummy/blob/master/contracts/HubWallet.sol)
+(https://github.com/sonm-io/Smart-dummy/tree/master/contracts/Hubs)
