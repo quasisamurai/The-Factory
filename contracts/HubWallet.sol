@@ -14,7 +14,7 @@ import "zeppelin/ownership/Ownable.sol";
 contract token {
     mapping (address => uint) public balances;
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
-
+    function transfer(address _to, uint _value) returns (bool success);
     function balanceOf(address _owner) constant returns (uint balance);
     function approve(address _spender, uint _value) returns (bool success);
     function allowance(address _owner, address _spender) constant returns (uint remaining);
@@ -41,7 +41,12 @@ contract HubWallet is Ownable{
     freezeQuote = 1 * (1 ether / 1 wei);
 
     // in the future this percent will be defined by factory.
-    lockPercent= 5;
+    lockPercent= 30;
+
+    //in promilles
+    daoFee = 5;
+
+    freezePeriod = 30 days;
 
   }
 
@@ -138,6 +143,22 @@ contract HubWallet is Ownable{
 
   }
 
+  function PayDay() public onlyOwner {
+
+    if(currentPhase!=Phase.Registred) throw;
+
+    if(now < (frozenTime + freezePeriod)) throw;
+
+    //dao got's 0.5% in such terms.
+    uint DaoCollect = lockedFunds * daoFee / 1000;
+
+    sharesTokenAddress.transfer(DAO,DaoCollect);
+
+    lockedFunds= 0;
+    currentPhase=Phase.Idle;
+
+
+  }
 
 
 }
