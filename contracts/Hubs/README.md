@@ -84,6 +84,9 @@ Hub could be reabilitate and get funds back or it could be punished (after 120 d
 #### withdraw function
 Withdraw funds to hub owner.
 
+#### registrate function
+see registrate section
+
 ### Suspected
 
 #### gulag function
