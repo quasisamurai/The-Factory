@@ -110,8 +110,7 @@ contract HubWallet is Ownable{
    *  Events
   /*/
 
-//  event LogBuy(address indexed owner, uint value);
-//  event LogBurn(address indexed owner, uint value);
+
     event LogPhaseSwitch(Phase newPhase);
 
 
@@ -128,6 +127,7 @@ contract HubWallet is Ownable{
     //Appendix to call register function from Whitelist contract and check it.
     //
     currentPhase=Phase.Registred;
+    LogPhaseSwitch(currentPhase);
     return true;
   }
 
@@ -163,6 +163,7 @@ contract HubWallet is Ownable{
 
     lockedFunds= 0;
     currentPhase=Phase.Idle;
+    LogPhaseSwitch(currentPhase);
 
 
   }
@@ -181,6 +182,7 @@ contract HubWallet is Ownable{
     lockedFunds=sharesTokenAddress.balanceOf(this);
     frozenTime = uint64(now);
     currentPhase = Phase.Suspected;
+    LogPhaseSwitch(currentPhase);
     freezePeriod = 120 days;
   }
 
@@ -190,6 +192,7 @@ contract HubWallet is Ownable{
     uint amount = lockedFunds;
     sharesTokenAddress.transfer(DAO,amount);
     currentPhase = Phase.Punished;
+    LogPhaseSwitch(currentPhase);
 
   }
 
@@ -199,6 +202,7 @@ contract HubWallet is Ownable{
     frozenFunds = 0;
 
     currentPhase = Phase.Idle;
+    LogPhaseSwitch(currentPhase);
   }
 
 
