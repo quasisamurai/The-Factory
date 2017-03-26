@@ -28,12 +28,17 @@ contract HubWallet is Ownable{
 
 
   ///@dev constructor
-  function HubWallet(address _hubowner,address _dao,address _whitelist){
+  function HubWallet(address _hubowner,address _dao,address _whitelist,token sharesAddress){
     owner=_hubowner;
     DAO=_dao;
     Whitelist=_whitelist;
     Factory=msg.sender;
+    genesisTime=uint64(now);
 
+    sharesTokenAddress = token(sharesAddress);
+
+    //1 SNM token is needed to registrate in whitelist
+    freezeQuote = 1 * (1 ether / 1 wei);
 
   }
 
@@ -47,6 +52,10 @@ contract HubWallet is Ownable{
   address public Whitelist;
 
 
+
+  token public sharesTokenAddress;
+
+
   //uint public freezePercent;
 
   // FreezeQuote - it is defined amount of tokens need to be frozen on  this contract.
@@ -56,5 +65,42 @@ contract HubWallet is Ownable{
   //lockedFunds - it is lockedFunds in percentage, which will be locked for every payday period.
   uint public lockPercent;
   uint public lockedFunds;
+
+  //TIMELOCK
+  uint64 public frozenTime;
+  uint public freezePeriod;
+  uint64 public genesisTime;
+
+
+  /*/
+   *  Wallet state
+  /*/
+
+  enum Phase {
+      Created,
+      Registred,
+      Idle,
+      Suspected,
+      Punished
+  }
+
+  Phase public currentPhase = Phase.Created;
+
+  /*/
+   *  Events
+  /*/
+
+//  event LogBuy(address indexed owner, uint value);
+//  event LogBurn(address indexed owner, uint value);
+    event LogPhaseSwitch(Phase newPhase);
+
+
+
+  /*/
+   *  Public functions
+  /*/
+
+
+
 
 }
