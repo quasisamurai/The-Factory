@@ -40,6 +40,9 @@ contract HubWallet is Ownable{
     //1 SNM token is needed to registrate in whitelist
     freezeQuote = 1 * (1 ether / 1 wei);
 
+    // in the future this percent will be defined by factory.
+    lockPercent= 5;
+
   }
 
 
@@ -64,12 +67,16 @@ contract HubWallet is Ownable{
 
   //lockedFunds - it is lockedFunds in percentage, which will be locked for every payday period.
   uint public lockPercent;
-  uint public lockedFunds;
+  uint public lockedFunds = 0;
 
   //TIMELOCK
   uint64 public frozenTime;
   uint public freezePeriod;
   uint64 public genesisTime;
+
+  //Fee's
+  uint daoFee;
+
 
   modifier onlyDAO()     { if(msg.sender != DAO) throw; _; }
 
@@ -103,6 +110,33 @@ contract HubWallet is Ownable{
    *  Public functions
   /*/
 
+  function Registration() public onlyOwner returns (bool success){
+    if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
+    if (sharesTokenAddress.balanceOf(msg.sender) <= freezeQuote) throw;
+    frozenFunds=freezeQuote;
+    frozenTime=uint64(now);
+    //Appendix to call register function from Whitelist contract and check it.
+    //
+    currentPhase=Phase.Registred;
+    return true;
+  }
+
+  function transfer(address _to, uint _value) public onlyOwner{
+    if(currentPhase!=Phase.Registred) throw;
+
+    uint lockFee = _value * lockPercent / 100;
+    uint lock = lockedFunds + lockFee;
+    uint limit = lock + frozenFunds;
+
+    uint value=_value - lockFee;
+
+    if(sharesTokenAddress.balanceOf(msg.sender)< (limit + value)) throw;
+
+    lockedFunds=lock;
+
+    sharesTokenAddress.approve(_to,value);
+
+  }
 
 
 
