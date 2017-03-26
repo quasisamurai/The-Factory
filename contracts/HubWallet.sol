@@ -160,5 +160,12 @@ contract HubWallet is Ownable{
 
   }
 
+  function withdraw() public onlyOwner {
+
+    if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
+    uint amount = sharesTokenAddress.balanceOf(this);
+    sharesTokenAddress.transfer(owner,amount);
+
+  }
 
 }
