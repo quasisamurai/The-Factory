@@ -2,8 +2,8 @@ pragma solidity ^0.4.4;
 
 //Raw prototype for Hub wallet contract.
 
-// TODO: Punishment function
-// TODO: Structure
+// TODO: Punishment function - Done but not cheked
+// TODO: Structure - done
 // TODO: README
 // TODO: Registred Appendix
 // TODO: Whitelist;
