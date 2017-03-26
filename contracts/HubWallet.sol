@@ -156,6 +156,8 @@ contract HubWallet is Ownable{
 
     //dao got's 0.5% in such terms.
     uint DaoCollect = lockedFunds * daoFee / 1000;
+    DaoCollect = DaoCollect + frozenFunds;
+    frozenFunds = 0;
 
     sharesTokenAddress.transfer(DAO,DaoCollect);
 
@@ -172,5 +174,32 @@ contract HubWallet is Ownable{
     sharesTokenAddress.transfer(owner,amount);
 
   }
+
+  function suspect() public onlyDao {
+    if (currentPhase!=Phase.Registred) throw;
+//    frozenFunds = 0;
+    lockedFunds=sharesTokenAddress.balanceOf(this);
+    frozenTime = uint64(now);
+    currentPhase = Phase.Suspected;
+    freezePeriod = 120 days;
+  }
+
+  function gulag() public onlyDao {
+    if (currentPhase!=Phase.Suspected) throw;
+    if (now < (frozenTime + freezePeriod)) throw;
+    uint amount = lockedFunds;
+    sharesTokenAddress.transfer(DAO,amount);
+    currentPhase = Phase.Punished;
+
+  }
+
+  function rehub() public onlyDao {
+    if (currentPhase!=Phase.Suspected) throw;
+    lockedFunds = 0;
+    frozenFunds = 0;
+
+    currentPhase = Phase.Idle;
+  }
+
 
 }
