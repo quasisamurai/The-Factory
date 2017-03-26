@@ -71,6 +71,9 @@ contract HubWallet is Ownable{
   uint public freezePeriod;
   uint64 public genesisTime;
 
+  modifier onlyDAO()     { if(msg.sender != DAO) throw; _; }
+
+
 
   /*/
    *  Wallet state
