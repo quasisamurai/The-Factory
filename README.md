@@ -8,3 +8,6 @@ See presale and token contracts here:
 
 Contracts schematic could be found here :
 (https://github.com/sonm-io/Contracts-scheme)
+
+HubWallet contract
+(https://github.com/sonm-io/Smart-dummy/blob/master/contracts/HubWallet.sol)
