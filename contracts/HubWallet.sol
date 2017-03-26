@@ -88,7 +88,7 @@ contract HubWallet is Ownable{
   uint daoFee;
 
 
-  modifier onlyDAO()     { if(msg.sender != DAO) throw; _; }
+  modifier onlyDao()     { if(msg.sender != DAO) throw; _; }
 
 
 
