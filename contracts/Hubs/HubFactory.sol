@@ -47,6 +47,6 @@ contract HubFactory {
 
   function check(address _hubwallet) public returns(bool){
     if(hubs[_hubwallet]=true)
-    returns true;
+    return true;
   }
 }
