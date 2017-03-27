@@ -1,15 +1,21 @@
 pragma solidity ^0.4.8;
 
+//TODO - README
+
+
+
 import './HubWallet.sol';
 
 contract HubFactory {
 
 
-  address sharesTokenAddress;
+  token sharesTokenAddress;
   address dao;
   address whitelist;
 
-  function HubFactory(address TokenAddress,address _dao, address _whitelist){
+  mapping (address => bool) public hubs;
+
+  function HubFactory(token TokenAddress,address _dao, address _whitelist){
 
     sharesTokenAddress = TokenAddress;
     dao=_dao;
@@ -25,8 +31,13 @@ contract HubFactory {
 
   }
 
+  function createHub(address _hubowner) public returns(address) {
+    address hubwallet = create(_hubowner);
+    hubs[hubwallet]= true;
 
-  function create(address _hubowner) public returns(address) {
+  }
+
+  function create(address _hubowner) private returns(address) {
     return address(new HubWallet(_hubowner,dao,whitelist,sharesTokenAddress));
   }
 }
