@@ -4,7 +4,7 @@ pragma solidity ^0.4.4;
 
 // TODO: Punishment function - Done but not cheked
 // TODO: Structure - done
-// TODO: README
+// TODO: README - Done
 // TODO: Registred Appendix
 // TODO: Whitelist;
 
