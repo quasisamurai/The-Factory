@@ -27,16 +27,22 @@ contract token {
 }
 
 
+contract whitelist {
+
+  function Register(address _owner, address wallet, uint64 time) public returns(bool);
+//  mapping (address => HubInfo) public Registred;
+}
+
 contract HubWallet is Ownable{
 
 
 
 
   ///@dev constructor
-  function HubWallet(address _hubowner,address _dao,address _whitelist,token sharesAddress){
+  function HubWallet(address _hubowner,address _dao,whitelist _whitelist,token sharesAddress){
     owner=_hubowner;
     DAO=_dao;
-    Whitelist=_whitelist;
+    Whitelist= whitelist(_whitelist);
     Factory=msg.sender;
     genesisTime=uint64(now);
 
@@ -62,8 +68,10 @@ contract HubWallet is Ownable{
 
   address public DAO;
   address public Factory;
-  address public Whitelist;
 
+
+  //address public Whitelist;
+  whitelist Whitelist;
 
 
   token public sharesTokenAddress;
@@ -125,7 +133,7 @@ contract HubWallet is Ownable{
     frozenFunds=freezeQuote;
     frozenTime=uint64(now);
     //Appendix to call register function from Whitelist contract and check it.
-    //
+    Whitelist.Register(owner,this,frozenTime);
     currentPhase=Phase.Registred;
     LogPhaseSwitch(currentPhase);
     return true;
