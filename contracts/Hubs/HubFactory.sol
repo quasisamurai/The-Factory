@@ -1,5 +1,9 @@
 pragma solidity ^0.4.8;
 
+
+//Raw prototype of hub-wallet factory
+
+
 //TODO - README
 
 
@@ -39,5 +43,10 @@ contract HubFactory {
 
   function create(address _hubowner) private returns(address) {
     return address(new HubWallet(_hubowner,dao,whitelist,sharesTokenAddress));
+  }
+
+  function check(address _hubwallet) public returns(bool){
+    if(hubs[_hubwallet]=true)
+    returns true;
   }
 }
