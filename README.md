@@ -14,3 +14,6 @@ HubWallet contract
 
 HubFactory contract
 (https://github.com/sonm-io/Forge/blob/master/contracts/Hubs/HubFactory.sol)
+
+Whitelist prototype
+(https://github.com/sonm-io/Forge/tree/master/contracts/Whitelist)
