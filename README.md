@@ -11,3 +11,6 @@ Contracts schematic could be found here :
 
 HubWallet contract
 (https://github.com/sonm-io/Smart-dummy/tree/master/contracts/Hubs)
+
+HubFactory contract
+(https://github.com/sonm-io/Forge/blob/master/contracts/Hubs/HubFactory.sol)
