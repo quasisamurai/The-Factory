@@ -1,6 +1,6 @@
 # Прототип Hub Wallet -
 (https://github.com/sonm-io/Smart-dummy/tree/master/contracts/Hubs)
-(По ссылке можно почитать ридми, так что желательно посмотреть одним глазком).
+
 
 ## Суть условий контракта:
 
