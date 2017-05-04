@@ -1,6 +1,6 @@
 # Workshop
 
-Smart-dummy is a forge(workshop) for SONM smart-contracts.
+This repository is workshop for sonm smart-contracts organisation.
 
 
 See presale and token contracts here:
