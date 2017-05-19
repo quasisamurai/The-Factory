@@ -42,8 +42,10 @@ contract Whitelist{
 
   function RegisterHub(address _owner, address wallet, uint64 time) public returns(bool) {
 
-    bool checked = WalletsFactory.check(wallet);
-    if (checked!=true) throw;
+    
+
+    address owner = WalletsFactory.HownerOf(msg.sender);
+    if (owner!=_owner) throw;
 
     Info info = Registred[wallet];
     info.owner=_owner;
@@ -57,8 +59,10 @@ contract Whitelist{
 
   function RegisterMin(address _owner, address wallet, uint64 time) public returns(bool) {
 
-    bool checked = WalletsFactory.checkM(wallet);
-    if (checked!=true) throw;
+
+
+    address owner = WalletsFactory.MownerOf(msg.sender);
+    if (owner!=_owner) throw;
 
     Info info = Registred[wallet];
     info.owner=_owner;
