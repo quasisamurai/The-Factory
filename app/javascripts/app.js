@@ -1,4 +1,4 @@
-
+Miner
 //TODO : CONVERT FUNCTIOS.
 //TODO : cleanup code
 //TODO : clean appendix
@@ -129,18 +129,19 @@ refreshAddress: function () {
   var self=this;
   var instance;
   var tok;
-  console.log("refresh init");
+//  console.log("refresh init");
   Token.deployed().then(function(instance) {
     tok=instance;
-    console.log(tok);
+  //  console.log(tok);
     $("#tokdAddress").html(tok.address);
-    console.log(tok.address);
-    self.ShowSupply();
-    self.hubBalance();
+  //  console.log(tok.address);
+
+  //  self.hubBalance();
+    self.whitelistAddr();
     return tok.symbol.call();
   }).then(function (sym) {
     $("#t_sym1").html(sym);
-    console.log(sym);
+  //  console.log(sym);
   });
 },
 
@@ -167,6 +168,22 @@ hubBalance: function () {
         self.setStatusPos(pos,msg);
   });
 
+},
+
+whitelistAddr: function () {
+  var self=this;
+  var pos="#whitelist";
+  var instance;
+  var msg;
+  var whl;
+
+
+
+  Whitelist.deployed().then(function(instance){
+    whl=instance;
+      $("#whitelist").html(whl.address);
+      console.log(whl.address);
+});
 },
 
   changeAdresses: function () {
@@ -201,18 +218,20 @@ hubBalance: function () {
   createHub: function () {
 
     var self=this;
-    var pos="#hubreg_result";
+    var pos="#createStatus";
     var instance;
     var msg;
+    var fac;
 
     Factory.deployed().then(function(instance){
       fac=instance;
-      return fac.createHub({from: account})
+      return fac.createHub({from: account, gas: 3000000})
     }).then(function (tx) {
         hubaddress = tx;
          console.log("tx:");
          console.log(tx);
          msg="Transaction complete";
+         msg=tx.valueOf();
          self.setStatusPos(pos,msg);
          self.refreshAddress();
    }).catch(function(e) {
@@ -231,7 +250,7 @@ hubBalance: function () {
     var instance;
     var msg;
     var hb;
-    HubWallet.at(hubaddress).then(function(instance){
+    Hub.at(hubaddress).then(function(instance){
       hb=instance;
       return hb.Registration({from: account})
     }).then(function (tx) {
@@ -262,7 +281,7 @@ sendPay: function () {
 
 
 
-  HubWallet.at(hubaddress).then(function(instance){
+  Hub.at(hubaddress).then(function(instance){
     hb=instance;
     return hb.transfer(to, val, {from: account})
   }).then(function (tx) {
@@ -288,7 +307,7 @@ payDay: function () {
   var msg;
   var hb;
 
-  HubWallet.at(hubaddress).then(function(instance){
+  Hub.at(hubaddress).then(function(instance){
     hb=instance;
     return hb.PayDay({from: account})
   }).then(function (tx) {
@@ -314,7 +333,7 @@ h_WithDraw: function () {
   var msg;
   var hb;
 
-  HubWallet.at(hubaddress).then(function(instance){
+  Hub.at(hubaddress).then(function(instance){
     hb=instance;
     return hb.withdraw({from: account})
   }).then(function (tx) {
@@ -366,7 +385,7 @@ registerMiner: function () {
   var instance;
   var msg;
   var mn;
-  MinerWallet.at(mineraddress).then(function(instance){
+  Miner.at(mineraddress).then(function(instance){
     mn=instance;
     return mn.Registration({from: account})
   }).then(function (tx) {
@@ -394,7 +413,7 @@ pullMoney: function () {
 
     var from = $("#pull_from").val();
 
-  MinerWallet.at(mineraddress).then(function(instance){
+  Miner.at(mineraddress).then(function(instance){
     mn=instance;
     return mn.pullMoney(from,{from: account})
   }).then(function (tx) {
@@ -418,7 +437,7 @@ unregMiner: function () {
   var instance;
   var msg;
   var mn;
-  MinerWallet.at(mineraddress).then(function(instance){
+  Miner.at(mineraddress).then(function(instance){
     mn=instance;
     return mn.PayDay({from: account})
   }).then(function (tx) {
@@ -442,7 +461,7 @@ withdrawMiner: function () {
   var instance;
   var msg;
   var mn;
-  MinerWallet.at(mineraddress).then(function(instance){
+  Miner.at(mineraddress).then(function(instance){
     mn=instance;
     return mn.withdraw({from: account})
   }).then(function (tx) {
@@ -469,7 +488,7 @@ suspectHub: function () {
 
   var addr = $("#hub_address").val();
 
-  HubWallet.at(addr).then(function(instance){
+  Hub.at(addr).then(function(instance){
     hb=instance;
     return hb.suspect({from: account})
   }).then(function (tx) {
@@ -496,7 +515,7 @@ gulagHub: function () {
   var hb;
   var addr = $("#hub_address").val();
 
-  HubWallet.at(addr).then(function(instance){
+  Hub.at(addr).then(function(instance){
     hb=instance;
     return hb.gulag({from: account})
   }).then(function (tx) {
@@ -523,7 +542,7 @@ rehubHub: function () {
   var hb;
   var addr = $("#hub_address").val();
 
-  HubWallet.at(addr).then(function(instance){
+  Hub.at(addr).then(function(instance){
     hb=instance;
     return hb.rehub({from: account})
   }).then(function (tx) {
@@ -550,7 +569,7 @@ suspectMiner: function () {
   var msg;
   var mn;
   var addr = $("#min_address").val();
-  MinerWallet.at(addr).then(function(instance){
+  Miner.at(addr).then(function(instance){
     mn=instance;
     return mn.suspect({from: account})
   }).then(function (tx) {
@@ -577,7 +596,7 @@ gulagMiner: function () {
   var msg;
   var mn;
   var addr = $("#min_address").val();
-  MinerWallet.at(addr).then(function(instance){
+  Miner.at(addr).then(function(instance){
     mn=instance;
     return mn.gulag({from: account})
   }).then(function (tx) {
@@ -604,7 +623,7 @@ rehubMiner: function () {
   var msg;
   var mn;
   var addr = $("#min_address").val();
-  MinerWallet.at(addr).then(function(instance){
+  Miner.at(addr).then(function(instance){
     mn=instance;
     return mn.rehub({from: account})
   }).then(function (tx) {
