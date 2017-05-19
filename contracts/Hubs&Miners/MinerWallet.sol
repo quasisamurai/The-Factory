@@ -60,7 +60,7 @@ contract MinerWallet is Ownable{
     daoFee = 5;
 
     // time of work period.
-    freezePeriod = 14 days;
+    freezePeriod = 28 days;
 
   }
 
@@ -85,6 +85,7 @@ contract MinerWallet is Ownable{
   // FreezeQuote - it is defined amount of tokens need to be frozen on  this contract.
   uint public freezeQuote;
   uint public frozenFunds;
+  uint public stakeShare;
 
   //lockedFunds - it is lockedFunds in percentage, which will be locked for every payday period.
   uint public lockPercent;
@@ -96,7 +97,7 @@ contract MinerWallet is Ownable{
   uint64 public genesisTime;
 
   //Fee's
-//  uint daoFee;
+  uint daoFee;
 
 
   modifier onlyDao()     { if(msg.sender != DAO) throw; _; }
@@ -134,7 +135,7 @@ contract MinerWallet is Ownable{
   function Registration(uint stake) public onlyOwner returns (bool success){
     if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
     if (sharesTokenAddress.balanceOf(msg.sender) <= freezeQuote) throw;
-
+    stakeShare=stake;
     frozenFunds=stake+freezeQuote;
     frozenTime=uint64(now);
     //Appendix to call register function from Whitelist contract and check it.
@@ -172,6 +173,23 @@ contract MinerWallet is Ownable{
 */
 
 
+
+
+  function withdraw() public onlyOwner {
+
+  //  if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
+  // Miner can get funds in any time.
+
+
+    if(sharesTokenAddress.balanceOf(msg.sender)< stakeShare) throw;
+
+
+    uint amount = sharesTokenAddress.balanceOf(this);
+    amount = amount - stakeShare;
+    sharesTokenAddress.transfer(owner,amount);
+
+  }
+
   function PayDay() public onlyOwner {
 
     if(currentPhase!=Phase.Registred) throw;
@@ -179,19 +197,22 @@ contract MinerWallet is Ownable{
     if(now < (frozenTime + freezePeriod)) throw;
 
     //dao got's 0.5% in such terms.
-    uint DaoCollect = lockedFunds * daoFee / 1000;
-    DaoCollect = DaoCollect + frozenFunds;
+    uint DaoCollect = frozenFunds * daoFee / 1000;
+  //  DaoCollect = DaoCollect + frozenFunds;
     frozenFunds = 0;
+    stakeShare = 0;
 
     sharesTokenAddress.transfer(DAO,DaoCollect);
 
-    lockedFunds= 0;
+    //Here need to do Unregister function
+
     currentPhase=Phase.Idle;
     LogPhaseSwitch(currentPhase);
 
 
   }
 
+/*
   function withdraw() public onlyOwner {
 
     if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
@@ -199,6 +220,10 @@ contract MinerWallet is Ownable{
     sharesTokenAddress.transfer(owner,amount);
 
   }
+  */
+
+
+
 
   function suspect() public onlyDao {
     if (currentPhase!=Phase.Registred) throw;
@@ -224,7 +249,7 @@ contract MinerWallet is Ownable{
     if (currentPhase!=Phase.Suspected) throw;
     lockedFunds = 0;
     frozenFunds = 0;
-
+    stakeShare = 0;
     currentPhase = Phase.Idle;
     LogPhaseSwitch(currentPhase);
   }
