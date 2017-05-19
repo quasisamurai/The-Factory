@@ -23,11 +23,11 @@ contract Factory {
   mapping (address => address) public hubs;
   mapping (address => address) public miners;
 
-  function Factory(token TokenAddress,address _dao, whitelist _whitelist){
+  function Factory(token TokenAddress,address _dao){
 
     sharesTokenAddress = TokenAddress;
     dao=_dao;
-    Whitelist= whitelist(_whitelist);
+
 
   }
 
