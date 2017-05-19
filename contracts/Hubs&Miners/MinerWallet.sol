@@ -33,6 +33,8 @@ contract whitelist {
 //  mapping (address => HubInfo) public Registred;
 }
 
+
+
 contract MinerWallet is Ownable{
 
 
@@ -121,6 +123,7 @@ contract MinerWallet is Ownable{
 
 
     event LogPhaseSwitch(Phase newPhase);
+    event pulledMoney(address hub, uint amount);
 
 
 
@@ -142,9 +145,14 @@ contract MinerWallet is Ownable{
     return true;
   }
 
-  
+  function pullMoney(address hubwallet) public onlyOwner{
+    uint val = sharesTokenAddress.allowance(hubwallet,this);
+    sharesTokenAddress.transferFrom(hubwallet,this,val);
+    pulledMoney(hubwallet,val);
+  }
 
 
+/*
   function transfer(address _to, uint _value) public onlyOwner{
     if(currentPhase!=Phase.Registred) throw;
 
@@ -161,6 +169,8 @@ contract MinerWallet is Ownable{
     sharesTokenAddress.approve(_to,value);
 
   }
+*/
+
 
   function PayDay() public onlyOwner {
 
