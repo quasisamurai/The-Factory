@@ -169,6 +169,7 @@ contract MinerWallet is Ownable{
     sharesTokenAddress.transfer(DAO,DaoCollect);
 
     //Here need to do Unregister function
+    Whitelist.UnRegisterMiner(owner,this);
 
     currentPhase=Phase.Idle;
     LogPhaseSwitch(currentPhase);

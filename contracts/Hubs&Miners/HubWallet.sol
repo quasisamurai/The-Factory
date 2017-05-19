@@ -154,6 +154,8 @@ contract HubWallet is Ownable{
     sharesTokenAddress.transfer(DAO,DaoCollect);
 
     lockedFunds= 0;
+
+    Whitelist.UnRegisterHub(owner,this);
     currentPhase=Phase.Idle;
     LogPhaseSwitch(currentPhase);
 
