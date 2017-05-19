@@ -9,7 +9,7 @@ pragma solidity ^0.4.8;
 
 
 import './HubWallet.sol';
-
+import './MinerWallet.sol';
 
 
 contract HubFactory {
@@ -20,6 +20,7 @@ contract HubFactory {
   whitelist Whitelist;
 
   mapping (address => bool) public hubs;
+  mapping (address => bool) public miners;
 
   function HubFactory(token TokenAddress,address _dao, whitelist _whitelist){
 
@@ -43,12 +44,28 @@ contract HubFactory {
 
   }
 
+  function createMiner(address _minowner) public returns(address) {
+    address minwallet = createM(_minowner);
+    miners[minwallet]= true;
+
+  }
+
   function create(address _hubowner) private returns(address) {
     return address(new HubWallet(_hubowner,dao,Whitelist,sharesTokenAddress));
+  }
+
+  function createM(address _minowner) private returns(address) {
+    return address(new MinerWallet(_minowner,dao,Whitelist,sharesTokenAddress));
   }
 
   function check(address _hubwallet) public returns(bool){
     if(hubs[_hubwallet]=true)
     return true;
   }
+
+  function checkM(address _minwallet) public returns(bool){
+    if(miners[_minwallet]=true)
+    return true;
+  }
+
 }
