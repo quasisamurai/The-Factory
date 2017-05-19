@@ -12,7 +12,7 @@ import './HubWallet.sol';
 import './MinerWallet.sol';
 
 
-contract HubFactory {
+contract Factory {
 
 
   token sharesTokenAddress;
@@ -22,7 +22,7 @@ contract HubFactory {
   mapping (address => bool) public hubs;
   mapping (address => bool) public miners;
 
-  function HubFactory(token TokenAddress,address _dao, whitelist _whitelist){
+  function Factory(token TokenAddress,address _dao, whitelist _whitelist){
 
     sharesTokenAddress = TokenAddress;
     dao=_dao;

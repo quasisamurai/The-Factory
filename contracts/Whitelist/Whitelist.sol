@@ -14,9 +14,9 @@ contract factory{
 
 contract Whitelist{
 
-  factory HubWalletsFactory;
+  factory WalletsFactory;
 
-  struct HubInfo {
+  struct Info {
 
     address owner;
     uint64 RegTime;
@@ -25,24 +25,24 @@ contract Whitelist{
 
   }
 
-  mapping (address => HubInfo) public Registred;
+  mapping (address => Info) public Registred;
 
 
   event RegistredHub(address indexed _owner,address indexed wallet, uint64 indexed time);
 
 
-  function Whitelist(factory HubFactory){
+  function Whitelist(factory Factory){
 
-    HubWalletsFactory = factory(HubFactory);
+    WalletsFactory = factory(Factory);
 
   }
 
   function Register(address _owner, address wallet, uint64 time) public returns(bool) {
 
-    bool checked = HubWalletsFactory.check(wallet);
+    bool checked = WalletsFactory.check(wallet);
     if (checked!=true) throw;
 
-    HubInfo info = Registred[wallet];
+    Info info = Registred[wallet];
     info.owner=_owner;
     //Time is money!
     info.RegTime=time;
