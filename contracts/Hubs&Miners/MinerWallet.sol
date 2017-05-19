@@ -53,8 +53,7 @@ contract MinerWallet is Ownable{
     //1 SNM token is needed to registrate in whitelist
     freezeQuote = 1 * (1 ether / 1 wei);
 
-    // in the future this percent will be defined by factory.
-    lockPercent= 30;
+    
 
     //in promilles
     daoFee = 5;
@@ -88,7 +87,7 @@ contract MinerWallet is Ownable{
   uint public stakeShare;
 
   //lockedFunds - it is lockedFunds in percentage, which will be locked for every payday period.
-  uint public lockPercent;
+
   uint public lockedFunds = 0;
 
   //TIMELOCK
@@ -153,25 +152,6 @@ contract MinerWallet is Ownable{
   }
 
 
-/*
-  function transfer(address _to, uint _value) public onlyOwner{
-    if(currentPhase!=Phase.Registred) throw;
-
-    uint lockFee = _value * lockPercent / 100;
-    uint lock = lockedFunds + lockFee;
-    uint limit = lock + frozenFunds;
-
-    uint value=_value - lockFee;
-
-    if(sharesTokenAddress.balanceOf(msg.sender)< (limit + value)) throw;
-
-    lockedFunds=lock;
-
-    sharesTokenAddress.approve(_to,value);
-
-  }
-*/
-
 
 
 
@@ -212,22 +192,13 @@ contract MinerWallet is Ownable{
 
   }
 
-/*
-  function withdraw() public onlyOwner {
-
-    if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
-    uint amount = sharesTokenAddress.balanceOf(this);
-    sharesTokenAddress.transfer(owner,amount);
-
-  }
-  */
 
 
 
 
   function suspect() public onlyDao {
     if (currentPhase!=Phase.Registred) throw;
-//    frozenFunds = 0;
+
     lockedFunds=sharesTokenAddress.balanceOf(this);
     frozenTime = uint64(now);
     currentPhase = Phase.Suspected;

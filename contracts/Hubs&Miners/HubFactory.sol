@@ -10,28 +10,30 @@ pragma solidity ^0.4.8;
 
 import './HubWallet.sol';
 
+
+
 contract HubFactory {
 
 
   token sharesTokenAddress;
   address dao;
-  address whitelist;
+  whitelist Whitelist;
 
   mapping (address => bool) public hubs;
 
-  function HubFactory(token TokenAddress,address _dao, address _whitelist){
+  function HubFactory(token TokenAddress,address _dao, whitelist _whitelist){
 
     sharesTokenAddress = TokenAddress;
     dao=_dao;
-    whitelist=_whitelist;
+    Whitelist= whitelist(_whitelist);
 
   }
 
   modifier onlyDao()     { if(msg.sender != dao) throw; _; }
 
-  function changeAdresses(address _dao, address _whitelist) public onlyDao{
+  function changeAdresses(address _dao, whitelist _whitelist) public onlyDao{
     dao=_dao;
-    whitelist=_whitelist;
+    Whitelist=whitelist(_whitelist);
 
   }
 
@@ -42,7 +44,7 @@ contract HubFactory {
   }
 
   function create(address _hubowner) private returns(address) {
-    return address(new HubWallet(_hubowner,dao,whitelist,sharesTokenAddress));
+    return address(new HubWallet(_hubowner,dao,Whitelist,sharesTokenAddress));
   }
 
   function check(address _hubwallet) public returns(bool){
