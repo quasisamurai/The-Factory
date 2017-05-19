@@ -117,7 +117,7 @@ contract HubWallet is Ownable{
     frozenFunds=freezeQuote;
     frozenTime=uint64(now);
     //Appendix to call register function from Whitelist contract and check it.
-    Whitelist.Register(owner,this,frozenTime);
+    Whitelist.RegisterHub(owner,this,frozenTime);
     currentPhase=Phase.Registred;
     LogPhaseSwitch(currentPhase);
     return true;

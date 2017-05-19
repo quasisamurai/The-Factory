@@ -123,7 +123,7 @@ contract MinerWallet is Ownable{
     frozenTime=uint64(now);
     //Appendix to call register function from Whitelist contract and check it.
     // TODO add to register function frozenFunds record.
-    Whitelist.Register(owner,this,frozenTime);
+    Whitelist.RegisterMin(owner,this,frozenTime);
     currentPhase=Phase.Registred;
     LogPhaseSwitch(currentPhase);
     return true;

@@ -8,7 +8,9 @@ pragma solidity ^0.4.8;
 
 contract factory{
   mapping (address => bool) public hubs;
+  mapping (address => bool) public miners;
   function check(address _hubwallet) public returns(bool);
+  function checkM(address _minwallet) public returns(bool);
 }
 
 
@@ -29,6 +31,7 @@ contract Whitelist{
 
 
   event RegistredHub(address indexed _owner,address indexed wallet, uint64 indexed time);
+  event RegistredMiner(address indexed _owner,address indexed wallet, uint64 indexed time);
 
 
   function Whitelist(factory Factory){
@@ -37,7 +40,7 @@ contract Whitelist{
 
   }
 
-  function Register(address _owner, address wallet, uint64 time) public returns(bool) {
+  function RegisterHub(address _owner, address wallet, uint64 time) public returns(bool) {
 
     bool checked = WalletsFactory.check(wallet);
     if (checked!=true) throw;
@@ -52,5 +55,19 @@ contract Whitelist{
 
   }
 
+  function RegisterMin(address _owner, address wallet, uint64 time) public returns(bool) {
+
+    bool checked = WalletsFactory.checkM(wallet);
+    if (checked!=true) throw;
+
+    Info info = Registred[wallet];
+    info.owner=_owner;
+    //Time is money!
+    info.RegTime=time;
+
+    RegistredHub(_owner,wallet,time);
+    return true;
+
+  }
 
 }
