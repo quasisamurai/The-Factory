@@ -3,14 +3,12 @@ pragma solidity ^0.4.8;
 //Whitelist prototype
 
 //TODO: README
-//TODO: Phase renewal in struct.
-//TODO: Approved (whited) wallets mapping
+//TODO: Correct internal structures
+
 
 contract factory{
   mapping (address => bool) public hubs;
   mapping (address => bool) public miners;
-  function check(address _hubwallet) public returns(bool);
-  function checkM(address _minwallet) public returns(bool);
   function HownerOf(address _wallet) constant returns (address _owner);
   function MownerOf(address _wallet) constant returns (address _owner);
 }
@@ -89,12 +87,5 @@ contract Whitelist{
 
   }
 
-  function WhoIsH(address hub) constant returns (HubInfo Info){
-    return RegistredHubs[hub];
-  }
-
-  function WhoIsM(address miner) constant returns (MinerInfo Info){
-    return RegistredMiners[miner];
-  }
 
 }

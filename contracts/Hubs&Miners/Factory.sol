@@ -63,18 +63,6 @@ contract Factory {
   }
 
 
-/*
-  function check(address _hubwallet) public returns(bool){
-    if(hubs[_hubwallet]=true)
-    return true;
-  }
-
-  function checkM(address _minwallet) public returns(bool){
-    if(miners[_minwallet]=true)
-    return true;
-  }
-*/
-
 function HownerOf(address _wallet) constant returns (address _owner) {
   return hubs[_wallet];
 }
