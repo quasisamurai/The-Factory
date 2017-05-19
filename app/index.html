@@ -50,90 +50,147 @@
 
 
 
-
-
-<h2><center>Создание контракта</center></h2>
-<hr>
-<p> Здесь располагается секция создания новых токенов </p>
-<br>
-<label>Имя токена<input type="text" id="t_name" value="BigToken" /> <br>
-  <label>Symbol<input type="text" id="t_sym" value="BFG" /> <br>
-    <label>INITIAL_SUPPLY<input type="text" id="t_val" value="10000" /> <br>
-
-<span id="createStatus"></span>
-<br><br><td align="right"> <button id="CreateEscr" onclick="App.deployContract()">New</button></td>
-
-
-
-
 <body>
 
-<h1>Token manager</h1>
-<div class="section">
-  <label>Введите адрес контракта токена для управления <input id="address"><br>
-    <button id='adr' onclick="App.startManager()">Ввод!</button><br>
-    <hr>
-
-
-  <h1>SimpleToken Bank</h1>
+  <h1>Factory</h1>
   <div class="section">
-    Контракт размещен на: <div id="tokdAddress"></div>
-  </div>
+    <label> Current Whitelist </label> <span id="whitelist"></span><br>
+    <label>Enter valid Whitelist address here <input id="address"><br>
+      <button id='adr' onclick="App.startManager()">Change!</button><br>
+      <hr>
+
 
 
 
   <div class="section">
-     <h2>Balance</h2>
-     <hr/>
-   </br>
-   <h3>У вас  <span id="balance"></span>  <span id="t_sym1"></span></h3>
-   <hr/>
+     <h2><center>Register hubWallet</center></h2>
+   <label>  HubOwner </label><span id="hub_owner"></span>
+
+
+       <button  onclick="App.mintToken()">Отчеканить!</button>
+       <span id="hubreg_result"></span>
    </div>
    <hr/>
 
    <div class="section">
-
-    <h3>Статус: <span id="status"></span></h3>
-    <hr/>
-
+      <h2><center>Pay to miner</center></h2>
+     <p align="left"><left>Single payout to some miner</left></p><br>
+    </br>
+   <label>   How much</label><input type="text" id="transfer_am" value="10" />
+   <label>   Whom </label><input type="text" id="transfer_to" />
+        <button id="transfer" onclick="App.sendToken()">Перевести</button>
+        <span id="transfer_result" color="blue"></span>
     </div>
     <hr/>
 
     <div class="section">
-       <h2><center>Отправить деньги</center></h2>
-      <p align="left"><left> Здесь можно кому-то перевести деньги вручную.</left></p><br>
-     </br>
-    <label>   Сумма перевода </label><input type="text" id="transfer_am" value="10" />
-    <label>   Кому </label><input type="text" id="transfer_to" />
-         <button id="transfer" onclick="App.sendToken()">Перевести</button>
-         <span id="transfer_result" color="blue"></span>
+       <h2><center>UnRegister hubWallet</center></h2>
+     <label>  HubOwner </label><span id="hub_owner"></span>
+
+
+         <button  onclick="App.mintToken()">Отчеканить!</button>
+         <span id="hubreg_result"></span>
      </div>
      <hr/>
 
-
-
      <div class="section">
-        <h2><center>Выпустить деньги</center></h2>
-      <label>  Сумма эмиссии </label><input type="text" id="mint_am" value="10" /> </br>
+        <h2><center>WithDraw hubWallet funds</center></h2>
+      <label>  HubOwner </label><span id="hub_owner"></span>
 
-        <label>  Кому будут перечислены новые монеты </label><input type="text" id="mint_to" />
 
-          <button id="mint" onclick="App.mintToken()">Отчеканить!</button>
-          <span id="mint_result"></span>
+          <button  onclick="App.mintToken()">Отчеканить!</button>
+          <span id="hubreg_result"></span>
       </div>
       <hr/>
 
+      <h1>Miner section</h1>
       <div class="section">
-         <h2><center>Сжечь деньги</center></h2>
-         <img src="http://cs6.pikabu.ru/images/previews_comm/2015-04_6/14302429718714.jpg"> </img></br>
-       <label>  Сумма сгорания </label><input type="text" id="burn_am" value="10" /> </br>
+          <h2><center>Create Miner Wallet</center></h2>
+
+          <button id='adr' onclick="App.startManager()">Ввод!</button><br>
+          <hr>
+
+          <div class="section">
+             <h2><center>Register MinerWallet</center></h2>
+           <label>  MinerOwner </label><span id="min_owner"></span>
 
 
+               <button  onclick="App.mintToken()">Отчеканить!</button>
+               <span id="hubreg_result"></span>
+           </div>
+           <hr/>
 
-           <button id="mint" onclick="App.burnTokens()">Фтопку!</button>
-           <span id="mint_result"></span>
-       </div>
-       <hr/>
+           <div class="section">
+              <h2><center>Pull Money</center></h2>
+            <label>  MinerOwner </label><span id="min_owner"></span>
+             <label>   From </label><input type="text" id="pull_from" />
+
+                <button  onclick="App.mintToken()">Отчеканить!</button>
+                <span id="hubreg_result"></span>
+            </div>
+            <hr/>
+
+            <div class="section">
+               <h2><center>UnRegister MinerWallet</center></h2>
+             <label>  MinerOwner </label><span id="min_owner"></span>
+
+
+                 <button  onclick="App.mintToken()">Отчеканить!</button>
+                 <span id="hubreg_result"></span>
+             </div>
+             <hr/>
+
+             <div class="section">
+                <h2><center>WithDraw MinerWallet funds</center></h2>
+              <label>  HubOwner </label><span id="hub_owner"></span>
+
+
+                  <button  onclick="App.mintToken()">Отчеканить!</button>
+                  <span id="hubreg_result"></span>
+              </div>
+              <hr/>
+
+              <h1>DAO</h1>
+              <div class="section">
+                <label> Suspect Hub </label> </br>
+                <label>Enter wallet address here <input id="address"><br>
+                  <button id='adr' onclick="App.startManager()">Press!</button><br>
+                  <hr>
+
+                  <h1>DAO</h1>
+                  <div class="section">
+                    <label> Suspect Miner </label> </br>
+                    <label>Enter wallet address here <input id="address"><br>
+                      <button id='adr' onclick="App.startManager()">Press!</button><br>
+                      <hr>
+
+                      <h1>DAO</h1>
+                      <div class="section">
+                        <label> Gulag Hub </label> </br>
+                        <label>Enter wallet address here <input id="address"><br>
+                          <button id='adr' onclick="App.startManager()">Press!</button><br>
+                          <hr>
+
+                          <h1>DAO</h1>
+                          <div class="section">
+                            <label> Gulag Miner </label> </br>
+                            <label>Enter wallet address here <input id="address"><br>
+                              <button id='adr' onclick="App.startManager()">Press!</button><br>
+                              <hr>
+
+                              <h1>DAO</h1>
+                              <div class="section">
+                                <label> Rehub Hub </label> </br>
+                                <label>Enter wallet address here <input id="address"><br>
+                                  <button id='adr' onclick="App.startManager()">Press!</button><br>
+                                  <hr>
+
+                                  <h1>DAO</h1>
+                                  <div class="section">
+                                    <label> Rehub Miner </label> </br>
+                                    <label>Enter wallet address here <input id="address"><br>
+                                      <button id='adr' onclick="App.startManager()">Press!</button><br>
+                                      <hr>
 
 <!--
  <div class="section">
