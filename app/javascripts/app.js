@@ -17,15 +17,24 @@ import { default as contract } from 'truffle-contract'
 // Import our contract artifacts and turn them into usable abstractions.
 //import token_artifacts from '../../build/contracts/BigToken.json'
 //import constructor_artifacts from '../../build/contracts/TokenConstructor.json'
-import token_artifacts from '../../build/contracts/TokenConstructor.json'
+import token_artifacts from '../../build/contracts/SDT.json'
+import factory_artifacts from '../../build/contracts/Factory.json'
+import whitelist_artifacts from '../../build/contracts/Whitelist.json'
+import hub_artifacts from '../../build/contracts/HubWallet.json'
+import miner_artifacts from '../../build/contracts/MinerWallet.json'
+
 
 
 //const async = require('async');
 
 //const request = require('request-promise') ;
 //var rp = request;
-// MetaCoin is our usable abstraction, which we'll use through the code below.
+//
 var Token = contract(token_artifacts);
+var Factory = contract(factory_artifacts);
+var Whitelist = contract(whitelist_artifacts);
+var Hub = contract(hub_artifacts);
+var Miner = contract(miner_artifacts);
 
 
 
@@ -40,6 +49,9 @@ var event
 
 var address;
 
+var hubaddress;
+var mineraddress;
+
 var balance;
 // var tokend;
 
@@ -52,6 +64,10 @@ window.App = {
 
     // Bootstrap the MetaCoin abstraction for Use.
     Token.setProvider(web3.currentProvider);
+    Factory.setProvider(web3.currentProvider);
+    Whitelist.setProvider(web3.currentProvider);
+    Hub.setProvider(web3.currentProvider);
+    Miner.setProvider(web3.currentProvider);
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function(err, accs) {
@@ -114,7 +130,7 @@ refreshAddress: function () {
   var instance;
   var tok;
   console.log("refresh init");
-  Token.at(address).then(function(instance) {
+  Token.deployed().then(function(instance) {
     tok=instance;
     console.log(tok);
     $("#tokdAddress").html(tok.address);
@@ -128,27 +144,6 @@ refreshAddress: function () {
   });
 },
 
-  ShowSupply: function () {
-    var self = this;
-    var pos="#totalSup";
-    var instance;
-    var msg;
-    var tok;
-    Token.at(address).then(function(instance){
-      tok=instance;
-      msg="Wait..";
-      self.setStatusPos(pos,msg);
-       return tok.totalSupply.call()
-        }).then(function (ts) {
-    //     $("#totalSup").html(ts)
-          console.log("ts:");
-          console.log(ts);
-        // Should I use msg=ts.valueOf(); ?
-          msg=ts.valueOf();
-          msg=web3.fromWei(msg);
-          self.setStatusPos(pos,msg);
-    });
-  },
 
 
 hubBalance: function () {
@@ -157,7 +152,7 @@ hubBalance: function () {
   var instance;
   var msg;
   var tok;
-  Token.at(address).then(function(instance){
+  Token.deployed().then(function(instance){
     tok=instance;
     msg="Wait..";
     self.setStatusPos(pos,msg);
@@ -174,6 +169,461 @@ hubBalance: function () {
 
 },
 
+  changeAdresses: function () {
+    var self=this;
+    var pos="#whitelist";
+    var instance;
+    var msg;
+    var fac;
+    var dao = account;
+
+    var to = $("#address1").val();
+
+    Factory.deployed().then(function(instance){
+      fac=instance;
+      return fac.changeAdresses(dao, to, {from: account})
+    }).then(function (tx) {
+         console.log("tx:");
+         console.log(tx);
+         msg="Transaction complete";
+         self.setStatusPos(pos,msg);
+         self.refreshAddress();
+   }).catch(function(e) {
+       console.log(e);
+
+      msg="Ошибка при отправке, смотри консоль";
+      self.setStatusPos(pos,msg);
+     });
+
+  },
+
+
+  createHub: function () {
+
+    var self=this;
+    var pos="#hubreg_result";
+    var instance;
+    var msg;
+
+    Factory.deployed().then(function(instance){
+      fac=instance;
+      return fac.createHub({from: account})
+    }).then(function (tx) {
+        hubaddress = tx;
+         console.log("tx:");
+         console.log(tx);
+         msg="Transaction complete";
+         self.setStatusPos(pos,msg);
+         self.refreshAddress();
+   }).catch(function(e) {
+       console.log(e);
+
+      msg="Ошибка при отправке, смотри консоль";
+      self.setStatusPos(pos,msg);
+     });
+
+
+  },
+
+  registerHub: function () {
+    var self=this;
+    var pos="#hubreg_result";
+    var instance;
+    var msg;
+    var hb;
+    HubWallet.at(hubaddress).then(function(instance){
+      hb=instance;
+      return hb.Registration({from: account})
+    }).then(function (tx) {
+
+         console.log("tx:");
+         console.log(tx);
+         msg="Transaction complete";
+         self.setStatusPos(pos,msg);
+         self.refreshAddress();
+   }).catch(function(e) {
+       console.log(e);
+
+      msg="Ошибка при отправке, смотри консоль";
+      self.setStatusPos(pos,msg);
+     });
+
+  },
+
+sendPay: function () {
+  var self=this;
+  var pos="#transfer_result";
+  var instance;
+  var msg;
+  var hb;
+
+  var val = $("#transfer_am").val();
+  var to = $("#transfer_to").val();
+
+
+
+  HubWallet.at(hubaddress).then(function(instance){
+    hb=instance;
+    return hb.transfer(to, val, {from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+payDay: function () {
+  var self=this;
+  var pos="#hubreg_result";
+  var instance;
+  var msg;
+  var hb;
+
+  HubWallet.at(hubaddress).then(function(instance){
+    hb=instance;
+    return hb.PayDay({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+h_WithDraw: function () {
+  var self=this;
+  var pos="#hubWith_result";
+  var instance;
+  var msg;
+  var hb;
+
+  HubWallet.at(hubaddress).then(function(instance){
+    hb=instance;
+    return hb.withdraw({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+createMiner : function () {
+
+  var self=this;
+  var pos="#minCreate_result";
+  var instance;
+  var msg;
+
+  Factory.deployed().then(function(instance){
+    fac=instance;
+    return fac.createMiner({from: account})
+  }).then(function (tx) {
+      mineraddress = tx;
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+
+},
+
+registerMiner: function () {
+  var self=this;
+  var pos="#minreg_result";
+  var instance;
+  var msg;
+  var mn;
+  MinerWallet.at(mineraddress).then(function(instance){
+    mn=instance;
+    return mn.Registration({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+pullMoney: function () {
+  var self=this;
+  var pos="#pullmoney_result";
+  var instance;
+  var msg;
+  var mn;
+
+    var from = $("#pull_from").val();
+
+  MinerWallet.at(mineraddress).then(function(instance){
+    mn=instance;
+    return mn.pullMoney(from,{from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+},
+
+unregMiner: function () {
+  var self=this;
+  var pos="#unreg_result";
+  var instance;
+  var msg;
+  var mn;
+  MinerWallet.at(mineraddress).then(function(instance){
+    mn=instance;
+    return mn.PayDay({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+},
+
+withdrawMiner: function () {
+  var self=this;
+  var pos="#wMiner_result";
+  var instance;
+  var msg;
+  var mn;
+  MinerWallet.at(mineraddress).then(function(instance){
+    mn=instance;
+    return mn.withdraw({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+},
+
+suspectHub: function () {
+  var self=this;
+  var pos="#suspect_hub";
+  var instance;
+  var msg;
+  var hb;
+
+  var addr = $("#hub_address").val();
+
+  HubWallet.at(addr).then(function(instance){
+    hb=instance;
+    return hb.suspect({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+gulagHub: function () {
+  var self=this;
+  var pos="#gulag_hub";
+  var instance;
+  var msg;
+  var hb;
+  var addr = $("#hub_address").val();
+
+  HubWallet.at(addr).then(function(instance){
+    hb=instance;
+    return hb.gulag({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+rehubHub: function () {
+  var self=this;
+  var pos="#rehub_hub";
+  var instance;
+  var msg;
+  var hb;
+  var addr = $("#hub_address").val();
+
+  HubWallet.at(addr).then(function(instance){
+    hb=instance;
+    return hb.rehub({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+suspectMiner: function () {
+
+  var self=this;
+  var pos="#suspect_miner";
+  var instance;
+  var msg;
+  var mn;
+  var addr = $("#min_address").val();
+  MinerWallet.at(addr).then(function(instance){
+    mn=instance;
+    return mn.suspect({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+  }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+gulagMiner: function () {
+
+  var self=this;
+  var pos="#gulag_miner";
+  var instance;
+  var msg;
+  var mn;
+  var addr = $("#min_address").val();
+  MinerWallet.at(addr).then(function(instance){
+    mn=instance;
+    return mn.gulag({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+  }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+rehubMiner: function () {
+
+  var self=this;
+  var pos="#rehub_miner";
+  var instance;
+  var msg;
+  var mn;
+  var addr = $("#min_address").val();
+  MinerWallet.at(addr).then(function(instance){
+    mn=instance;
+    return mn.rehub({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+  }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
+/*
 sendToken: function () {
   var self=this;
   var pos="#transfer_result";
@@ -190,9 +640,7 @@ sendToken: function () {
   Token.at(address).then(function(instance){
     tok=instance;
     msg="Wait..";
-    /**
 
-    **/
      return tok.transfer(to, val, {from: account})
    }).then(function (tx) {
         console.log("tx:");
@@ -207,146 +655,8 @@ sendToken: function () {
      self.setStatusPos(pos,msg);
     });
 },
+*/
 
-
-// Send to,val. Be aware of number type in "to".
-sendTokVal: function (to,val) {
-  var self=this;
-//  var pos="#transfer_result";
-  var instance;
-  var msg;
-  var tok;
-//  var amnt;
-//  val=web3.toWei(val);
-//  to=web3.toWei(val);
-
-
-  Token.at(address).then(function(instance){
-    tok=instance;
-//    msg="Wait..";
-
-     return tok.transfer(to, val, {from: account})
-   }).then(function (tx) {
-        console.log("tx:");
-        console.log(tx);
-    //    msg="Transaction complete";
-    //    self.setStatusPos(pos,msg);
-    //    self.refreshAddress();
-  }).catch(function(e) {
-      console.log(e);
-
-  //   msg="Ошибка при отправке, смотри консоль";
-  //   setStatusPos(pos,msg);
-    });
-},
-
-mintToken: function(){
-
-//мфк ыуда = ершы
-var self=this;
-
-var instance;
-var msg;
-var tok;
-
-var val = $("#mint_am").val();
-val =web3.toWei(val);
-var to = $("#mint_to").val();
-
-
-var pos="#mint_result";
-msg="Инициализация, ждите";
-//setStatus(msg);
-self.setStatusPos(pos, msg);
-var cb;  // cb - баланс до чеканки
-
-Token.at(address).then(function(instance){
-  tok=instance;
-//    msg="Wait..";
-  //запрашиваем баланс до чеканки
-  return tok.balanceOf(to);
-}).then(
-  function (prev) {
-    cb=prev; //запоминаем старый баланс
-    cb=cb.valueOf();
-    cb=web3.fromWei(cb);
-    tok.mintToken(to, val, {from:account}); //
-    console.log('val=');
-     console.log(val);
-  }).then(function () {
-     msg="Чеканка";
-   self.setStatus(msg);
-   self.setStatusPos(pos, msg);
-   self.ShowSupply();
-   self.hubBalance();
- }).then(
-   function (){
-     msg="Проверка";
-         self.setStatus(msg);
-         self.setStatusPos(pos,msg);
-         self.refreshAddress();
-   return tok.balanceOf(to); //запрашиваем баланс ПОСЛЕ чеканки
-
-  //  console.log(check);
-  }).then(
-    function(cheked){
-    var ch=cheked.valueOf();
-    ch=web3.fromWei(ch);
-    val=web3.fromWei(val);
-  //если новый баланс - старый баланс = значению эмиссии, то эмиссия прошла успешно
-      if(ch-cb==val||val==0) {
-      msg="Эмиссия прошла успешно";
-    //  setStatus(msg);
-      self.setStatusPos(pos,msg);
-      console.log('oldbalance');
-      console.log(cb);
-    //  console.log(check);
-    console.log('newbalance');
-      console.log(ch);
-    } else {
-      msg="Что-то пошло не так";
-    //  setStatus(msg);
-      self.setStatusPos(pos,msg);
-      console.log('oldbalance');
-      console.log(cb);
-    //  console.log(check);
-    console.log('newbalance');
-      console.log(ch);
-    }
-  });
-
-},
-
-burnTokens: function () {
-  var self=this;
-  var val=$("#burn_am").val();
-  val=Number(val);
-  val = web3.toWei(val);
-
-  var msg;
-  var tok;
-
-
-
-  Token.at(address).then(function(instance){
-    tok=instance;
-//    msg="Wait..";
-
-     return tok.burnTokens(val,{from: account})
-   }).then(function (tx) {
-        console.log("tx:");
-        console.log(tx);
-    //    msg="Transaction complete";
-    //    self.setStatusPos(pos,msg);
-          self.refreshAddress();
-  }).catch(function(e) {
-      console.log(e);
-
-  //   msg="Ошибка при отправке, смотри консоль";
-  //   setStatusPos(pos,msg);
-    });
-
-},
 
 
 deployContract: function(){
