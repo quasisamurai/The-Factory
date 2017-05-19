@@ -231,9 +231,9 @@ whitelistAddr: function () {
          console.log("tx:");
          console.log(tx);
          msg="Transaction complete";
-         msg=tx.valueOf();
+      //   msg=tx.valueOf();
          self.setStatusPos(pos,msg);
-         self.refreshAddress();
+    //     self.refreshAddress();
    }).catch(function(e) {
        console.log(e);
 
@@ -256,10 +256,10 @@ whitelistAddr: function () {
     }).then(function (tx) {
 
          console.log("tx:");
-         console.log(tx);
+         console.log(tx.tx);
          msg="Transaction complete";
          self.setStatusPos(pos,msg);
-         self.refreshAddress();
+      //   self.refreshAddress();
    }).catch(function(e) {
        console.log(e);
 
