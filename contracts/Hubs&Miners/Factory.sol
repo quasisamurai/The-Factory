@@ -1,7 +1,7 @@
 pragma solidity ^0.4.8;
 
 
-//Raw prototype of hub-wallet factory
+//Raw prototype of wallet factory
 
 
 //TODO - README
