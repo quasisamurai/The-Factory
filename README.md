@@ -35,12 +35,14 @@ Contracts schematic could be found here :
 
   Then you should install abigen itself
 
-  ```$ cd $GOPATH/src/github.com/sonm-io/go-ethereum
-    $ godep go install ./cmd/abigen ```
+  ``` 
+  cd $GOPATH/src/github.com/ethereum/go-ethereum
+  godep go install ./cmd/abigen
+  ```
 
 
 
-  If something wrong with abigen dependency (like someone forget to check broken dep from abigen in official go-ethereum)
+ If something wrong with abigen dependency (like someone forget to check broken dep from abigen in official go-ethereum)
   you could try just ```go install abigen ``` from  ```./cmd/``` directory.
 
   You should see your abigen binary in  ```/bin/``` your $GOPATH directory.
