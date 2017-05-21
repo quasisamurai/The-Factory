@@ -35,7 +35,7 @@ Contracts schematic could be found here :
 
   Then you should install abigen itself
 
-  ``` 
+  ```
   cd $GOPATH/src/github.com/ethereum/go-ethereum
   godep go install ./cmd/abigen
   ```
@@ -69,3 +69,5 @@ Contracts schematic could be found here :
 
   it will create new ```Token``` struct for your go project and you can be use this struct without neccesarry to import your generated file into main project.
   This is simplier way to develop, but may be confusing when you would not remember where do you declarated this struct and how to change it.
+
+  note - you **have to ** store zeppelin library in contracts directory because apigen does not recognise ethpm folders as truffle do.
