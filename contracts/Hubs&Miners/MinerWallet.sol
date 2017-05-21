@@ -189,6 +189,7 @@ contract MinerWallet is Ownable{
     currentPhase = Phase.Suspected;
     LogPhaseSwitch(currentPhase);
     freezePeriod = 120 days;
+    Whitelist.UnRegisterMiner(owner,this);
   }
 
   function gulag() public onlyDao {

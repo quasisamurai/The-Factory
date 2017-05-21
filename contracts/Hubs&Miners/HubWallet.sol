@@ -178,6 +178,8 @@ contract HubWallet is Ownable{
     currentPhase = Phase.Suspected;
     LogPhaseSwitch(currentPhase);
     freezePeriod = 120 days;
+    Whitelist.UnRegisterHub(owner,this);
+
   }
 
   function gulag() public onlyDao {
