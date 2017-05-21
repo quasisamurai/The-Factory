@@ -65,3 +65,8 @@ Contracts schematic could be found here :
   This is simplier way to develop, but may be confusing when you would not remember where do you declarated this struct and how to change it.
 
   note - you **have to ** store zeppelin library in contracts directory because apigen does not recognise ethpm folders as truffle do.
+
+  ### GO generate
+  You can generate go binds from sol files by ```go generate``` see more info in ```generator.go``` in contracts directory.
+
+  To generate packages you need to run in console ```go generate``` in contracts directory. Generated files will be saved in ```/go-build/``` directory.
