@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+  <title>Sonm Factory Test Frontend</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .section {
+      margin: 20px;
+    }
+    button {
+      padding: 5px 16px;
+      border-radius: 4px;
+    }
+    button#changeQuota { background-color: yellow; }
+    button#transfer { }
+
+    button#buyTicket { background-color: #98fb98; }
+    button#refundTicket { background-color: pink; }
+
+
+  </style>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!--
+<link href="./app.css" rel='stylesheet' type='text/css'>
+-->
+
+
+<script type="text/javascript" src="./app.js"></script>
+
+
+
+
+
+</head>
+
+
+
+
+
+
+
+<body>
+
+  <h1>Factory</h1>
+  <div class="section">
+    <label> Current Whitelist </label> <span id="whitelist"></span><br>
+    <label>Enter valid Whitelist address here <input id="address1"><br>
+      <button id='adr' onclick="App.changeAdresses()">Change!</button><br>
+      <hr>
+
+
+      <h2><center>Hubs</center></h2>
+      <hr>
+      <p> Create new hub wallet </p>
+      <br>
+
+      <span id="createStatus"></span>
+      <br><br><td align="right"> <button id="CreateHub" onclick="App.createHub()">New</button></td>
+
+  <div class="section">
+     <h2><center>Register hubWallet</center></h2>
+   <label>  HubOwner </label><span id="hub_owner"></span>
+
+
+       <button  onclick="App.registerHub()">Отчеканить!</button>
+       <span id="hubreg_result"></span>
+   </div>
+   <hr/>
+
+   <div class="section">
+      <h2><center>Pay to miner</center></h2>
+     <p align="left"><left>Single payout to some miner</left></p><br>
+    </br>
+   <label>   How much</label><input type="text" id="transfer_am" value="10" />
+   <label>   Whom </label><input type="text" id="transfer_to" />
+        <button id="transfer" onclick="App.sendPay()">Перевести</button>
+        <span id="transfer_result" color="blue"></span>
+    </div>
+    <hr/>
+
+    <div class="section">
+       <h2><center>UnRegister hubWallet</center></h2>
+     <label>  HubOwner </label><span id="hub_owner"></span>
+
+
+         <button  onclick="App.payDay()">Отчеканить!</button>
+         <span id="hubreg_result"></span>
+     </div>
+     <hr/>
+
+     <div class="section">
+        <h2><center>WithDraw hubWallet funds</center></h2>
+      <label>  HubOwner </label><span id="hub_owner"></span>
+
+
+          <button  onclick="App.h_WithDraw()">Отчеканить!</button>
+          <span id="hubWith_result"></span>
+      </div>
+      <hr/>
+
+      <h1>Miner section</h1>
+      <div class="section">
+          <h2><center>Create Miner Wallet</center></h2>
+
+          <button id= onclick="App.createMiner()">Ввод!</button><br>
+          <span id="minCreate_result"></span>
+          <hr>
+
+          <div class="section">
+             <h2><center>Register MinerWallet</center></h2>
+           <label>  MinerOwner </label><span id="min_owner"></span>
+
+
+               <button  onclick="App.registerMiner()">Отчеканить!</button>
+               <span id="minreg_result"></span>
+           </div>
+           <hr/>
+
+           <div class="section">
+              <h2><center>Pull Money</center></h2>
+            <label>  MinerOwner </label><span id="min_owner"></span>
+             <label>   From </label><input type="text" id="pull_from" />
+
+                <button  onclick="App.pullMoney()">Отчеканить!</button>
+                <span id="pullmoney_result"></span>
+            </div>
+            <hr/>
+
+            <div class="section">
+               <h2><center>UnRegister MinerWallet</center></h2>
+             <label>  MinerOwner </label><span id="min_owner"></span>
+
+
+                 <button  onclick="App.unregMiner()">Отчеканить!</button>
+                 <span id="unreg_result"></span>
+             </div>
+             <hr/>
+
+             <div class="section">
+                <h2><center>WithDraw MinerWallet funds</center></h2>
+              <label>  HubOwner </label><span id="hub_owner"></span>
+
+
+                  <button  onclick="App.withdrawMiner()">Отчеканить!</button>
+                  <span id="wMiner_result"></span>
+              </div>
+              <hr/>
+
+              <h1>DAO</h1>
+              <div class="section">
+                <label> Suspect Hub </label> </br>
+                <label>Enter wallet address here <input id="hub_address"><br>
+                  <button id='adr' onclick="App.suspectHub()">Press!</button><br>
+                    <span id="suspect_hub"></span>
+                  <hr>
+
+                  <h1>DAO</h1>
+                  <div class="section">
+                    <label> Suspect Miner </label> </br>
+                    <label>Enter wallet address here <input id="min_address"><br>
+                      <button id='adr' onclick="App.suspectMiner()">Press!</button><br>
+                        <span id="suspect_miner"></span>
+                      <hr>
+
+                      <h1>DAO</h1>
+                      <div class="section">
+                        <label> Gulag Hub </label> </br>
+                        <label>Enter wallet address here <input id="hub_address"><br>
+                          <button id='adr' onclick="App.gulagHub()">Press!</button><br>
+                            <span id="gulag_hub"></span>
+                          <hr>
+
+                          <h1>DAO</h1>
+                          <div class="section">
+                            <label> Gulag Miner </label> </br>
+                            <label>Enter wallet address here <input id="address"><br>
+                              <button id='adr' onclick="App.gulagMiner()">Press!</button><br>
+                                <span id="gulag_miner"></span>
+                              <hr>
+
+                              <h1>DAO</h1>
+                              <div class="section">
+                                <label> Rehub Hub </label> </br>
+                                <label>Enter wallet address here <input id="hub_address"><br>
+                                  <button id='adr' onclick="App.rehubHub()">Press!</button><br>
+                                    <span id="rehub_hub"></span>
+                                  <hr>
+
+                                  <h1>DAO</h1>
+                                  <div class="section">
+                                    <label> Rehub Miner </label> </br>
+                                    <label>Enter wallet address here <input id="address"><br>
+                                      <button id='adr' onclick="App.rehubMiner()">Press!</button><br>
+                                        <span id="rehub_miner"></span>
+                                      <hr>
+
+<!--
+ <div class="section">
+    <h2>Финансировать проект</h2>
+    Сумма взноса: <input type="text" id="fundAmount" value="10" />
+      Адрес с которого будут внесены деньги: <input type="text" id="DeposAddress" />
+      <button id="DepositFund">Внести финансирование</button>
+      <span id="DepositFundResult"></span>
+  </div>
+  <hr/>
+-->
+
+
+
+
+
+<!--
+ <div class="section">
+    <h2> Провести все транзакции</h2>
+
+      <button id="ProcAll" onclick="App.getAll()">Добавить получателя</button>
+      <span id="AllResult"></span>
+ </br>
+
+  </div>
+-->
+
+
+
+</body>
+</html>

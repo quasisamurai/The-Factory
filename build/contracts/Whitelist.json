@@ -1,0 +1,429 @@
+{
+  "contract_name": "Whitelist",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "UnRegisterHub",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "name": "time",
+          "type": "uint64"
+        },
+        {
+          "name": "stakeShare",
+          "type": "uint256"
+        }
+      ],
+      "name": "RegisterMin",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "RegistredHubs",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "RegistredMiners",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "UnRegisterMiner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "name": "time",
+          "type": "uint64"
+        }
+      ],
+      "name": "RegisterHub",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "Factory",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "time",
+          "type": "uint64"
+        }
+      ],
+      "name": "RegistredHub",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "time",
+          "type": "uint64"
+        },
+        {
+          "indexed": true,
+          "name": "stake",
+          "type": "uint256"
+        }
+      ],
+      "name": "RegistredMiner",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052346100005760405160208061059583398101604052515b60008054600160a060020a031916600160a060020a0383161790555b505b61054d806100486000396000f3006060604052361561005c5763ffffffff60e060020a6000350416630bdf096281146100615780632edbb4fa146100945780634f89b674146100d75780636e61cce3146101045780637efad0521461013157806394baf30114610164575b610000565b3461000057610080600160a060020a03600435811690602435166101a4565b604080519115158252519081900360200190f35b3461000057610080600160a060020a036004358116906024351667ffffffffffffffff6044351660643561024c565b604080519115158252519081900360200190f35b3461000057610080600160a060020a036004351661035a565b604080519115158252519081900360200190f35b3461000057610080600160a060020a036004351661036f565b604080519115158252519081900360200190f35b3461000057610080600160a060020a0360043581169060243516610384565b604080519115158252519081900360200190f35b3461000057610080600160a060020a036004358116906024351667ffffffffffffffff6044351661042c565b604080519115158252519081900360200190f35b60008054604080516020908101849052815160e060020a630cae8775028152600160a060020a033381166004830152925185949390931692630cae87759260248084019391929182900301818787803b156100005760325a03f11561000057505060405151915050600160a060020a038082169085161461022457610000565b600160a060020a0383166000908152600160205260409020805460ff191690555b5092915050565b6000805460408051602090810184905281517f96bb4ef5000000000000000000000000000000000000000000000000000000008152600160a060020a0333811660048301529251859493909316926396bb4ef59260248084019391929182900301818787803b156100005760325a03f11561000057505060405151915050600160a060020a03808216908716146102e257610000565b600160a060020a03808616600081815260026020908152604091829020805460ff1916600117905581519283529051869367ffffffffffffffff891693908b16927f01efd282f1b6e0b9bf41a06d831c8b246f0a6a650a848076129723831b2aa00d92918290030190a4600191505b50949350505050565b60016020526000908152604090205460ff1681565b60026020526000908152604090205460ff1681565b60008054604080516020908101849052815160e060020a630cae8775028152600160a060020a033381166004830152925185949390931692630cae87759260248084019391929182900301818787803b156100005760325a03f11561000057505060405151915050600160a060020a038082169085161461040457610000565b600160a060020a0383166000908152600260205260409020805460ff191690555b5092915050565b60008054604080516020908101849052815160e060020a630cae8775028152600160a060020a033381166004830152925185949390931692630cae87759260248084019391929182900301818787803b156100005760325a03f11561000057505060405151915050600160a060020a03808216908616146104ac57610000565b600160a060020a03808516600081815260016020818152604092839020805460ff19169092179091558151928352905167ffffffffffffffff8716938916927f4b639bce86a9292c37187d0b099958f116ccc27417075d090b204104fa18b70192908290030190a3600191505b5093925050505600a165627a7a72305820b2adcc94145d4bc04fa66cf607801c6a7e8df2058a7212fc2152fe506b48a9310029",
+  "networks": {
+    "4": {
+      "events": {
+        "0x4b639bce86a9292c37187d0b099958f116ccc27417075d090b204104fa18b701": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            }
+          ],
+          "name": "RegistredHub",
+          "type": "event"
+        },
+        "0x01efd282f1b6e0b9bf41a06d831c8b246f0a6a650a848076129723831b2aa00d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            },
+            {
+              "indexed": true,
+              "name": "stake",
+              "type": "uint256"
+            }
+          ],
+          "name": "RegistredMiner",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x638724e6dd02b641a186c3dc926fe773a1c1554f",
+      "updated_at": 1495751620061
+    },
+    "1495206623934": {
+      "events": {
+        "0x4b639bce86a9292c37187d0b099958f116ccc27417075d090b204104fa18b701": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            }
+          ],
+          "name": "RegistredHub",
+          "type": "event"
+        },
+        "0x01efd282f1b6e0b9bf41a06d831c8b246f0a6a650a848076129723831b2aa00d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            },
+            {
+              "indexed": true,
+              "name": "stake",
+              "type": "uint256"
+            }
+          ],
+          "name": "RegistredMiner",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x9d1f59e19e78388eaf0dee3f25dc918918f28251",
+      "updated_at": 1495215609756
+    },
+    "1495227261664": {
+      "events": {
+        "0x4b639bce86a9292c37187d0b099958f116ccc27417075d090b204104fa18b701": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            }
+          ],
+          "name": "RegistredHub",
+          "type": "event"
+        },
+        "0x01efd282f1b6e0b9bf41a06d831c8b246f0a6a650a848076129723831b2aa00d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            },
+            {
+              "indexed": true,
+              "name": "stake",
+              "type": "uint256"
+            }
+          ],
+          "name": "RegistredMiner",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x321327371e233cba0de2497cfbc19f9788b5e32b",
+      "updated_at": 1495227279539
+    },
+    "1495749768392": {
+      "events": {
+        "0x4b639bce86a9292c37187d0b099958f116ccc27417075d090b204104fa18b701": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            }
+          ],
+          "name": "RegistredHub",
+          "type": "event"
+        },
+        "0x01efd282f1b6e0b9bf41a06d831c8b246f0a6a650a848076129723831b2aa00d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            },
+            {
+              "indexed": true,
+              "name": "stake",
+              "type": "uint256"
+            }
+          ],
+          "name": "RegistredMiner",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xb25b8f31a19a4f9149c26510d47d7beddc3a674e",
+      "updated_at": 1495749787020
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1495751620061
+}
