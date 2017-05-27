@@ -60,7 +60,7 @@ contract Whitelist{
   function RegisterHub(address _owner, address _wallet, uint64 time) public returns(bool) {
 
     address wallet = WalletsFactory.HubOf(_owner);
-    if (wallet!=_wallet) throw;
+    if (wallet!=msg.sender) throw;
 
 
     /*
@@ -80,7 +80,7 @@ contract Whitelist{
   function RegisterMin(address _owner, address _wallet, uint64 time, uint stakeShare) public returns(bool) {
 
     address wallet = WalletsFactory.MinerOf(_owner);
-    if (wallet!=_wallet) throw;
+    if (wallet!=msg.sender) throw;
 
 
 
@@ -103,14 +103,14 @@ contract Whitelist{
   function UnRegisterHub(address _owner, address _wallet) public returns(bool) {
 
     address wallet = WalletsFactory.HubOf(_owner);
-    if (wallet!=_wallet) throw;
+    if (wallet!=msg.sender) throw;
 
     RegistredHubs[wallet]= false;
   }
 
   function UnRegisterMiner(address _owner, address _wallet) public returns(bool) {
     address wallet = WalletsFactory.MinerOf(_owner);
-    if (wallet!=_wallet) throw;
+    if (wallet!=msg.sender) throw;
 
     RegistredMiners[wallet]= false;
   }

@@ -93,7 +93,9 @@ Contracts schematic could be found here :
 
  ## Rinkbey testnet contract addresses:
 
- Migrations: 0x078cf1a3ce1717401835d347a33df87711e519af
- SDT: 0x1a248cae46c5b05ca05182e3ab6f97aaddc02e33
- Factory: 0xe1987c7fbfb912a26660ec57eeffc9a3e5e9b947
- Whitelist: 0x2ce5b2cf5eff5b94eb598aee3d304cf0671a68d6
+ Migrations: 0x6fe8b88ddab1f97be0b2fb7d49cf4e2beb78c692
+ SDT: 0x5dc277eec942aef60d360c3b4e112d40d1301d80
+ Factory: 0xb121cbde60afb91761fd28d753faa0a6314c9747
+ Whitelist: 0xb0a80ab6b8d1082c5bbbf8bf77c93604cebe12f5
+
+ Test hubwallet contracts
