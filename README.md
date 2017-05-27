@@ -76,7 +76,7 @@ Contracts schematic could be found here :
   To run rinkey testnet through go-ethereum node you should run it as follows:
 
   ```
-  geth --networkid=4 --datadir=$HOME/.rinkeby --cache=512 --ethstats='yournode:Respect my authoritah!@stats.rinkeby.io' --bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303 --rpc --password <(echo yourpassword) --unlock 0 --rpccorsdomain localhost
+  geth --networkid=4 --datadir=$HOME/.rinkeby --cache=512 --ethstats='yournode:Respect my authoritah!@stats.rinkeby.io' --bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303 --rpc --password <(echo yourpassword) --unlock 0 --rpccorsdomain localhost --rpcport 8080
 
 ```
 
@@ -84,6 +84,12 @@ Contracts schematic could be found here :
   ```
   ethereumwallet --rpc $HOME/.rinkeby/geth.ipc --node-networkid=4 --node-datadir=$HOME/.rinkeby --node-ethstats='yournode:Respect my authoritah!@stats.rinkeby.io' --node-bootnodes=enode://a24ac7c5484ef4ed0c5eb2d36620ba4e4aa13b8c84684e1b4aab0cebea2ae45cb4d375b77eab56516d34bfbd3c1a833fc51296ff084b770b94fb9028c4d25ccf@52.169.42.101:30303
 ```
+
+ ## Rinkbey metamask
+
+  Metamask plugin is currently working perfect with Rinkbey testnet. You could run frontend of Factory as ```npm run dev ``` which will build react frontend and start minimal npm server
+  You could interact with Factory contracts throught this frontend and using metamask as a node to work with rinkbey testnet.
+
 
  ## Rinkbey testnet contract addresses:
 
