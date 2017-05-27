@@ -335,6 +335,34 @@ payDay: function () {
 
 },
 
+DaoFee: function () {
+  var self=this;
+  var pos="#hubreg_result";
+  var instance;
+  var msg;
+  var hb;
+
+  var hbdr= $("#hub_address").val();
+
+  Hub.at(hbdr).then(function(instance){
+    hb=instance;
+    return hb.DaoTransfer({from: account, gas:4000000})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
 h_WithDraw: function () {
   var self=this;
   var pos="#hubWith_result";
