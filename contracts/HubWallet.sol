@@ -81,6 +81,8 @@ contract HubWallet is Ownable{
   //Fee's
   uint daoFee;
 
+  uint DaoCollect;
+
 
   modifier onlyDao()     { if(msg.sender != DAO) throw; _; }
 
@@ -126,22 +128,22 @@ contract HubWallet is Ownable{
     frozenFunds=freezeQuote;
     frozenTime=uint64(now);
     //Appendix to call register function from Whitelist contract and check it.
-  //  Whitelist.RegisterHub(owner,this,frozenTime);
+    Whitelist.RegisterHub(owner,this,frozenTime);
 //    LogPass("Whitelist okay");
-  //  currentPhase=Phase.Registred;
-//    LogPhaseSwitch(currentPhase);
+    currentPhase=Phase.Registred;
+    LogPhaseSwitch(currentPhase);
 
     return true;
   }
 
-  function transfer() public {
+  function transfer(address _to, uint _value) public onlyOwner {
 
     //address _to, uint _value
     //  ToVal(_to, _value);
 
-  //  if(currentPhase!=Phase.Registred) throw;
+    if(currentPhase!=Phase.Registred) throw;
 
-    /*
+
 
     uint lockFee = _value * lockPercent / 100;
     uint lock = lockedFunds + lockFee;
@@ -149,15 +151,15 @@ contract HubWallet is Ownable{
 
     uint value=_value - lockFee;
 
-  //  if(sharesTokenAddress.balanceOf(msg.sender)< (limit + value)) throw;
+    if(sharesTokenAddress.balanceOf(msg.sender)< (limit + value)) throw;
 
     lockedFunds=lock;
 
-  //  sharesTokenAddress.approve(_to,value);
+    sharesTokenAddress.approve(_to,value);
 
-  */
 
-    LogPass("done");
+
+  //  LogPass("done");
 
   }
 
@@ -165,14 +167,14 @@ contract HubWallet is Ownable{
 
     if(currentPhase!=Phase.Registred) throw;
 
-    if(now < (frozenTime + freezePeriod)) throw;
+  //  if(now < (frozenTime + freezePeriod)) throw;
 
     //dao got's 0.5% in such terms.
-    uint DaoCollect = lockedFunds * daoFee / 1000;
+    DaoCollect = lockedFunds * daoFee / 1000;
     DaoCollect = DaoCollect + frozenFunds;
     frozenFunds = 0;
 
-    sharesTokenAddress.transfer(DAO,DaoCollect);
+  //  sharesTokenAddress.transfer(DAO,DaoCollect);
 
     lockedFunds= 0;
 
@@ -185,8 +187,10 @@ contract HubWallet is Ownable{
 
   function withdraw() public onlyOwner {
 
-    if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
+  //  if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
+    if(currentPhase!=Phase.Idle) throw;
     uint amount = sharesTokenAddress.balanceOf(this);
+    sharesTokenAddress.transfer(DAO,DaoCollect);
     sharesTokenAddress.transfer(owner,amount);
 
   }
