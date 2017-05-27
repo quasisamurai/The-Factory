@@ -19,7 +19,7 @@ contract Factory {
   address dao;
   whitelist Whitelist;
 
-// wallet => owner
+// owner => wallet
   mapping (address => address) public hubs;
   mapping (address => address) public miners;
 
@@ -44,7 +44,7 @@ contract Factory {
   function createHub() public returns(address) {
     address _hubowner = msg.sender;
     address hubwallet = create(_hubowner);
-    hubs[hubwallet]= _hubowner;
+    hubs[_hubowner]= hubwallet;
     LogCreate(hubwallet, _hubowner);
 
   }
@@ -52,7 +52,7 @@ contract Factory {
   function createMiner() public returns(address) {
     address _minowner = msg.sender;
     address minwallet = createM(_minowner);
-    miners[minwallet]= _minowner;
+    miners[_minowner]= minwallet;
     LogCreate(minwallet,_minowner);
   }
 
@@ -65,12 +65,12 @@ contract Factory {
   }
 
 
-function HownerOf(address _wallet) constant returns (address _owner) {
-  return hubs[_wallet];
+function HubOf(address _owner) constant returns (address _wallet) {
+  return hubs[_owner];
 }
 
-function MownerOf(address _wallet) constant returns (address _owner) {
-  return miners[_wallet];
+function MinerOf(address _owner) constant returns (address _wallet) {
+  return miners[_owner];
 }
 
 }

@@ -7,10 +7,10 @@ pragma solidity ^0.4.8;
 
 
 contract factory{
-  mapping (address => bool) public hubs;
-  mapping (address => bool) public miners;
-  function HownerOf(address _wallet) constant returns (address _owner);
-  function MownerOf(address _wallet) constant returns (address _owner);
+  mapping (address => address) public hubs;
+  mapping (address => address) public miners;
+  function HubOf(address _owner) constant returns (address _wallet);
+  function MinerOf(address _owner) constant returns (address _wallet);
 }
 
 
@@ -57,12 +57,11 @@ contract Whitelist{
 
   }
 
-  function RegisterHub(address _owner, address wallet, uint64 time) public returns(bool) {
+  function RegisterHub(address _owner, address _wallet, uint64 time) public returns(bool) {
 
+    address wallet = WalletsFactory.HubOf(_owner);
+    if (wallet!=_wallet) throw;
 
-
-    address owner = WalletsFactory.HownerOf(msg.sender);
-    if (owner!=_owner) throw;
 
     /*
     HubInfo info = RegistredHubs[wallet];
@@ -78,12 +77,12 @@ contract Whitelist{
 
   }
 
-  function RegisterMin(address _owner, address wallet, uint64 time, uint stakeShare) public returns(bool) {
+  function RegisterMin(address _owner, address _wallet, uint64 time, uint stakeShare) public returns(bool) {
+
+    address wallet = WalletsFactory.MinerOf(_owner);
+    if (wallet!=_wallet) throw;
 
 
-
-    address owner = WalletsFactory.MownerOf(msg.sender);
-    if (owner!=_owner) throw;
 
     /*
     MinerInfo info = RegistredMiners[wallet];
@@ -101,17 +100,17 @@ contract Whitelist{
 
   }
 
-  function UnRegisterHub(address _owner, address wallet) public returns(bool) {
+  function UnRegisterHub(address _owner, address _wallet) public returns(bool) {
 
-    address owner = WalletsFactory.HownerOf(msg.sender);
-    if (owner!=_owner) throw;
+    address wallet = WalletsFactory.HubOf(_owner);
+    if (wallet!=_wallet) throw;
 
     RegistredHubs[wallet]= false;
   }
 
-  function UnRegisterMiner(address _owner, address wallet) public returns(bool) {
-    address owner = WalletsFactory.HownerOf(msg.sender);
-    if (owner!=_owner) throw;
+  function UnRegisterMiner(address _owner, address _wallet) public returns(bool) {
+    address wallet = WalletsFactory.MinerOf(_owner);
+    if (wallet!=_wallet) throw;
 
     RegistredMiners[wallet]= false;
   }
