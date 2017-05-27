@@ -81,8 +81,8 @@ contract HubWallet is Ownable{
   //Fee's
   uint daoFee;
 
-  bool daoflag;
-  bool payday_f;
+//  bool daoflag;
+//  bool payday_f;
 
   uint DaoCollect;
 
@@ -123,7 +123,7 @@ contract HubWallet is Ownable{
 
   function Registration() public returns (bool success){
 
-  //  if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
+
       if(currentPhase!=Phase.Idle) throw;
 
     if (sharesTokenAddress.balanceOf(msg.sender) <= freezeQuote) throw;
@@ -132,9 +132,7 @@ contract HubWallet is Ownable{
     frozenTime=uint64(now);
     //Appendix to call register function from Whitelist contract and check it.
     Whitelist.RegisterHub(owner,this,frozenTime);
-//    LogPass("Whitelist okay");
-//    daoflag = false;
-//    payday_f = false;
+
     currentPhase=Phase.Registred;
     LogPhaseSwitch(currentPhase);
 
@@ -178,14 +176,15 @@ contract HubWallet is Ownable{
     frozenFunds = 0;
     lockedFunds= 0;
 
-  //  if(now < (frozenTime + freezePeriod)) throw;
+    // Comment it for test.
+    if(now < (frozenTime + freezePeriod)) throw;
 
     //For test usage
-    DaoCollect=0;
+  //  DaoCollect=0;
 
     //dao got's 0.5% in such terms.
     sharesTokenAddress.transfer(DAO,DaoCollect);
-  //  DaoTransfer();
+
     Whitelist.UnRegisterHub(owner,this);
     currentPhase=Phase.Idle;
     LogPhaseSwitch(currentPhase);
@@ -205,18 +204,20 @@ contract HubWallet is Ownable{
 
   }
 
+/*
   // For test only. Remove.
   function DaoTransfer() public onlyOwner {
   //  if(currentPhase!=Phase.Registred) throw;
-    if(payday_f!=true) throw;
+//    if(payday_f!=true) throw;
 
   //  sharesTokenAddress.transfer(DAO,DaoCollect);
 
-    DaoCollect=1;
+    DaoCollect=0;
     sharesTokenAddress.transfer(DAO,DaoCollect);
     daoflag = true;
 
   }
+  */
 
   function suspect() public onlyDao {
     if (currentPhase!=Phase.Registred) throw;

@@ -116,7 +116,7 @@ contract MinerWallet is Ownable{
   /*/
 
   function Registration(uint stake) public onlyOwner returns (bool success){
-    if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
+      if(currentPhase!=Phase.Idle) throw;
     if (sharesTokenAddress.balanceOf(msg.sender) <= freezeQuote) throw;
     stakeShare=stake;
     frozenFunds=stake+freezeQuote;
@@ -157,6 +157,7 @@ contract MinerWallet is Ownable{
   function PayDay() public onlyOwner {
 
     if(currentPhase!=Phase.Registred) throw;
+
 
     if(now < (frozenTime + freezePeriod)) throw;
 

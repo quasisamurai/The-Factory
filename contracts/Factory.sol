@@ -25,7 +25,7 @@ contract Factory {
 
   event LogCreate(address wallet, address owner);
   event LogCr(address owner);
-  event Weird(string thing);
+//  event Weird(string thing);
 
   function Factory(token TokenAddress,address _dao){
 
