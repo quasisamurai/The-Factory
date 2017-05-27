@@ -23,6 +23,8 @@ contract Factory {
   mapping (address => address) public hubs;
   mapping (address => address) public miners;
 
+  event LogCreate(address wallet, address owner);
+
   function Factory(token TokenAddress,address _dao){
 
     sharesTokenAddress = TokenAddress;
@@ -43,7 +45,7 @@ contract Factory {
     address _hubowner = msg.sender;
     address hubwallet = create(_hubowner);
     hubs[hubwallet]= _hubowner;
-
+    LogCreate(hubwallet, _hubowner);
 
   }
 
@@ -51,7 +53,7 @@ contract Factory {
     address _minowner = msg.sender;
     address minwallet = createM(_minowner);
     miners[minwallet]= _minowner;
-
+    LogCreate(minwallet,_minowner);
   }
 
   function create(address _hubowner) private returns(address) {

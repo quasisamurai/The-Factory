@@ -93,7 +93,7 @@ Contracts schematic could be found here :
 
  ## Rinkbey testnet contract addresses:
 
- Migrations: 0x97b476511a9b2719c1aba209641624998e397392
- SDT: 0x31ac2908b1f981519b7ab992b46eaa41566b3c0a
- Factory: 0x1d978c1a1f7f15b624f13b4f8400ed28ed48c54f
- Whitelist: 0x638724e6dd02b641a186c3dc926fe773a1c1554f
+ Migrations: 0x73d3e142bcc7128621299fe613e95702e08f1601
+ SDT: 0xb4d7a4f7fd9f5ac1f0e6d346b629bed02512b9a2
+ Factory: 0x6afd82c04c7d471bdcff66f6c821cda6a3880abb
+ Whitelist: 0xa8ed6cdaf6c2a815066b93c142d328f3807f78b2
