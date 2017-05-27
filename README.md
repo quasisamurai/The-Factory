@@ -99,3 +99,6 @@ Contracts schematic could be found here :
  Whitelist: 0xb0a80ab6b8d1082c5bbbf8bf77c93604cebe12f5
 
  Test hubwallet contracts
+ 0x1b120c90f1b2f15924991dff1a4f4cdbf30478bc
+
+ 

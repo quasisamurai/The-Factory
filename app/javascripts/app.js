@@ -250,13 +250,15 @@ whitelistAddr: function () {
     var instance;
     var msg;
     var hb;
-    Hub.at(hubaddress).then(function(instance){
+    var hbdr= $("#hub_address").val();
+    Hub.at(hbdr).then(function(instance){
       hb=instance;
-      return hb.Registration({from: account})
+      console.log("hmm");
+      return hb.Registration({from: account, gas: 3000000})
     }).then(function (tx) {
 
          console.log("tx:");
-         console.log(tx.tx);
+         console.log(tx);
          msg="Transaction complete";
          self.setStatusPos(pos,msg);
       //   self.refreshAddress();
@@ -275,15 +277,20 @@ sendPay: function () {
   var instance;
   var msg;
   var hb;
+  var hbdr= $("#hub_address").val();
+  console.log(hbdr);
 
   var val = $("#transfer_am").val();
   var to = $("#transfer_to").val();
 
+  console.log(to);
+  console.log(val);
 
-
-  Hub.at(hubaddress).then(function(instance){
+  Hub.at(hbdr).then(function(instance){
     hb=instance;
-    return hb.transfer(to, val, {from: account})
+    console.log(hb);
+    return hb.transfer({from: account, gas: 3000000})
+  //  return hb.transfer(to, val, {from: account, gas: 3000000})
   }).then(function (tx) {
 
        console.log("tx:");
@@ -307,7 +314,9 @@ payDay: function () {
   var msg;
   var hb;
 
-  Hub.at(hubaddress).then(function(instance){
+  var hbdr= $("#hub_address").val();
+
+  Hub.at(hbdr).then(function(instance){
     hb=instance;
     return hb.PayDay({from: account})
   }).then(function (tx) {

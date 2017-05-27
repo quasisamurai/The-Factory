@@ -24,6 +24,8 @@ contract Factory {
   mapping (address => address) public miners;
 
   event LogCreate(address wallet, address owner);
+  event LogCr(address owner);
+//  event Weird(string thing);
 
   function Factory(token TokenAddress,address _dao){
 
@@ -58,10 +60,13 @@ contract Factory {
 
   function create(address _hubowner) private returns(address) {
     return address(new HubWallet(_hubowner,dao,Whitelist,sharesTokenAddress));
+    LogCr(_hubowner);
+
   }
 
   function createM(address _minowner) private returns(address) {
     return address(new MinerWallet(_minowner,dao,Whitelist,sharesTokenAddress));
+    LogCr(_minowner);
   }
 
 

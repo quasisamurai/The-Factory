@@ -43,6 +43,8 @@ contract HubWallet is Ownable{
 
     freezePeriod = 30 days;
 
+    currentPhase = Phase.Idle;
+
   }
 
 
@@ -96,7 +98,7 @@ contract HubWallet is Ownable{
       Punished
   }
 
-  Phase public currentPhase = Phase.Created;
+  Phase public currentPhase;
 
   /*/
    *  Events
@@ -105,26 +107,41 @@ contract HubWallet is Ownable{
 
     event LogPhaseSwitch(Phase newPhase);
 
+    event LogPass(string pass);
+
+    event ToVal(address to, uint val);
 
 
   /*/
    *  Public functions
   /*/
 
-  function Registration() public onlyOwner returns (bool success){
-    if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
+  function Registration() public returns (bool success){
+
+  //  if(currentPhase != Phase.Created || currentPhase!=Phase.Idle) throw;
+      if(currentPhase!=Phase.Idle) throw;
+
     if (sharesTokenAddress.balanceOf(msg.sender) <= freezeQuote) throw;
+  //  LogPass("balance checked okay");
     frozenFunds=freezeQuote;
     frozenTime=uint64(now);
     //Appendix to call register function from Whitelist contract and check it.
-    Whitelist.RegisterHub(owner,this,frozenTime);
-    currentPhase=Phase.Registred;
-    LogPhaseSwitch(currentPhase);
+  //  Whitelist.RegisterHub(owner,this,frozenTime);
+//    LogPass("Whitelist okay");
+  //  currentPhase=Phase.Registred;
+//    LogPhaseSwitch(currentPhase);
+
     return true;
   }
 
-  function transfer(address _to, uint _value) public onlyOwner{
-    if(currentPhase!=Phase.Registred) throw;
+  function transfer() public {
+
+    //address _to, uint _value
+    //  ToVal(_to, _value);
+
+  //  if(currentPhase!=Phase.Registred) throw;
+
+    /*
 
     uint lockFee = _value * lockPercent / 100;
     uint lock = lockedFunds + lockFee;
@@ -132,11 +149,15 @@ contract HubWallet is Ownable{
 
     uint value=_value - lockFee;
 
-    if(sharesTokenAddress.balanceOf(msg.sender)< (limit + value)) throw;
+  //  if(sharesTokenAddress.balanceOf(msg.sender)< (limit + value)) throw;
 
     lockedFunds=lock;
 
-    sharesTokenAddress.approve(_to,value);
+  //  sharesTokenAddress.approve(_to,value);
+
+  */
+
+    LogPass("done");
 
   }
 
