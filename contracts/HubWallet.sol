@@ -126,7 +126,7 @@ contract HubWallet is Ownable{
 
       if(currentPhase!=Phase.Idle) throw;
 
-    if (sharesTokenAddress.balanceOf(msg.sender) <= freezeQuote) throw;
+    if (sharesTokenAddress.balanceOf(this) <= freezeQuote) throw;
   //  LogPass("balance checked okay");
     frozenFunds=freezeQuote;
     frozenTime=uint64(now);
