@@ -99,7 +99,7 @@ contract MinerWallet is Ownable{
       Punished
   }
 
-  Phase public currentPhase = Phase.Created;
+  Phase public currentPhase = Phase.Idle;
 
   /*/
    *  Events
