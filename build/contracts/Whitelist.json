@@ -252,8 +252,8 @@
         }
       },
       "links": {},
-      "address": "0x4d98d99e9b74d66fc2b4ac49070422b0f514339b",
-      "updated_at": 1495902792035
+      "address": "0x0b4d4a9cd704bf05da93d0f50be641d6db758459",
+      "updated_at": 1496248411436
     },
     "1495206623934": {
       "events": {
@@ -702,8 +702,64 @@
       "links": {},
       "address": "0x94c9998a8e7a4e639fd7a1d0891286f9cc40c43d",
       "updated_at": 1495872236765
+    },
+    "1496245158719": {
+      "events": {
+        "0x4b639bce86a9292c37187d0b099958f116ccc27417075d090b204104fa18b701": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            }
+          ],
+          "name": "RegistredHub",
+          "type": "event"
+        },
+        "0x01efd282f1b6e0b9bf41a06d831c8b246f0a6a650a848076129723831b2aa00d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "time",
+              "type": "uint64"
+            },
+            {
+              "indexed": true,
+              "name": "stake",
+              "type": "uint256"
+            }
+          ],
+          "name": "RegistredMiner",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xee4cf887e9e91e6386d610a6be62404acb708ef3",
+      "updated_at": 1496245243658
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1495902792035
+  "updated_at": 1496248411436
 }

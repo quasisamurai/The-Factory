@@ -319,8 +319,8 @@
         }
       },
       "links": {},
-      "address": "0x4b15b70e9e1ac7e7f7edd3f7c81cf8ec4e784cc0",
-      "updated_at": 1495902792026
+      "address": "0xa733e5f29016e9947b988d923a4769b0b6db4bea",
+      "updated_at": 1496248411434
     },
     "1495206623934": {
       "events": {
@@ -729,8 +729,59 @@
       "links": {},
       "address": "0xb60149e9bd543047e152f89fc564b5d9c125c2b0",
       "updated_at": 1495872236754
+    },
+    "1496245158719": {
+      "events": {
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Transfer",
+          "type": "event"
+        },
+        "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "spender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Approval",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xee79bbce40e31c43916691eaecb774c723b3625b",
+      "updated_at": 1496245243653
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1495902792026
+  "updated_at": 1496248411434
 }
