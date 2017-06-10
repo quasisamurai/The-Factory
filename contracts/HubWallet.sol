@@ -41,7 +41,7 @@ contract HubWallet is Ownable{
     //in promilles
     daoFee = 5;
 
-    freezePeriod = 30 days;
+    freezePeriod = 10 days;
 
     currentPhase = Phase.Idle;
 

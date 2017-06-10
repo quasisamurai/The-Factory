@@ -43,7 +43,7 @@ contract MinerWallet is Ownable{
     daoFee = 5;
 
     // time of work period.
-    freezePeriod = 28 days;
+    freezePeriod = 5 days;
 
   }
 
