@@ -4,11 +4,31 @@ This repository is workshop for sonm smart-contracts organisation.
 
 
 See presale and token contracts here:
-(https://github.com/sonm-io/token)
+(https://github.com/sonm-io/ico-contracts/blob/master/contracts/SNM.sol)
 
 Contracts schematic could be found here :
 (https://github.com/sonm-io/Contracts-scheme)
 
+## Contracts
+
+You can get more detailed info about contracts [here] (https://github.com/sonm-io/Factory/tree/master/contracts)
+
+### Hub wallet
+Before hub started to payout tokens to miners and recive payments from buyers – he must create a hub wallet – simple contract with defined amount of frozen funds. If hub will be cheating – DAO could initiate process of blacklisting this hub and expropriate frozen funds from it.
+
+Frozen funds it also will be frozen at DAO account for defined time – it's special protection against malicious descisions of DAO – tokens could lower it price for time from expropriation to undfreeze, therefore there is no motivation to 'raskulachivat'(expropriate) every hub.
+
+### Miner wallet
+Miner wallet is a simple contract which build by analogy with hub wallet - like employment history it could help to rate miners. freezePeriod for MinerWallet are much less, than for HubWallet.
+
+### Factory contract
+Factory - is a simple factory contract, which can create wallets and have instruments for checking info about wallets creation (for approval of valid wallets contracts)
+
+### Whitelist
+Whitelist containing info about registred wallets. All registred wallets must follow rules of community as they are could be punished by DAO in case of fraud or other violations of rules of community.
+
+### Auxiliary contracts
+Definition contain defination of some contracts function, Migrations are help to follow actual contract addresses
 
 
 ## Golang artefacts
