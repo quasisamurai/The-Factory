@@ -1,4 +1,4 @@
-# HUB contracts
+# Contracts
 
 # Hub wallet
 
@@ -70,8 +70,8 @@ This function is close payment period and set state of the contract as ```Idle``
 
 This function checks the registration time against the current date and thus can be invoked only at the end of the payout period. If this condition is met, it transfers 0.5% of the frozen funds to the JSC wallet, after which it unlocks all the frozen funds and set the contract’s state to idle. In this idle state the contract can move all the funds back to the owner’s wallet or register the contract again in the whitelist. During the idle state the hub cannot conduct payouts or be dismantled.
 Thus, if the owner can move the funds from the hub to his personal wallet he can do so in two ways – do it in accordance with the rules, wait until the end of the payout period, pay the JSC 0.5% of the frozen funds and move the rest to his wallet; or he can cheat and move all the funds using the transfer function under the guise of paying miners, but in this case 30% of all funds will stay frozen +1 SNM. Such a system motivates the hub to act in compliance with the rules.
-The contract also has the Suspected and Punished conditions. In the Registred state – the state when the contract can be registered in the whitelist – the JSC and only JSC can invoke the suspect function, thus setting the contract’s stats to suspected – suspected of being malicious. This function blocks all funds on the contract’s wallet for 120 days.
-In the suspected state the following functions can be invoked by the JSC exclusively:
+The contract also has the Suspected and Punished conditions. In the Registred state – the state when the contract can be registered in the whitelist – the DAO and only DAO can invoke the suspect function, thus setting the contract’s stats to suspected – suspected of being malicious. This function blocks all funds on the contract’s wallet for 120 days.
+In the suspected state the following functions can be invoked by the DAO exclusively:
 
 
 This mean that the only way to hub to get all his money including lockedFunds - is to invoke this function and pay DAO 0.5% of lockedFunds. In any other case 30% from all hub's operation's will be locked on the contract balance.
@@ -96,3 +96,21 @@ This can only be invoked by the DAO committee after 120 days have passed since t
 
 #### rehub function
 This rehabilitates the hub, removes all fund freezes and set the contract state to  ```idle```. 
+
+
+# Miner wallet
+
+## Abstract
+
+Miner wallet is a simple contract which build by analogy with hub wallet - like employment history it could help to rate miners. 
+freezePeriod for MinerWallet are much less, than for HubWallet. 
+
+# Factory
+Factory - is a simple ```factory``` contract, which can create wallets and have instruments for checking info about wallets creation (for approval of valid wallets contracts)
+
+# Whitelist
+Whitelist containing info about registred wallets. All registred wallets must follow rules of community as they are could be punished by DAO in case of fraud or other violations of rules of community.
+
+# Auxiliary contracts
+Definition contain defination of some contracts function, Migrations are help to follow actual contract addresses
+
