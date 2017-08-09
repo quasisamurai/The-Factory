@@ -51,13 +51,18 @@ contract Whitelist{
   event RegistredHub(address indexed _owner,address wallet, uint64 indexed time);
   event RegistredMiner(address indexed _owner,address wallet, uint64 indexed time);
 
- enum Type {
+/* TODO - fix enum conversion issue?
+  ISSUE - type enum cannot be implicity convertible to expected type bool
+  PATCH - will use uint type as temporal solution?
+*/
+  enum TypeW {
    Hub,
    Miner,
    Client
  }
 
 
+  //uint h=1;
 
   //-----------------------------------func------------------------------------
 
@@ -112,24 +117,35 @@ contract Whitelist{
 
   //TODO - incapsulate Registration
 
-  function UnRegisterHub(address _owner, address _wallet) public returns(bool) {
+  function UnRegisterHub(address _owner, address _wallet) private returns(bool) {
 
-    address wallet = WalletsFactory.HubOf(_owner);
-    if (wallet!=msg.sender) throw;
 
-    RegistredHubs[wallet]= false;
+
+    RegistredHubs[_wallet]= false;
   }
 
-  function UnRegisterMiner(address _owner, address _wallet) public returns(bool) {
-    address wallet = WalletsFactory.MinerOf(_owner);
-    if (wallet!=msg.sender) throw;
+  function UnRegisterMiner(address _owner, address _wallet) private returns(bool) {
 
-    RegistredMiners[wallet]= false;
+
+    RegistredMiners[_wallet]= false;
   }
 
 // General deregister
-  function DeRegister(Type _type, address _owner, address _wallet) public returns(bool) {
+  function DeRegister(TypeW _type, address _owner, address _wallet) public returns(bool) {
 
+    if (_type==TypeW.Hub) {
+      address wallet_h = WalletsFactory.HubOf(_owner);
+      if (wallet_h!=msg.sender) throw;
+      UnRegisterHub(_owner,_wallet);
+    }
+
+    if (_type==TypeW.Miner) {
+      address wallet_m = WalletsFactory.MinerOf(_owner);
+      if (wallet_m!=msg.sender) throw;
+      UnRegisterMiner(_owner,_wallet);
+    }
+
+    // Add unregister client func?
   }
 
 }
