@@ -181,15 +181,16 @@ contract Wallet  is Ownable {
 
 
     function suspect() public  {
-  //    if (currentPhase!=Phase.Registred) throw;
-  //    frozenFunds = 0;
-  //    CheckOut();
+      if (currentPhase!=Phase.Registred) throw;
+      frozenFunds = 0;
+  //
 
-//      lockedFunds=sharesTokenAddress.balanceOf(this);
-//      frozenTime = uint64(now);
-//      currentPhase = Phase.Suspected;
-//      LogPhaseSwitch(currentPhase);
-  //   freezePeriod = 120 days;
+      lockedFunds=sharesTokenAddress.balanceOf(this);
+      frozenTime = uint64(now);
+      currentPhase = Phase.Suspected;
+      LogPhaseSwitch(currentPhase);
+      freezePeriod = 120 days;
+     CheckOut();
     }
 
     function gulag() public onlyDao {
