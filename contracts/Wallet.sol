@@ -91,36 +91,6 @@ contract Wallet  is Ownable {
 
 
 
-/*
-    ///@dev constructor
-    function Wallet(address _wowner,address _dao,whitelist _whitelist,token sharesAddress){
-      owner=_wowner;
-      DAO=_dao;
-      Whitelist= whitelist(_whitelist);
-      Factory=msg.sender;
-      genesisTime=uint64(now);
-
-
-      sharesTokenAddress = token(sharesAddress);
-
-      //1 SNM token is needed to registrate in whitelist
-      //freezeQuote = 1 * (1 ether / 1 wei);
-
-      // in the future this percent will be defined by factory.
-      lockPercent= 30;
-
-      //in promilles
-      daoFee = 5;
-
-      freezePeriod = 10 days;
-
-      currentPhase = Phase.Idle;
-      walletType = TypeW.Hub;
-
-    }
-*/
-
-
     /*/
      *  Public functions
     /*/

@@ -39,9 +39,9 @@ contract HubWallet is Ownable, Wallet{
 
     freezePeriod = 10 days;
 
-    if (_privat=true){
-      privat=true;
-    }
+    
+      privat=_privat;
+
 
     currentPhase = Phase.Idle;
 

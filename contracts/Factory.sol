@@ -4,12 +4,12 @@ pragma solidity ^0.4.8;
 //Raw prototype of wallet factory
 
 
-//TODO - README
+//TODO - DOCS
 
 
 import './HubWallet.sol';
 import './MinerWallet.sol';
-import '.Wallet.sol';
+
 
 
 contract Factory {
@@ -20,12 +20,27 @@ contract Factory {
 
     whitelist Whitelist;
 
+    //wallet type
+    enum TypeW {
+     Hub,
+     Miner,
+     Client
+   }
+
+  TypeW public walletType;
+
+
     // owner => wallet
-    mapping (address => address) public hubs;
+    mapping (address => address) public wallets;
 
-    mapping (address => address) public miners;
+    //wallet types
+    // wallet => type
+    mapping (address => TypeW) public types;
 
-    mapping (address => TypeW) public type_w;
+    //Type of hubs.
+    // wallet => type. true for private pools (clusters, datacentres, etc)
+    mapping (address => bool) public privat;
+
 
     event LogCreate(address wallet, address owner);
 
@@ -47,22 +62,27 @@ contract Factory {
         Whitelist = whitelist(_whitelist);
     }
 
-    function createHub() public returns (address) {
+
+
+    function createHub(bool _privat) public returns (address) {
         address _hubowner = msg.sender;
-        address hubwallet = create(_hubowner);
-        hubs[_hubowner] = hubwallet;
+        address hubwallet = createH(_hubowner,_privat);
+        wallets[_hubowner] = hubwallet;
+        types[hubwallet] = TypeW.Hub;
+        privat[hubwallet] = _privat;
         LogCreate(hubwallet, _hubowner);
     }
 
     function createMiner() public returns (address) {
         address _minowner = msg.sender;
         address minwallet = createM(_minowner);
-        miners[_minowner] = minwallet;
+        wallets[_minowner] = minwallet;
+        types[_minowner] = TypeW.Miner;
         LogCreate(minwallet, _minowner);
     }
 
-    function create(address _hubowner) private returns (address) {
-        return address(new HubWallet(_hubowner, dao, Whitelist, sharesTokenAddress));
+    function createH(address _hubowner, bool _privat) private returns (address) {
+        return address(new HubWallet(_hubowner, dao, Whitelist, sharesTokenAddress,_privat));
         LogCr(_hubowner);
     }
 
@@ -72,12 +92,16 @@ contract Factory {
     }
 
 
-    function HubOf(address _owner) constant returns (address _wallet) {
-        return hubs[_owner];
+    function getWallet(address _owner) constant returns (address _wallet) {
+        return wallets[_owner];
     }
 
-    function MinerOf(address _owner) constant returns (address _wallet) {
-        return miners[_owner];
+    function getType(address _owner) constant returns (TypeW _type) {
+        return types[_owner];
+    }
+
+    function isPrivate(address _owner) constant returns (bool _private) {
+        return privat[_owner];
     }
 
 }
