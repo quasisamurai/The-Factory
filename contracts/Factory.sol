@@ -9,6 +9,7 @@ pragma solidity ^0.4.8;
 
 import './HubWallet.sol';
 import './MinerWallet.sol';
+import '.Wallet.sol';
 
 
 contract Factory {
@@ -23,6 +24,8 @@ contract Factory {
     mapping (address => address) public hubs;
 
     mapping (address => address) public miners;
+
+    mapping (address => TypeW) public type_w;
 
     event LogCreate(address wallet, address owner);
 

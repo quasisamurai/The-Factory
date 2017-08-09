@@ -6,6 +6,8 @@ pragma solidity ^0.4.8;
 
 import "./zeppelin/ownership/Ownable.sol";
 import "./Declaration.sol";
+//import "./Whitelist.sol";
+//import "./SDT.sol";
 
 
 contract Wallet  is Ownable {
@@ -53,7 +55,7 @@ contract Wallet  is Ownable {
 
       modifier onlyDao()     { if(msg.sender != DAO) throw; _; }
 
-
+//
 
       /*/
        *  Wallet state
@@ -67,13 +69,23 @@ contract Wallet  is Ownable {
           Punished
       }
 
+
+      enum TypeW {
+       Hub,
+       Miner,
+       Client
+     }
+
+
+
       Phase public currentPhase;
+      TypeW public walletType;
 
       /*/
        *  Events
       /*/
 
-
+//
         event LogPhaseSwitch(Phase newPhase);
 
         event LogPass(string pass);
@@ -91,6 +103,7 @@ contract Wallet  is Ownable {
       Factory=msg.sender;
       genesisTime=uint64(now);
 
+
       sharesTokenAddress = token(sharesAddress);
 
       //1 SNM token is needed to registrate in whitelist
@@ -105,6 +118,7 @@ contract Wallet  is Ownable {
       freezePeriod = 10 days;
 
       currentPhase = Phase.Idle;
+      walletType = TypeW.Hub;
 
     }
 
@@ -113,6 +127,14 @@ contract Wallet  is Ownable {
     /*/
      *  Public functions
     /*/
+
+
+    function getType() public returns (TypeW){
+      TypeW r=walletType;
+      return r;
+    }
+
+
 
     function Registration() public returns (bool success){
 
@@ -162,6 +184,13 @@ contract Wallet  is Ownable {
 
 
       // Example of deregister
+
+      function PayDay() public onlyOwner {
+
+        Whitelist.DeRegister(owner,this);
+      }
+
+
 /*
     function PayDay() public onlyOwner {
 

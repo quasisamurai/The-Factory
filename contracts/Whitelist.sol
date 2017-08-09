@@ -2,7 +2,7 @@ pragma solidity ^0.4.8;
 
 //Whitelist prototype
 
-//TODO: README
+
 //TODO: Correct internal structures
 
 
@@ -13,6 +13,22 @@ contract factory{
   function MinerOf(address _owner) constant returns (address _wallet);
 }
 
+contract Wallet{
+
+
+  enum TypeW {
+   Hub,
+   Miner,
+   Client
+ }
+
+ TypeW public walletType;
+
+ function getType() public returns (TypeW){
+   TypeW r=walletType;
+   return r;
+ }
+}
 
 contract Whitelist{
 
@@ -55,12 +71,13 @@ contract Whitelist{
   ISSUE - type enum cannot be implicity convertible to expected type bool
   PATCH - will use uint type as temporal solution?
 */
+/*
   enum TypeW {
    Hub,
    Miner,
    Client
  }
-
+*/
 
   //uint h=1;
 
@@ -72,6 +89,9 @@ contract Whitelist{
 
   }
 
+/*
+    TODO make incapculation for general Register function
+*/
   function RegisterHub(address _owner, address _wallet, uint64 time) public returns(bool) {
 
     address wallet = WalletsFactory.HubOf(_owner);
@@ -131,15 +151,18 @@ contract Whitelist{
   }
 
 // General deregister
-  function DeRegister(TypeW _type, address _owner, address _wallet) public returns(bool) {
+  function DeRegister(address _owner, address _wallet) public returns(bool) {
 
-    if (_type==TypeW.Hub) {
+    Wallet.TypeW _type;
+    _type = Wallet.getType();
+
+    if (_type==Wallet.TypeW.Hub) {
       address wallet_h = WalletsFactory.HubOf(_owner);
       if (wallet_h!=msg.sender) throw;
       UnRegisterHub(_owner,_wallet);
     }
 
-    if (_type==TypeW.Miner) {
+    if (_type==Wallet.TypeW.Miner) {
       address wallet_m = WalletsFactory.MinerOf(_owner);
       if (wallet_m!=msg.sender) throw;
       UnRegisterMiner(_owner,_wallet);
