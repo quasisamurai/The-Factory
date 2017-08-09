@@ -49,7 +49,7 @@ contract Whitelist{
   mapping (address => bool) public RegistredMiners;
 
   event RegistredHub(address indexed _owner,address wallet, uint64 indexed time);
-  event RegistredMiner(address indexed _owner,address wallet, uint64 indexed time, uint indexed stake);
+  event RegistredMiner(address indexed _owner,address wallet, uint64 indexed time);
 
 
   function Whitelist(factory Factory){
@@ -78,7 +78,7 @@ contract Whitelist{
 
   }
 
-  function RegisterMin(address _owner, address _wallet, uint64 time, uint stakeShare) public returns(bool) {
+  function RegisterMin(address _owner, address _wallet, uint64 time) public returns(bool) {
 
     address wallet = WalletsFactory.MinerOf(_owner);
     if (wallet!=msg.sender) throw;
@@ -96,7 +96,7 @@ contract Whitelist{
 
     RegistredMiners[wallet] = true;
 
-    RegistredMiner(_owner,wallet,time,stakeShare);
+    RegistredMiner(_owner,wallet,time);
     return true;
 
   }
@@ -117,6 +117,7 @@ contract Whitelist{
 
     RegistredMiners[wallet]= false;
   }
+
 
 
 }

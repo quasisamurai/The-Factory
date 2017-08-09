@@ -64,7 +64,7 @@ contract MinerWallet is Ownable{
   // FreezeQuote - it is defined amount of tokens need to be frozen on  this contract.
   uint public freezeQuote;
   uint public frozenFunds;
-  uint public stakeShare;
+//  uint public stakeShare;
 
   //lockedFunds - it is lockedFunds in percentage, which will be locked for every payday period.
 
@@ -111,15 +111,15 @@ contract MinerWallet is Ownable{
    *  Public functions
   /*/
 
-  function Registration(uint stake) public onlyOwner returns (bool success){
+  function Registration() public onlyOwner returns (bool success){
       if(currentPhase!=Phase.Idle) throw;
     if (sharesTokenAddress.balanceOf(this) <= freezeQuote) throw;
-    stakeShare=stake;
-    frozenFunds=stake+freezeQuote;
+  //  stakeShare=stake;
+    frozenFunds=freezeQuote;
     frozenTime=uint64(now);
     //Appendix to call register function from Whitelist contract and check it.
     // TODO add to register function frozenFunds record.
-    Whitelist.RegisterMin(owner,this,frozenTime,stake);
+    Whitelist.RegisterMin(owner,this,frozenTime);
     currentPhase=Phase.Registred;
     LogPhaseSwitch(currentPhase);
     return true;
@@ -141,11 +141,11 @@ contract MinerWallet is Ownable{
   // Miner can get funds in any time.
 
 
-    if(sharesTokenAddress.balanceOf(msg.sender)< stakeShare) throw;
+  //  if(sharesTokenAddress.balanceOf(msg.sender)< stakeShare) throw;
 
 
     uint amount = sharesTokenAddress.balanceOf(this);
-    amount = amount - stakeShare;
+  //  amount = amount - stakeShare;
     sharesTokenAddress.transfer(owner,amount);
 
   }
@@ -161,7 +161,7 @@ contract MinerWallet is Ownable{
     uint DaoCollect = frozenFunds * daoFee / 1000;
   //  DaoCollect = DaoCollect + frozenFunds;
     frozenFunds = 0;
-    stakeShare = 0;
+//    stakeShare = 0;
 
     sharesTokenAddress.transfer(DAO,DaoCollect);
 
@@ -203,7 +203,7 @@ contract MinerWallet is Ownable{
     if (currentPhase!=Phase.Suspected) throw;
     lockedFunds = 0;
     frozenFunds = 0;
-    stakeShare = 0;
+  //  stakeShare = 0;
     currentPhase = Phase.Idle;
     LogPhaseSwitch(currentPhase);
   }
