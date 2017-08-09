@@ -51,6 +51,15 @@ contract Whitelist{
   event RegistredHub(address indexed _owner,address wallet, uint64 indexed time);
   event RegistredMiner(address indexed _owner,address wallet, uint64 indexed time);
 
+ enum Type {
+   Hub,
+   Miner,
+   Client
+ }
+
+
+
+  //-----------------------------------func------------------------------------
 
   function Whitelist(factory Factory){
 
@@ -118,6 +127,9 @@ contract Whitelist{
     RegistredMiners[wallet]= false;
   }
 
-
+// General deregister
+  function DeRegister(enum _type, address _owner, address _wallet) public returns(bool) {
+    
+  }
 
 }
