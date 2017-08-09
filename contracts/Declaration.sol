@@ -1,5 +1,9 @@
 pragma solidity ^0.4.4;
 
+//Declaration contains declaretion of existed contracts and their functions
+
+
+
 /* The token is used as a voting shares */
 contract token {
     mapping (address => uint) public balances;

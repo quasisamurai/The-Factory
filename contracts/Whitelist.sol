@@ -19,6 +19,7 @@ contract Whitelist{
   factory WalletsFactory;
 
 /*
+
   struct HubInfo {
 
     address owner;
@@ -99,6 +100,8 @@ contract Whitelist{
     return true;
 
   }
+
+  //TODO - incapsulate Registration
 
   function UnRegisterHub(address _owner, address _wallet) public returns(bool) {
 
