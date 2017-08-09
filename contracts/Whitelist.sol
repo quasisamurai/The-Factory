@@ -2,54 +2,46 @@ pragma solidity ^0.4.8;
 
 //Whitelist prototype
 
-//TODO: README
+
 //TODO: Correct internal structures
 
 
 contract factory{
-  mapping (address => address) public hubs;
-  mapping (address => address) public miners;
-  function HubOf(address _owner) constant returns (address _wallet);
-  function MinerOf(address _owner) constant returns (address _wallet);
+
+  //wallet type
+  enum TypeW {
+   Hub,
+   Miner,
+   Client
+ }
+
+  mapping (address => address) public wallets;
+  mapping (address => TypeW) public types;
+
+  function getWallet(address _owner) constant returns (address _wallet);
+  function getType(address _wallet) constant returns (TypeW _type);
+
 }
+
 
 
 contract Whitelist{
 
   factory WalletsFactory;
 
-/*
-  struct HubInfo {
-
-    address owner;
-    uint64 RegTime;
-
-    // Probably we need to register and renew Phase of wallet as well.
-
-  }
 
 
-  struct MinerInfo {
-
-    address owner;
-    uint64 RegTime;
-    uint stake;
+  mapping (address => bool) public isRegistred;
 
 
-  }
-
-
-
-  mapping (address => HubInfo) public RegistredHubs;
-  mapping (address => MinerInfo) public RegistredMiners;
+/* TODO - make indexed events
 */
+  event Registred(address _owner,address wallet, uint64 time, factory.TypeW _type);
+  event unRegistred(address _owner,address wallet, uint64 time, factory.TypeW _type);
 
-  mapping (address => bool) public RegistredHubs;
-  mapping (address => bool) public RegistredMiners;
 
-  event RegistredHub(address indexed _owner,address wallet, uint64 indexed time);
-  event RegistredMiner(address indexed _owner,address wallet, uint64 indexed time, uint indexed stake);
 
+  //-----------------------------------func------------------------------------
 
   function Whitelist(factory Factory){
 
@@ -57,63 +49,42 @@ contract Whitelist{
 
   }
 
-  function RegisterHub(address _owner, address _wallet, uint64 time) public returns(bool) {
 
-    address wallet = WalletsFactory.HubOf(_owner);
+  function Register(address _owner, address _wallet, uint64 time) public returns(bool) {
+
+    address wallet = WalletsFactory.getWallet(_owner);
+    // Check that call comes from our wallet
     if (wallet!=msg.sender) throw;
+    isRegistred[wallet]=true;
 
-
-    /*
-    HubInfo info = RegistredHubs[wallet];
-    info.owner=_owner;
-    //Time is money!
-    info.RegTime=time;
-    */
-
-    RegistredHubs[wallet]= true;
-
-    RegistredHub(_owner,wallet,time);
+    factory.TypeW _type;
+    _type=WalletsFactory.getType(_wallet);
+    //Appendix event
+    Registred(_owner,wallet,time,_type);
     return true;
 
   }
 
-  function RegisterMin(address _owner, address _wallet, uint64 time, uint stakeShare) public returns(bool) {
 
-    address wallet = WalletsFactory.MinerOf(_owner);
+
+
+// General deregister
+  function DeRegister(address _owner, address _wallet) public returns(bool) {
+
+    address wallet = WalletsFactory.getWallet(_owner);
+    // Check that call comes from our wallet
     if (wallet!=msg.sender) throw;
+    isRegistred[wallet]=false;
 
+    uint64 time;
+    time=uint64(now);
+    factory.TypeW _type;
+    _type=WalletsFactory.getType(_wallet);
+    //Appendix event
+    unRegistred(_owner,wallet,time,_type);
 
+    }
 
-    /*
-    MinerInfo info = RegistredMiners[wallet];
-    info.owner=_owner;
-    //Time is money!
-    info.RegTime=time;
-
-    info.stake=stakeShare;
-    */
-
-    RegistredMiners[wallet] = true;
-
-    RegistredMiner(_owner,wallet,time,stakeShare);
-    return true;
-
-  }
-
-  function UnRegisterHub(address _owner, address _wallet) public returns(bool) {
-
-    address wallet = WalletsFactory.HubOf(_owner);
-    if (wallet!=msg.sender) throw;
-
-    RegistredHubs[wallet]= false;
-  }
-
-  function UnRegisterMiner(address _owner, address _wallet) public returns(bool) {
-    address wallet = WalletsFactory.MinerOf(_owner);
-    if (wallet!=msg.sender) throw;
-
-    RegistredMiners[wallet]= false;
-  }
 
 
 }
