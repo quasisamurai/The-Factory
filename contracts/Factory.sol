@@ -96,12 +96,12 @@ contract Factory {
         return wallets[_owner];
     }
 
-    function getType(address _owner) constant returns (TypeW _type) {
-        return types[_owner];
+    function getType(address _wallet) constant returns (TypeW _type) {
+        return types[_wallet];
     }
 
-    function isPrivate(address _owner) constant returns (bool _private) {
-        return privat[_owner];
+    function isPrivate(address _wallet) constant returns (bool _private) {
+        return privat[_wallet];
     }
 
 }

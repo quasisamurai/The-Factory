@@ -7,79 +7,39 @@ pragma solidity ^0.4.8;
 
 
 contract factory{
-  mapping (address => address) public hubs;
-  mapping (address => address) public miners;
-  function HubOf(address _owner) constant returns (address _wallet);
-  function MinerOf(address _owner) constant returns (address _wallet);
-}
 
-contract Wallet{
-
-
+  //wallet type
   enum TypeW {
    Hub,
    Miner,
    Client
  }
 
- TypeW public walletType;
+  mapping (address => address) public wallets;
+  mapping (address => TypeW) public types;
 
- function getType() public returns (TypeW){
-   TypeW r=walletType;
-   return r;
- }
+  function getWallet(address _owner) constant returns (address _wallet);
+  function getType(address _wallet) constant returns (TypeW _type);
+
 }
+
+
 
 contract Whitelist{
 
   factory WalletsFactory;
 
-/*
-
-  struct HubInfo {
-
-    address owner;
-    uint64 RegTime;
-
-    // Probably we need to register and renew Phase of wallet as well.
-
-  }
 
 
-  struct MinerInfo {
-
-    address owner;
-    uint64 RegTime;
-    uint stake;
+  mapping (address => bool) public isRegistred;
 
 
-  }
-
-
-
-  mapping (address => HubInfo) public RegistredHubs;
-  mapping (address => MinerInfo) public RegistredMiners;
+/* TODO - make indexed events
 */
+  event Registred(address _owner,address wallet, uint64 time, factory.TypeW _type);
+  event unRegistred(address _owner,address wallet, uint64 time, factory.TypeW _type);
 
-  mapping (address => bool) public RegistredHubs;
-  mapping (address => bool) public RegistredMiners;
 
-  event RegistredHub(address indexed _owner,address wallet, uint64 indexed time);
-  event RegistredMiner(address indexed _owner,address wallet, uint64 indexed time);
-
-/* TODO - fix enum conversion issue?
-  ISSUE - type enum cannot be implicity convertible to expected type bool
-  PATCH - will use uint type as temporal solution?
-*/
-/*
-  enum TypeW {
-   Hub,
-   Miner,
-   Client
- }
-*/
-
-  //uint h=1;
 
   //-----------------------------------func------------------------------------
 
@@ -89,86 +49,42 @@ contract Whitelist{
 
   }
 
-/*
-    TODO make incapculation for general Register function
-*/
-  function RegisterHub(address _owner, address _wallet, uint64 time) public returns(bool) {
 
-    address wallet = WalletsFactory.HubOf(_owner);
+  function Register(address _owner, address _wallet, uint64 time) public returns(bool) {
+
+    address wallet = WalletsFactory.getWallet(_owner);
+    // Check that call comes from our wallet
     if (wallet!=msg.sender) throw;
+    isRegistred[wallet]=true;
 
-
-    /*
-    HubInfo info = RegistredHubs[wallet];
-    info.owner=_owner;
-    //Time is money!
-    info.RegTime=time;
-    */
-
-    RegistredHubs[wallet]= true;
-
-    RegistredHub(_owner,wallet,time);
+    factory.TypeW _type;
+    _type=WalletsFactory.getType(_wallet);
+    //Appendix event
+    Registred(_owner,wallet,time,_type);
     return true;
 
   }
 
-  function RegisterMin(address _owner, address _wallet, uint64 time) public returns(bool) {
-
-    address wallet = WalletsFactory.MinerOf(_owner);
-    if (wallet!=msg.sender) throw;
 
 
-
-    /*
-    MinerInfo info = RegistredMiners[wallet];
-    info.owner=_owner;
-    //Time is money!
-    info.RegTime=time;
-
-    info.stake=stakeShare;
-    */
-
-    RegistredMiners[wallet] = true;
-
-    RegistredMiner(_owner,wallet,time);
-    return true;
-
-  }
-
-  //TODO - incapsulate Registration
-
-  function UnRegisterHub(address _owner, address _wallet) private returns(bool) {
-
-
-
-    RegistredHubs[_wallet]= false;
-  }
-
-  function UnRegisterMiner(address _owner, address _wallet) private returns(bool) {
-
-
-    RegistredMiners[_wallet]= false;
-  }
 
 // General deregister
   function DeRegister(address _owner, address _wallet) public returns(bool) {
 
-    Wallet.TypeW _type;
-    _type = Wallet.getType();
+    address wallet = WalletsFactory.getWallet(_owner);
+    // Check that call comes from our wallet
+    if (wallet!=msg.sender) throw;
+    isRegistred[wallet]=false;
 
-    if (_type==Wallet.TypeW.Hub) {
-      address wallet_h = WalletsFactory.HubOf(_owner);
-      if (wallet_h!=msg.sender) throw;
-      UnRegisterHub(_owner,_wallet);
+    uint64 time;
+    time=uint64(now);
+    factory.TypeW _type;
+    _type=WalletsFactory.getType(_wallet);
+    //Appendix event
+    unRegistred(_owner,wallet,time,_type);
+
     }
 
-    if (_type==Wallet.TypeW.Miner) {
-      address wallet_m = WalletsFactory.MinerOf(_owner);
-      if (wallet_m!=msg.sender) throw;
-      UnRegisterMiner(_owner,_wallet);
-    }
 
-    // Add unregister client func?
-  }
 
 }
