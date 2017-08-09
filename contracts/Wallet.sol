@@ -131,8 +131,9 @@ contract Wallet  is Ownable {
 
 
     //Register in whitelist
-    function CheckIn() private returns (bool success){
-
+    function CheckIn() public returns (bool success){
+        if(msg.sender!=address(this)) throw;
+        // double check
         if(currentPhase!=Phase.Idle) throw;
 
       frozenTime=uint64(now);
@@ -147,9 +148,10 @@ contract Wallet  is Ownable {
 
 
     //DeRegister in whitelist
-    function ChekOut() private returns (bool success){
+    function CheckOut() public returns (bool success){
 
-
+        if(msg.sender!=address(this)) throw;
+        //double check
         if(currentPhase!=Phase.Registred) throw;
 
         // Comment it for test.
@@ -178,17 +180,16 @@ contract Wallet  is Ownable {
 
 
 
-    function suspect() public onlyDao {
-      if (currentPhase!=Phase.Registred) throw;
+    function suspect() public  {
+  //    if (currentPhase!=Phase.Registred) throw;
   //    frozenFunds = 0;
-      lockedFunds=sharesTokenAddress.balanceOf(this);
-      frozenTime = uint64(now);
-      currentPhase = Phase.Suspected;
-      LogPhaseSwitch(currentPhase);
-      freezePeriod = 120 days;
+  //    CheckOut();
 
-      ChekOut();
-
+//      lockedFunds=sharesTokenAddress.balanceOf(this);
+//      frozenTime = uint64(now);
+//      currentPhase = Phase.Suspected;
+//      LogPhaseSwitch(currentPhase);
+  //   freezePeriod = 120 days;
     }
 
     function gulag() public onlyDao {
