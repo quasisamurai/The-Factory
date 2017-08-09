@@ -67,16 +67,6 @@ contract Wallet  is Ownable {
           Punished
       }
 
- /* This part should be transfered to the Factory
-
-      enum TypeW {
-       Hub,
-       Miner,
-       Client
-     }
-
-    TypeW public walletType;
- */
 
       Phase public currentPhase;
 
@@ -108,7 +98,7 @@ contract Wallet  is Ownable {
 
       frozenTime=uint64(now);
       //Appendix to call register function from Whitelist contract and check it.
-    //  Whitelist.RegisterHub(owner,this,frozenTime);
+      Whitelist.Register(owner,this,frozenTime);
 
       currentPhase=Phase.Registred;
       LogPhaseSwitch(currentPhase);
@@ -126,9 +116,9 @@ contract Wallet  is Ownable {
 
         // Comment it for test.
       if(now < (frozenTime + freezePeriod)) throw;
-      frozenTime=uint64(now);
+
       //Appendix to call register function from Whitelist contract and check it.
-    //  Whitelist.DeRegister(owner,this);
+      Whitelist.DeRegister(owner,this);
 
       currentPhase=Phase.Idle;
       LogPhaseSwitch(currentPhase);

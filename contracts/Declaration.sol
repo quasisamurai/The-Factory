@@ -21,12 +21,9 @@ contract token {
 contract whitelist {
 
 
-
-  function RegisterHub(address _owner, address wallet, uint64 time) public returns(bool);
-  function RegisterMin(address _owner, address wallet, uint64 time) public returns(bool);
-
+  function Register(address _owner, address _wallet, uint64 time) public returns(bool);
   function DeRegister(address _owner, address _wallet) public returns(bool);
-//  mapping (address => HubInfo) public Registred;
+
 }
 
 contract Declaration {
