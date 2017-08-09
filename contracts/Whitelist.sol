@@ -128,8 +128,8 @@ contract Whitelist{
   }
 
 // General deregister
-  function DeRegister(enum _type, address _owner, address _wallet) public returns(bool) {
-    
+  function DeRegister(Type _type, address _owner, address _wallet) public returns(bool) {
+
   }
 
 }
