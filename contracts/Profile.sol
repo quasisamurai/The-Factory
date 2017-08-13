@@ -19,10 +19,10 @@ contract Profile  is Ownable {
 
       address public DAO;
       address public Factory;
+//
 
-
-      //address public Whitelist;
-      whitelist Whitelist;
+      //address public Network;
+      network Network;
 
 
       token public sharesTokenAddress;
@@ -90,15 +90,15 @@ contract Profile  is Ownable {
 
 
 
-    //Register in whitelist
+    //Register in Network
     function CheckIn() public returns (bool success){
         if(msg.sender!=address(this)) throw;
         // double check
         if(currentPhase!=Phase.Idle) throw;
 
       frozenTime=uint64(now);
-      //Appendix to call register function from Whitelist contract and check it.
-      Whitelist.Register(owner,this,frozenTime);
+      //Appendix to call register function from Network contract and check it.
+      Network.Register(owner,this,frozenTime);
 
       currentPhase=Phase.Registred;
       LogPhaseSwitch(currentPhase);
@@ -107,7 +107,7 @@ contract Profile  is Ownable {
     }
 
 
-    //DeRegister in whitelist
+    //DeRegister in Network
     function CheckOut() public returns (bool success){
 
         if(msg.sender!=address(this)) throw;
@@ -117,8 +117,8 @@ contract Profile  is Ownable {
         // Comment it for test.
       if(now < (frozenTime + freezePeriod)) throw;
 
-      //Appendix to call register function from Whitelist contract and check it.
-      Whitelist.DeRegister(owner,this);
+      //Appendix to call register function from Network contract and check it.
+      Network.DeRegister(owner,this);
 
       currentPhase=Phase.Idle;
       LogPhaseSwitch(currentPhase);

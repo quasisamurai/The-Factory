@@ -18,7 +18,7 @@ contract token {
 
 
 
-contract whitelist {
+contract network {
 
 
   function Register(address _owner, address _wallet, uint64 time) public returns(bool);
