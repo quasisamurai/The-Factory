@@ -14,16 +14,16 @@ import "./Profile.sol";
 contract MinerProfile is Ownable, Profile{
 
   ///@dev constructor
-  function MinerProfile(address _minowner,address _dao,whitelist _whitelist,token sharesAddress){
+  function MinerProfile(address _minowner,address _dao,network _Network,token sharesAddress){
     owner=_minowner;
     DAO=_dao;
-    Whitelist= whitelist(_whitelist);
+    Network= network(_Network);
     Factory=msg.sender;
     genesisTime=uint64(now);
 
     sharesTokenAddress = token(sharesAddress);
 
-    //1 SNM token is needed to registrate in whitelist
+    //1 SNM token is needed to registrate in Network
     freezeQuote = 1 * (1 ether / 1 wei);
 
 
@@ -49,9 +49,9 @@ contract MinerProfile is Ownable, Profile{
     if (sharesTokenAddress.balanceOf(this) <= freezeQuote) throw;
     frozenFunds=freezeQuote;
 
-    //Appendix to call register function from Whitelist contract and check it.
+    //Appendix to call register function from Network contract and check it.
     if(!super.CheckIn()) throw;
-    //Whitelist.RegisterMin(owner,this,frozenTime);
+    //Network.RegisterMin(owner,this,frozenTime);
 
     return true;
   }
@@ -79,7 +79,7 @@ contract MinerProfile is Ownable, Profile{
 
     //Here need to do Unregister function
     if(!super.CheckOut()) throw;
-    //Whitelist.UnRegisterMiner(owner,this);
+    //Network.UnRegisterMiner(owner,this);
 
   }
 

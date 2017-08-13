@@ -19,16 +19,16 @@ contract HubProfile is Ownable, Profile{
   bool privat = false;
 
   ///@dev constructor
-  function HubProfile(address _hubowner,address _dao,whitelist _whitelist,token sharesAddress, bool _privat){
+  function HubProfile(address _hubowner,address _dao,network _Network,token sharesAddress, bool _privat){
     owner=_hubowner;
     DAO=_dao;
-    Whitelist= whitelist(_whitelist);
+    Network= network(_Network);
     Factory=msg.sender;
     genesisTime=uint64(now);
 
     sharesTokenAddress = token(sharesAddress);
 
-    //1 SNM token is needed to registrate in whitelist
+    //1 SNM token is needed to registrate in Network
     freezeQuote = 1 * (1 ether / 1 wei);
 
     // in the future this percent will be defined by factory.
@@ -62,7 +62,7 @@ contract HubProfile is Ownable, Profile{
 
     frozenFunds=freezeQuote;
 
-    //Appendix to call register function from Whitelist contract and check it.
+    //Appendix to call register function from Network contract and check it.
 
     if(!super.CheckIn()) throw;
   //super.CheckIn();
