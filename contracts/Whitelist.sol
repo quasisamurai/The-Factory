@@ -8,18 +8,18 @@ pragma solidity ^0.4.8;
 
 contract factory{
 
-  //wallet type
+  //Profile type
   enum TypeW {
    Hub,
    Miner,
    Client
  }
 
-  mapping (address => address) public wallets;
+  mapping (address => address) public Profiles;
   mapping (address => TypeW) public types;
 
-  function getWallet(address _owner) constant returns (address _wallet);
-  function getType(address _wallet) constant returns (TypeW _type);
+  function getProfile(address _owner) constant returns (address _Profile);
+  function getType(address _Profile) constant returns (TypeW _type);
 
 }
 
@@ -27,7 +27,7 @@ contract factory{
 
 contract Whitelist{
 
-  factory WalletsFactory;
+  factory ProfilesFactory;
 
 
 
@@ -36,8 +36,8 @@ contract Whitelist{
 
 /* TODO - make indexed events
 */
-  event Registred(address _owner,address wallet, uint64 time, factory.TypeW _type);
-  event unRegistred(address _owner,address wallet, uint64 time, factory.TypeW _type);
+  event Registred(address _owner,address Profile, uint64 time, factory.TypeW _type);
+  event unRegistred(address _owner,address Profile, uint64 time, factory.TypeW _type);
 
 
 
@@ -45,22 +45,22 @@ contract Whitelist{
 
   function Whitelist(factory Factory){
 
-    WalletsFactory = factory(Factory);
+    ProfilesFactory = factory(Factory);
 
   }
 
 
-  function Register(address _owner, address _wallet, uint64 time) public returns(bool) {
+  function Register(address _owner, address _Profile, uint64 time) public returns(bool) {
 
-    address wallet = WalletsFactory.getWallet(_owner);
-    // Check that call comes from our wallet
-    if (wallet!=msg.sender) throw;
-    isRegistred[wallet]=true;
+    address Profile = ProfilesFactory.getProfile(_owner);
+    // Check that call comes from our Profile
+    if (Profile!=msg.sender) throw;
+    isRegistred[Profile]=true;
 
     factory.TypeW _type;
-    _type=WalletsFactory.getType(_wallet);
+    _type=ProfilesFactory.getType(_Profile);
     //Appendix event
-    Registred(_owner,wallet,time,_type);
+    Registred(_owner,Profile,time,_type);
     return true;
 
   }
@@ -69,19 +69,19 @@ contract Whitelist{
 
 
 // General deregister
-  function DeRegister(address _owner, address _wallet) public returns(bool) {
+  function DeRegister(address _owner, address _Profile) public returns(bool) {
 
-    address wallet = WalletsFactory.getWallet(_owner);
-    // Check that call comes from our wallet
-    if (wallet!=msg.sender) throw;
-    isRegistred[wallet]=false;
+    address Profile = ProfilesFactory.getProfile(_owner);
+    // Check that call comes from our Profile
+    if (Profile!=msg.sender) throw;
+    isRegistred[Profile]=false;
 
     uint64 time;
     time=uint64(now);
     factory.TypeW _type;
-    _type=WalletsFactory.getType(_wallet);
+    _type=ProfilesFactory.getType(_Profile);
     //Appendix event
-    unRegistred(_owner,wallet,time,_type);
+    unRegistred(_owner,Profile,time,_type);
 
     }
 

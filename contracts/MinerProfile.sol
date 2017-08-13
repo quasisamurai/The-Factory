@@ -1,6 +1,6 @@
 pragma solidity ^0.4.4;
 
-//Raw prototype for Hub wallet contract.
+//Raw prototype for Miner Profile contract.
 
 
 
@@ -8,13 +8,13 @@ pragma solidity ^0.4.4;
 
 import "./zeppelin/ownership/Ownable.sol";
 
-import "./Wallet.sol";
+import "./Profile.sol";
 
 
-contract MinerWallet is Ownable, Wallet{
+contract MinerProfile is Ownable, Profile{
 
   ///@dev constructor
-  function MinerWallet(address _minowner,address _dao,whitelist _whitelist,token sharesAddress){
+  function MinerProfile(address _minowner,address _dao,whitelist _whitelist,token sharesAddress){
     owner=_minowner;
     DAO=_dao;
     Whitelist= whitelist(_whitelist);
@@ -56,10 +56,10 @@ contract MinerWallet is Ownable, Wallet{
     return true;
   }
 
-  function pullMoney(address hubwallet) public onlyOwner{
-    uint val = sharesTokenAddress.allowance(hubwallet,this);
-    sharesTokenAddress.transferFrom(hubwallet,this,val);
-    pulledMoney(hubwallet,val);
+  function pullMoney(address hubProfile) public onlyOwner{
+    uint val = sharesTokenAddress.allowance(hubProfile,this);
+    sharesTokenAddress.transferFrom(hubProfile,this,val);
+    pulledMoney(hubProfile,val);
   }
 
 

@@ -1,14 +1,14 @@
 pragma solidity ^0.4.8;
 
 
-//Raw prototype of wallet factory
+//Raw prototype of Profile factory
 
 
 //TODO - DOCS
 
 
-import './HubWallet.sol';
-import './MinerWallet.sol';
+import './HubProfile.sol';
+import './MinerProfile.sol';
 
 
 
@@ -20,29 +20,29 @@ contract Factory {
 
     whitelist Whitelist;
 
-    //wallet type
+    //Profile type
     enum TypeW {
      Hub,
      Miner,
      Client
    }
 
-  TypeW public walletType;
+  TypeW public ProfileType;
 
 
-    // owner => wallet
-    mapping (address => address) public wallets;
+    // owner => Profile
+    mapping (address => address) public Profiles;
 
-    //wallet types
-    // wallet => type
+    //Profile types
+    // Profile => type
     mapping (address => TypeW) public types;
 
     //Type of hubs.
-    // wallet => type. true for private pools (clusters, datacentres, etc)
+    // Profile => type. true for private pools (clusters, datacentres, etc)
     mapping (address => bool) public privat;
 
 
-    event LogCreate(address wallet, address owner);
+    event LogCreate(address Profile, address owner);
 
     event LogCr(address owner);
     //  event Weird(string thing);
@@ -66,42 +66,42 @@ contract Factory {
 
     function createHub(bool _privat) public returns (address) {
         address _hubowner = msg.sender;
-        address hubwallet = createH(_hubowner,_privat);
-        wallets[_hubowner] = hubwallet;
-        types[hubwallet] = TypeW.Hub;
-        privat[hubwallet] = _privat;
-        LogCreate(hubwallet, _hubowner);
+        address hubProfile = createH(_hubowner,_privat);
+        Profiles[_hubowner] = hubProfile;
+        types[hubProfile] = TypeW.Hub;
+        privat[hubProfile] = _privat;
+        LogCreate(hubProfile, _hubowner);
     }
 
     function createMiner() public returns (address) {
         address _minowner = msg.sender;
-        address minwallet = createM(_minowner);
-        wallets[_minowner] = minwallet;
+        address minProfile = createM(_minowner);
+        Profiles[_minowner] = minProfile;
         types[_minowner] = TypeW.Miner;
-        LogCreate(minwallet, _minowner);
+        LogCreate(minProfile, _minowner);
     }
 
     function createH(address _hubowner, bool _privat) private returns (address) {
-        return address(new HubWallet(_hubowner, dao, Whitelist, sharesTokenAddress,_privat));
+        return address(new HubProfile(_hubowner, dao, Whitelist, sharesTokenAddress,_privat));
         LogCr(_hubowner);
     }
 
     function createM(address _minowner) private returns (address) {
-        return address(new MinerWallet(_minowner, dao, Whitelist, sharesTokenAddress));
+        return address(new MinerProfile(_minowner, dao, Whitelist, sharesTokenAddress));
         LogCr(_minowner);
     }
 
 
-    function getWallet(address _owner) constant returns (address _wallet) {
-        return wallets[_owner];
+    function getProfile(address _owner) constant returns (address _Profile) {
+        return Profiles[_owner];
     }
 
-    function getType(address _wallet) constant returns (TypeW _type) {
-        return types[_wallet];
+    function getType(address _Profile) constant returns (TypeW _type) {
+        return types[_Profile];
     }
 
-    function isPrivate(address _wallet) constant returns (bool _private) {
-        return privat[_wallet];
+    function isPrivate(address _Profile) constant returns (bool _private) {
+        return privat[_Profile];
     }
 
 }

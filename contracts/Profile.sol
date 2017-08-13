@@ -1,6 +1,6 @@
 pragma solidity ^0.4.8;
 
-//sonm wallet abstraction
+//sonm profile abstraction
 
 
 
@@ -9,7 +9,7 @@ import "./Declaration.sol";
 
 
 
-contract Wallet  is Ownable {
+contract Profile  is Ownable {
 
 
 

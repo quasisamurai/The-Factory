@@ -1,6 +1,6 @@
 pragma solidity ^0.4.8;
 
-//Raw prototype for Hub wallet contract.
+//Raw prototype for Hub Profile contract.
 
 
 
@@ -10,16 +10,16 @@ pragma solidity ^0.4.8;
 
 import "./zeppelin/ownership/Ownable.sol";
 //import "./Declaration.sol";
-import "./Wallet.sol";
+import "./Profile.sol";
 
 
-contract HubWallet is Ownable, Wallet{
+contract HubProfile is Ownable, Profile{
 
 
   bool privat = false;
 
   ///@dev constructor
-  function HubWallet(address _hubowner,address _dao,whitelist _whitelist,token sharesAddress, bool _privat){
+  function HubProfile(address _hubowner,address _dao,whitelist _whitelist,token sharesAddress, bool _privat){
     owner=_hubowner;
     DAO=_dao;
     Whitelist= whitelist(_whitelist);
@@ -39,7 +39,7 @@ contract HubWallet is Ownable, Wallet{
 
     freezePeriod = 10 days;
 
-    
+
       privat=_privat;
 
 
