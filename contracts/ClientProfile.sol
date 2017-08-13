@@ -1,4 +1,4 @@
-pragma solidity ^0.4.10;
+pragma solidity ^0.4.8;
 
 //Raw prototype for Client Profile contract.
 
@@ -57,7 +57,7 @@ contract ClientProfile is Ownable, Profile{
 
     if (sharesTokenAddress.balanceOf(this) <= freezeQuote) throw;
 
-    
+
 
     //Appendix to call register function from Network contract and check it.
 

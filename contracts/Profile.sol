@@ -28,7 +28,7 @@ contract Profile  is Ownable {
       token public sharesTokenAddress;
 
 
-      
+
       // FreezeQuote - it is defined amount of tokens need to be frozen on  this contract.
       uint public freezeQuote;
 
@@ -164,7 +164,7 @@ contract Profile  is Ownable {
       if(currentPhase!=Phase.Registred) throw;
       uint val = sharesTokenAddress.allowance(Profile,this);
       sharesTokenAddress.transferFrom(Profile,this,val);
-      pulledMoney(Profile,val);
+
     }
 
 
@@ -179,7 +179,7 @@ contract Profile  is Ownable {
         DaoCollect = lockedFunds * daoFee / 1000;
 
         DaoCollect = DaoCollect + turn;
-        frozenFunds = 0;
+
         lockedFunds= 0;
 
         // Comment it for test.
@@ -190,7 +190,7 @@ contract Profile  is Ownable {
 
         //dao got's 0.5% in such terms.
           sharesTokenAddress.transfer(DAO,DaoCollect);
-          if (!super.CheckOut()) throw;
+          if (!CheckOut()) throw;
 
       }
 
