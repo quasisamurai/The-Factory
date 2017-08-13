@@ -49,6 +49,8 @@ contract Profile  is Ownable {
 
       uint DaoCollect;
 
+      uint localRate;
+
 
       modifier onlyDao()     { if(msg.sender != DAO) throw; _; }
 
@@ -101,7 +103,6 @@ contract Profile  is Ownable {
 
       currentPhase=Phase.Registred;
       LogPhaseSwitch(currentPhase);
-
       return true;
     }
 
@@ -121,7 +122,6 @@ contract Profile  is Ownable {
 
       currentPhase=Phase.Idle;
       LogPhaseSwitch(currentPhase);
-
       return true;
     }
 
@@ -131,16 +131,10 @@ contract Profile  is Ownable {
 
           uint lockFee = _value * daoFee / 1000;
           uint lock = lockedFunds + lockFee;
-
-
           uint value=_value - lockFee;
-
           if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) throw;
-
           lockedFunds=lock;
-
-
-      sharesTokenAddress.transfer(_to,value);
+          sharesTokenAddress.transfer(_to,value);
 
     }
 
@@ -160,12 +154,24 @@ contract Profile  is Ownable {
           sharesTokenAddress.approve(_to,value);
     }
 
-    function pullMoney(address Profile) public onlyOwner{
+    function pullMoney(address Profile) public{
       if(currentPhase!=Phase.Registred) throw;
       uint val = sharesTokenAddress.allowance(Profile,this);
       sharesTokenAddress.transferFrom(Profile,this,val);
 
     }
+
+      function buyRate(uint amount) public onlyOwner {
+
+        if(currentPhase!=Phase.Registred) throw;
+        uint lock = lockedFunds;
+
+        if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) throw;
+
+        lockedFunds = lockedFunds + amount;
+        localRate = localRate + amount;
+
+      }
 
 
       function PayDay() public onlyOwner {
@@ -173,13 +179,9 @@ contract Profile  is Ownable {
         if(currentPhase!=Phase.Registred) throw;
 
         uint balance = sharesTokenAddress.balanceOf(msg.sender);
-
         uint turn = balance * daoFee / 1000;
-
         DaoCollect = lockedFunds * daoFee / 1000;
-
         DaoCollect = DaoCollect + turn;
-
         lockedFunds= 0;
 
         // Comment it for test.
@@ -205,9 +207,6 @@ contract Profile  is Ownable {
 
     function suspect() public  {
       if (currentPhase!=Phase.Registred) throw;
-
-  //
-
       lockedFunds=sharesTokenAddress.balanceOf(this);
       frozenTime = uint64(now);
       currentPhase = Phase.Suspected;
@@ -229,7 +228,6 @@ contract Profile  is Ownable {
     function rehub() public onlyDao {
       if (currentPhase!=Phase.Suspected) throw;
       lockedFunds = 0;
-
       currentPhase = Phase.Idle;
       LogPhaseSwitch(currentPhase);
     }
