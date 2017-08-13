@@ -57,7 +57,7 @@ contract ClientProfile is Ownable, Profile{
 
     if (sharesTokenAddress.balanceOf(this) <= freezeQuote) throw;
 
-    frozenFunds=freezeQuote;
+    
 
     //Appendix to call register function from Network contract and check it.
 
@@ -69,50 +69,7 @@ contract ClientProfile is Ownable, Profile{
     return true;
   }
 
-  function give(address _to, uint _value) public onlyOwner {
 
 
-    if(currentPhase!=Phase.Registred) throw;
-    sharesTokenAddress.approve(_to,value);
-  }
-
-  function transfer(address _to, uint _value) public onlyOwner {
-
-    if(currentPhase!=Phase.Registred) throw;
-    sharesTokenAddress.transfer(_to,value);
-
-  }
-
-
-  function pullMoney(address hubProfile) public onlyOwner{
-    uint val = sharesTokenAddress.allowance(hubProfile,this);
-    sharesTokenAddress.transferFrom(hubProfile,this,val);
-    pulledMoney(hubProfile,val);
-  }
-
-
-
-
-  function PayDay() public onlyOwner {
-
-    if(currentPhase!=Phase.Registred) throw;
-  //  if (daoflag!=true) throw;
-
-    DaoCollect = lockedFunds * daoFee / 1000;
-    DaoCollect = DaoCollect + frozenFunds;
-    frozenFunds = 0;
-    lockedFunds= 0;
-
-    // Comment it for test.
-    if(now < (frozenTime + freezePeriod)) throw;
-
-    //For test usage
-  //  DaoCollect=0;
-
-    //dao got's 0.5% in such terms.
-      sharesTokenAddress.transfer(DAO,DaoCollect);
-      if (!super.CheckOut()) throw;
-
-  }
 
 }

@@ -28,11 +28,10 @@ contract Profile  is Ownable {
       token public sharesTokenAddress;
 
 
-      //uint public freezePercent;
-
+      
       // FreezeQuote - it is defined amount of tokens need to be frozen on  this contract.
       uint public freezeQuote;
-      uint public frozenFunds;
+
 
       //lockedFunds - it is lockedFunds in percentage, which will be locked for every payday period.
       uint public lockPercent;
@@ -126,15 +125,79 @@ contract Profile  is Ownable {
       return true;
     }
 
+    function transfer(address _to, uint _value) public onlyOwner {
+
+      if(currentPhase!=Phase.Registred) throw;
+
+          uint lockFee = _value * daoFee / 1000;
+          uint lock = lockedFunds + lockFee;
 
 
+          uint value=_value - lockFee;
+
+          if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) throw;
+
+          lockedFunds=lock;
 
 
+      sharesTokenAddress.transfer(_to,value);
 
-    function withdraw(address to) public onlyOwner {
+    }
+
+    //Otobrat i podelit
+    function give(address _to, uint _value) public onlyOwner {
+
+
+      if(currentPhase!=Phase.Registred) throw;
+
+          uint lockFee = _value * lockPercent / 100;
+          uint lock = lockedFunds + lockFee;
+          uint value=_value - lockFee;
+
+          if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) throw;
+
+          lockedFunds=lock;
+          sharesTokenAddress.approve(_to,value);
+    }
+
+    function pullMoney(address Profile) public onlyOwner{
+      if(currentPhase!=Phase.Registred) throw;
+      uint val = sharesTokenAddress.allowance(Profile,this);
+      sharesTokenAddress.transferFrom(Profile,this,val);
+      pulledMoney(Profile,val);
+    }
+
+
+      function PayDay() public onlyOwner {
+
+        if(currentPhase!=Phase.Registred) throw;
+
+        uint balance = sharesTokenAddress.balanceOf(msg.sender);
+
+        uint turn = balance * daoFee / 1000;
+
+        DaoCollect = lockedFunds * daoFee / 1000;
+
+        DaoCollect = DaoCollect + turn;
+        frozenFunds = 0;
+        lockedFunds= 0;
+
+        // Comment it for test.
+        if(now < (frozenTime + freezePeriod)) throw;
+
+        //For test usage
+      //  DaoCollect=0;
+
+        //dao got's 0.5% in such terms.
+          sharesTokenAddress.transfer(DAO,DaoCollect);
+          if (!super.CheckOut()) throw;
+
+      }
+
+    function withdraw(address to, uint amount) public onlyOwner {
 
       if(currentPhase!=Phase.Idle) throw;
-      uint amount = sharesTokenAddress.balanceOf(this);
+    //  uint amount = sharesTokenAddress.balanceOf(this);
       sharesTokenAddress.transfer(to,amount);
     }
 
@@ -142,7 +205,7 @@ contract Profile  is Ownable {
 
     function suspect() public  {
       if (currentPhase!=Phase.Registred) throw;
-      frozenFunds = 0;
+
   //
 
       lockedFunds=sharesTokenAddress.balanceOf(this);
@@ -166,7 +229,6 @@ contract Profile  is Ownable {
     function rehub() public onlyDao {
       if (currentPhase!=Phase.Suspected) throw;
       lockedFunds = 0;
-      frozenFunds = 0;
 
       currentPhase = Phase.Idle;
       LogPhaseSwitch(currentPhase);

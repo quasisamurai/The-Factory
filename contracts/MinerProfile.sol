@@ -32,11 +32,9 @@ contract MinerProfile is Ownable, Profile{
     daoFee = 5;
 
     // time of work period.
-    freezePeriod = 5 days;
+    freezePeriod = 10 days;
 
   }
-
-  event pulledMoney(address hub, uint amount);
 
 
 
@@ -47,7 +45,6 @@ contract MinerProfile is Ownable, Profile{
   function Registration() public onlyOwner returns (bool success){
       if(currentPhase!=Phase.Idle) throw;
     if (sharesTokenAddress.balanceOf(this) <= freezeQuote) throw;
-    frozenFunds=freezeQuote;
 
     //Appendix to call register function from Network contract and check it.
     if(!super.CheckIn()) throw;
@@ -56,31 +53,6 @@ contract MinerProfile is Ownable, Profile{
     return true;
   }
 
-  function pullMoney(address hubProfile) public onlyOwner{
-    uint val = sharesTokenAddress.allowance(hubProfile,this);
-    sharesTokenAddress.transferFrom(hubProfile,this,val);
-    pulledMoney(hubProfile,val);
-  }
 
-
-  function PayDay() public onlyOwner {
-
-    if(currentPhase!=Phase.Registred) throw;
-
-    if(now < (frozenTime + freezePeriod)) throw;
-
-    //dao got's 0.5% in such terms.
-    uint DaoCollect = frozenFunds * daoFee / 1000;
-  //  DaoCollect = DaoCollect + frozenFunds;
-    frozenFunds = 0;
-
-
-    sharesTokenAddress.transfer(DAO,DaoCollect);
-
-    //Here need to do Unregister function
-    if(!super.CheckOut()) throw;
-    //Network.UnRegisterMiner(owner,this);
-
-  }
 
 }
