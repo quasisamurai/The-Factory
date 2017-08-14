@@ -20,8 +20,8 @@ import { default as contract } from 'truffle-contract'
 import token_artifacts from '../../build/contracts/SDT.json'
 import factory_artifacts from '../../build/contracts/Factory.json'
 import whitelist_artifacts from '../../build/contracts/Whitelist.json'
-import hub_artifacts from '../../build/contracts/HubWallet.json'
-import miner_artifacts from '../../build/contracts/MinerWallet.json'
+import hub_artifacts from '../../build/contracts/HubProfile.json'
+import miner_artifacts from '../../build/contracts/MinerProfile.json'
 
 
 
@@ -86,148 +86,7 @@ window.App = {
 
 
         //Need(!!) to remove it when deploying live
-        $("#transfer_to").val(accounts[1]);
-        $("#mint_to").val(accounts[0]);
-        console.log("accounts1");
-        console.log(accounts[1]);
-
-
-
-
-
-
-    });
-
-        //  var inst;
-        /**
-          Token.deployed().then(function (inst) {
-            address=inst.address;
-            console.log("address");
-            console.log(address);
-            self.refreshAddress();
-          });
-**/
-
-
-//        There must be a functions that will be work onload
-          self.refreshAddress();
-
-        //  self.sendJSON();
-  },
-
-  setStatus: function(message) {
-    var status = document.getElementById("status");
-    status.innerHTML = message;
-  },
-
-  setStatusPos: function (pos, msg){
-  $(pos).html(msg);
-
-  },
-
-refreshAddress: function () {
-  var self=this;
-  var instance;
-  var tok;
-//  console.log("refresh init");
-  Token.deployed().then(function(instance) {
-    tok=instance;
-  //  console.log(tok);
-    $("#tokdAddress").html(tok.address);
-  //  console.log(tok.address);
-
-  //  self.hubBalance();
-    self.whitelistAddr();
-    return tok.symbol.call();
-  }).then(function (sym) {
-    $("#t_sym1").html(sym);
-  //  console.log(sym);
-  });
-},
-
-
-
-hubBalance: function () {
-  var self=this;
-  var pos="#balance";
-  var instance;
-  var msg;
-  var tok;
-  Token.deployed().then(function(instance){
-    tok=instance;
-    msg="Wait..";
-    self.setStatusPos(pos,msg);
-     return tok.balanceOf(account);
-   }).then(function (tx) {
-  //     $("#totalSup").html(ts)
-        console.log("tx:");
-        console.log(tx);
-      // Should I use msg=ts.valueOf(); ?
-        msg=tx.valueOf();
-        msg=web3.fromWei(msg);
-        self.setStatusPos(pos,msg);
-  });
-
-},
-
-whitelistAddr: function () {
-  var self=this;
-  var pos="#whitelist";
-  var instance;
-  var msg;
-  var whl;
-
-
-
-  Whitelist.deployed().then(function(instance){
-    whl=instance;
-      $("#whitelist").html(whl.address);
-      console.log(whl.address);
-});
-},
-
-  changeAdresses: function () {
-    var self=this;
-    var pos="#whitelist";
-    var instance;
-    var msg;
-    var fac;
-    var dao = account;
-
-    var to = $("#address1").val();
-
-    Factory.deployed().then(function(instance){
-      fac=instance;
-      return fac.changeAdresses(dao, to, {from: account})
-    }).then(function (tx) {
-         console.log("tx:");
-         console.log(tx);
-         msg="Transaction complete";
-         self.setStatusPos(pos,msg);
-         self.refreshAddress();
-   }).catch(function(e) {
-       console.log(e);
-
-      msg="Ошибка при отправке, смотри консоль";
-      self.setStatusPos(pos,msg);
-     });
-
-  },
-
-
-  createHub: function () {
-
-    var self=this;
-    var pos="#createStatus";
-    var instance;
-    var msg;
-    var fac;
-
-    Factory.deployed().then(function(instance){
-      fac=instance;
-      return fac.createHub({from: account, gas: 3000000})
-    }).then(function (tx) {
-        hubaddress = tx;
+        $("#transfer_to").val(accounts[1]);H
          console.log("tx:");
          console.log(tx);
          msg="Transaction complete";
@@ -244,7 +103,7 @@ whitelistAddr: function () {
 
   },
 
-  registerHub: function () {
+registerHub: function () {
     var self=this;
     var pos="#hubreg_result";
     var instance;
@@ -262,6 +121,58 @@ whitelistAddr: function () {
          msg="Transaction complete";
          self.setStatusPos(pos,msg);
       //   self.refreshAddress();
+   }).catch(function(e) {
+       console.log(e);
+
+      msg="Ошибка при отправке, смотри консоль";
+      self.setStatusPos(pos,msg);
+     });
+
+  },
+
+createMiner : function () {
+
+    var self=this;
+    var pos="#minCreate_result";
+    var instance;
+    var msg;
+
+    Factory.deployed().then(function(instance){
+      fac=instance;
+      return fac.createMiner({from: account})
+    }).then(function (tx) {
+        mineraddress = tx;
+         console.log("tx:");
+         console.log(tx);
+         msg="Transaction complete";
+         self.setStatusPos(pos,msg);
+         self.refreshAddress();
+   }).catch(function(e) {
+       console.log(e);
+
+      msg="Ошибка при отправке, смотри консоль";
+      self.setStatusPos(pos,msg);
+     });
+
+
+  },
+
+registerMiner: function () {
+    var self=this;
+    var pos="#minreg_result";
+    var instance;
+    var msg;
+    var mn;
+    Miner.at(mineraddress).then(function(instance){
+      mn=instance;
+      return mn.Registration({from: account})
+    }).then(function (tx) {
+
+         console.log("tx:");
+         console.log(tx);
+         msg="Transaction complete";
+         self.setStatusPos(pos,msg);
+         self.refreshAddress();
    }).catch(function(e) {
        console.log(e);
 
@@ -391,58 +302,6 @@ h_WithDraw: function () {
 
 },
 
-createMiner : function () {
-
-  var self=this;
-  var pos="#minCreate_result";
-  var instance;
-  var msg;
-
-  Factory.deployed().then(function(instance){
-    fac=instance;
-    return fac.createMiner({from: account})
-  }).then(function (tx) {
-      mineraddress = tx;
-       console.log("tx:");
-       console.log(tx);
-       msg="Transaction complete";
-       self.setStatusPos(pos,msg);
-       self.refreshAddress();
- }).catch(function(e) {
-     console.log(e);
-
-    msg="Ошибка при отправке, смотри консоль";
-    self.setStatusPos(pos,msg);
-   });
-
-
-},
-
-registerMiner: function () {
-  var self=this;
-  var pos="#minreg_result";
-  var instance;
-  var msg;
-  var mn;
-  Miner.at(mineraddress).then(function(instance){
-    mn=instance;
-    return mn.Registration({from: account})
-  }).then(function (tx) {
-
-       console.log("tx:");
-       console.log(tx);
-       msg="Transaction complete";
-       self.setStatusPos(pos,msg);
-       self.refreshAddress();
- }).catch(function(e) {
-     console.log(e);
-
-    msg="Ошибка при отправке, смотри консоль";
-    self.setStatusPos(pos,msg);
-   });
-
-},
-
 pullMoney: function () {
   var self=this;
   var pos="#pullmoney_result";
@@ -469,6 +328,32 @@ pullMoney: function () {
     self.setStatusPos(pos,msg);
    });
 },
+
+/*unregHub: function(){
+  var self=this;
+  var pos="#unreg_result";
+  var instance;
+  var msg;
+  var mn;
+  Hub.at(hubaddress).then(function(instance){
+    hb=instance;
+    return mn.UnRegisterHub({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+*/
 
 unregMiner: function () {
   var self=this;
@@ -546,6 +431,33 @@ suspectHub: function () {
 
 },
 
+suspectMiner: function () {
+
+  var self=this;
+  var pos="#suspect_miner";
+  var instance;
+  var msg;
+  var mn;
+  var addr = $("#min_address").val();
+  Miner.at(addr).then(function(instance){
+    mn=instance;
+    return mn.suspect({from: account})
+  }).then(function (tx) {
+
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+  }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
+
 gulagHub: function () {
   var self=this;
   var pos="#gulag_hub";
@@ -592,33 +504,6 @@ rehubHub: function () {
        self.setStatusPos(pos,msg);
        self.refreshAddress();
  }).catch(function(e) {
-     console.log(e);
-
-    msg="Ошибка при отправке, смотри консоль";
-    self.setStatusPos(pos,msg);
-   });
-
-},
-
-suspectMiner: function () {
-
-  var self=this;
-  var pos="#suspect_miner";
-  var instance;
-  var msg;
-  var mn;
-  var addr = $("#min_address").val();
-  Miner.at(addr).then(function(instance){
-    mn=instance;
-    return mn.suspect({from: account})
-  }).then(function (tx) {
-
-       console.log("tx:");
-       console.log(tx);
-       msg="Transaction complete";
-       self.setStatusPos(pos,msg);
-       self.refreshAddress();
-  }).catch(function(e) {
      console.log(e);
 
     msg="Ошибка при отправке, смотри консоль";
