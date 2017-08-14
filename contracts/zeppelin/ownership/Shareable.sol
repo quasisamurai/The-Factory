@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 
 /*
@@ -40,7 +40,7 @@ contract Shareable {
   // simple single-sig function modifier.
   modifier onlyOwner {
     if (!isOwner(msg.sender)) {
-      throw;
+      revert();
     }
     _;
   }

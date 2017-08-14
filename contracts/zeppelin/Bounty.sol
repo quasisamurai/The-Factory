@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 
 import './payment/PullPayment.sol';
@@ -18,7 +18,7 @@ contract Bounty is PullPayment, Killable {
 
   function() payable {
     if (claimed) {
-      throw;
+      revert();
     }
   }
 
@@ -34,11 +34,11 @@ contract Bounty is PullPayment, Killable {
   function claim(Target target) {
     address researcher = researchers[target];
     if (researcher == 0) {
-      throw;
+      revert();
     }
     // Check Target contract invariants
     if (target.checkInvariant()) {
-      throw;
+      revert();
     }
     asyncSend(researcher, this.balance);
     claimed = true;

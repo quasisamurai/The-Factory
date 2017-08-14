@@ -1,4 +1,4 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.11;
 
 
 import "zeppelin/token/StandardToken.sol";
@@ -10,7 +10,7 @@ import "zeppelin/ownership/Ownable.sol";
 /*
  *  Sonm Dummy Token for test
 *
- *  
+ *
  *
  * Very simple ERC20 Token example, where all tokens are pre-assigned
  * to the creator. Note they can later distribute these tokens

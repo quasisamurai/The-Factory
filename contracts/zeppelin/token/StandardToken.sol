@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 
 import './ERC20.sol';
@@ -27,8 +27,8 @@ contract StandardToken is ERC20, SafeMath {
   function transferFrom(address _from, address _to, uint _value) returns (bool success) {
     var _allowance = allowed[_from][msg.sender];
 
-    // Check is not needed because safeSub(_allowance, _value) will already throw if this condition is not met
-    // if (_value > _allowance) throw;
+    // Check is not needed because safeSub(_allowance, _value) will already revert() if this condition is not met
+    // if (_value > _allowance) revert();
 
     balances[_to] = safeAdd(balances[_to], _value);
     balances[_from] = safeSub(balances[_from], _value);

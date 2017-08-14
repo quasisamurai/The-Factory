@@ -1,4 +1,4 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.11;
 
 //Declaration contains declaretion of existed contracts and their functions
 

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 
 import "./StandardToken.sol";
@@ -24,7 +24,7 @@ contract CrowdsaleToken is StandardToken {
   
   function createTokens(address recipient) payable {
     if (msg.value == 0) {
-      throw;
+      revert();
     }
 
     uint tokens = safeMul(msg.value, getPrice());

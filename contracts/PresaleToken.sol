@@ -1,4 +1,4 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.11;
 
 
 // ERC20 token interface is implemented only partially.
@@ -55,8 +55,8 @@ contract PresaleToken {
     mapping (address => uint256) private balance;
 
 
-    modifier onlyTokenManager()     { if(msg.sender != tokenManager) throw; _; }
-    modifier onlyCrowdsaleManager() { if(msg.sender != crowdsaleManager) throw; _; }
+    modifier onlyTokenManager()     { if(msg.sender != tokenManager) revert(); _; }
+    modifier onlyCrowdsaleManager() { if(msg.sender != crowdsaleManager) revert(); _; }
 
 
     /*/
@@ -79,11 +79,11 @@ contract PresaleToken {
     /// @dev Lets buy you some tokens.
     function buyTokens(address _buyer) public payable {
         // Available only if presale is running.
-        if(currentPhase != Phase.Running) throw;
+        if(currentPhase != Phase.Running) revert();
 
-        if(msg.value == 0) throw;
+        if(msg.value == 0) revert();
         uint newTokens = msg.value * PRICE;
-        if (totalSupply + newTokens > TOKEN_SUPPLY_LIMIT) throw;
+        if (totalSupply + newTokens > TOKEN_SUPPLY_LIMIT) revert();
         balance[_buyer] += newTokens;
         totalSupply += newTokens;
         LogBuy(_buyer, newTokens);
@@ -96,10 +96,10 @@ contract PresaleToken {
         onlyCrowdsaleManager
     {
         // Available only during migration phase
-        if(currentPhase != Phase.Migrating) throw;
+        if(currentPhase != Phase.Migrating) revert();
 
         uint tokens = balance[_owner];
-        if(tokens == 0) throw;
+        if(tokens == 0) revert();
         balance[_owner] = 0;
         totalSupply -= tokens;
         LogBurn(_owner, tokens);
@@ -138,7 +138,7 @@ contract PresaleToken {
             || (currentPhase == Phase.Migrating && _nextPhase == Phase.Migrated
                 && totalSupply == 0);
 
-        if(!canSwitchPhase) throw;
+        if(!canSwitchPhase) revert();
         currentPhase = _nextPhase;
         LogPhaseSwitch(_nextPhase);
     }
@@ -149,7 +149,7 @@ contract PresaleToken {
     {
         // Available at any phase.
         if(this.balance > 0) {
-            if(!tokenManager.send(this.balance)) throw;
+            if(!tokenManager.send(this.balance)) revert();
         }
     }
 
@@ -158,7 +158,7 @@ contract PresaleToken {
         onlyTokenManager
     {
         // You can't change crowdsale contract when migration is in progress.
-        if(currentPhase == Phase.Migrating) throw;
+        if(currentPhase == Phase.Migrating) revert();
         crowdsaleManager = _mgr;
     }
 }

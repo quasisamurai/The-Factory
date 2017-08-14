@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 
 /**
@@ -47,7 +47,7 @@ contract SafeMath {
 
   function assert(bool assertion) internal {
     if (!assertion) {
-      throw;
+      revert();
     }
   }
 }

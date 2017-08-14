@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 //Raw prototype for Hub Profile contract.
 
@@ -56,13 +56,13 @@ contract HubProfile is Ownable, Profile{
   function Registration() public returns (bool success){
 
 
-      if(currentPhase!=Phase.Idle) throw;
+      if(currentPhase!=Phase.Idle) revert();
 
-    if (sharesTokenAddress.balanceOf(this) <= freezeQuote) throw;
+    if (sharesTokenAddress.balanceOf(this) <= freezeQuote) revert();
 
     //Appendix to call register function from Network contract and check it.
 
-    if(!super.CheckIn()) throw;
+    if(!super.CheckIn()) revert();
   //super.CheckIn();
 
 

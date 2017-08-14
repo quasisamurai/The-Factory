@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 
 //Raw prototype of Profile factory
@@ -53,7 +53,7 @@ contract Factory {
     }
 
     modifier onlyDao(){
-        if (msg.sender != dao) throw;
+        if (msg.sender != dao) revert();
         _;
     }
 

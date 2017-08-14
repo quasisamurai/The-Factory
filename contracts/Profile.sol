@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 //sonm profile abstraction
 
@@ -52,7 +52,7 @@ contract Profile  is Ownable {
       uint localRate;
 
 
-      modifier onlyDao()     { if(msg.sender != DAO) throw; _; }
+      modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
 
 
 
@@ -93,9 +93,9 @@ contract Profile  is Ownable {
 
     //Register in Network
     function CheckIn() public returns (bool success){
-        if(msg.sender!=address(this)) throw;
+        if(msg.sender!=address(this)) revert();
         // double check
-        if(currentPhase!=Phase.Idle) throw;
+        if(currentPhase!=Phase.Idle) revert();
 
       frozenTime=uint64(now);
       //Appendix to call register function from Network contract and check it.
@@ -110,12 +110,12 @@ contract Profile  is Ownable {
     //DeRegister in Network
     function CheckOut() public returns (bool success){
 
-        if(msg.sender!=address(this)) throw;
+        if(msg.sender!=address(this)) revert();
         //double check
-        if(currentPhase!=Phase.Registred) throw;
+        if(currentPhase!=Phase.Registred) revert();
 
         // Comment it for test.
-      if(now < (frozenTime + freezePeriod)) throw;
+      if(now < (frozenTime + freezePeriod)) revert();
 
       //Appendix to call register function from Network contract and check it.
       Network.DeRegister(owner,this);
@@ -127,12 +127,12 @@ contract Profile  is Ownable {
 
     function transfer(address _to, uint _value) public onlyOwner {
 
-      if(currentPhase!=Phase.Registred) throw;
+      if(currentPhase!=Phase.Registred) revert();
 
           uint lockFee = _value * daoFee / 1000;
           uint lock = lockedFunds + lockFee;
           uint value=_value - lockFee;
-          if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) throw;
+          if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) revert();
           lockedFunds=lock;
           sharesTokenAddress.transfer(_to,value);
 
@@ -142,20 +142,20 @@ contract Profile  is Ownable {
     function give(address _to, uint _value) public onlyOwner {
 
 
-      if(currentPhase!=Phase.Registred) throw;
+      if(currentPhase!=Phase.Registred) revert();
 
           uint lockFee = _value * lockPercent / 100;
           uint lock = lockedFunds + lockFee;
           uint value=_value - lockFee;
 
-          if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) throw;
+          if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) revert();
 
           lockedFunds=lock;
           sharesTokenAddress.approve(_to,value);
     }
 
     function pullMoney(address Profile) public{
-      if(currentPhase!=Phase.Registred) throw;
+      if(currentPhase!=Phase.Registred) revert();
       uint val = sharesTokenAddress.allowance(Profile,this);
       sharesTokenAddress.transferFrom(Profile,this,val);
 
@@ -163,10 +163,10 @@ contract Profile  is Ownable {
 
       function buyRate(uint amount) public onlyOwner {
 
-        if(currentPhase!=Phase.Registred) throw;
+        if(currentPhase!=Phase.Registred) revert();
         uint lock = lockedFunds;
 
-        if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) throw;
+        if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
 
         lockedFunds = lockedFunds + amount;
         localRate = localRate + amount;
@@ -176,7 +176,7 @@ contract Profile  is Ownable {
 
       function PayDay() public onlyOwner {
 
-        if(currentPhase!=Phase.Registred) throw;
+        if(currentPhase!=Phase.Registred) revert();
 
         uint balance = sharesTokenAddress.balanceOf(msg.sender);
         uint turn = balance * daoFee / 1000;
@@ -185,20 +185,20 @@ contract Profile  is Ownable {
         lockedFunds= 0;
 
         // Comment it for test.
-        if(now < (frozenTime + freezePeriod)) throw;
+        if(now < (frozenTime + freezePeriod)) revert();
 
         //For test usage
       //  DaoCollect=0;
 
         //dao got's 0.5% in such terms.
           sharesTokenAddress.transfer(DAO,DaoCollect);
-          if (!CheckOut()) throw;
+          if (!CheckOut()) revert();
 
       }
 
     function withdraw(address to, uint amount) public onlyOwner {
 
-      if(currentPhase!=Phase.Idle) throw;
+      if(currentPhase!=Phase.Idle) revert();
     //  uint amount = sharesTokenAddress.balanceOf(this);
       sharesTokenAddress.transfer(to,amount);
     }
@@ -206,7 +206,7 @@ contract Profile  is Ownable {
 
 
     function suspect() public  {
-      if (currentPhase!=Phase.Registred) throw;
+      if (currentPhase!=Phase.Registred) revert();
       lockedFunds=sharesTokenAddress.balanceOf(this);
       frozenTime = uint64(now);
       currentPhase = Phase.Suspected;
@@ -216,8 +216,8 @@ contract Profile  is Ownable {
     }
 
     function gulag() public onlyDao {
-      if (currentPhase!=Phase.Suspected) throw;
-      if (now < (frozenTime + freezePeriod)) throw;
+      if (currentPhase!=Phase.Suspected) revert();
+      if (now < (frozenTime + freezePeriod)) revert();
       uint amount = lockedFunds;
       sharesTokenAddress.transfer(DAO,amount);
       currentPhase = Phase.Punished;
@@ -226,7 +226,7 @@ contract Profile  is Ownable {
     }
 
     function rehub() public onlyDao {
-      if (currentPhase!=Phase.Suspected) throw;
+      if (currentPhase!=Phase.Suspected) revert();
       lockedFunds = 0;
       currentPhase = Phase.Idle;
       LogPhaseSwitch(currentPhase);

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 
 import './Ownable.sol';
@@ -16,14 +16,14 @@ contract DelayedClaimable is Ownable, Claimable {
 
   function setLimits(uint _start, uint _end) onlyOwner {
     if (_start > _end)
-        throw;
+        revert();
     end = _end;
     start = _start;
   }
 
   function claimOwnership() onlyPendingOwner {
     if ((block.number > end) || (block.number < start))
-        throw;
+        revert();
     owner = pendingOwner;
     pendingOwner = 0x0;
     end = 0;
