@@ -55,7 +55,7 @@ contract Network{
 
     address Profile = ProfilesFactory.getProfile(_owner);
     // Check that call comes from our Profile
-    if (Profile!=msg.sender) throw;
+    if (Profile!=msg.sender) revert();
     isRegistred[Profile]=true;
 
     factory.TypeW _type;
@@ -74,7 +74,7 @@ contract Network{
 
     address Profile = ProfilesFactory.getProfile(_owner);
     // Check that call comes from our Profile
-    if (Profile!=msg.sender) throw;
+    if (Profile!=msg.sender) revert();
     isRegistred[Profile]=false;
 
     uint64 time;

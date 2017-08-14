@@ -43,11 +43,11 @@ contract MinerProfile is Ownable, Profile{
   /*/
 
   function Registration() public onlyOwner returns (bool success){
-      if(currentPhase!=Phase.Idle) throw;
-    if (sharesTokenAddress.balanceOf(this) <= freezeQuote) throw;
+      if(currentPhase!=Phase.Idle) revert();
+    if (sharesTokenAddress.balanceOf(this) <= freezeQuote) revert();
 
     //Appendix to call register function from Network contract and check it.
-    if(!super.CheckIn()) throw;
+    if(!super.CheckIn()) revert();
     //Network.RegisterMin(owner,this,frozenTime);
 
     return true;

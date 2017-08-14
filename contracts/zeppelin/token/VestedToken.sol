@@ -16,7 +16,7 @@ contract VestedToken is StandardToken {
   mapping (address => TokenGrant[]) public grants;
 
   modifier canTransfer(address _sender, uint _value) {
-    if (_value > transferableTokens(_sender, uint64(now))) throw;
+    if (_value > transferableTokens(_sender, uint64(now))) revert();
     _;
   }
 
@@ -36,13 +36,13 @@ contract VestedToken is StandardToken {
     uint64 _vesting) {
 
     if (_cliff < _start) {
-      throw;
+      revert();
     }
     if (_vesting < _start) {
-      throw;
+      revert();
     }
     if (_vesting < _cliff) {
-      throw;
+      revert();
     }
 
 
@@ -56,7 +56,7 @@ contract VestedToken is StandardToken {
     TokenGrant grant = grants[_holder][_grantId];
 
     if (grant.granter != msg.sender) {
-      throw;
+      revert();
     }
     uint256 nonVested = nonVestedTokens(grant, uint64(now));
 

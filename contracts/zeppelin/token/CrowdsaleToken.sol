@@ -24,7 +24,7 @@ contract CrowdsaleToken is StandardToken {
   
   function createTokens(address recipient) payable {
     if (msg.value == 0) {
-      throw;
+      revert();
     }
 
     uint tokens = safeMul(msg.value, getPrice());

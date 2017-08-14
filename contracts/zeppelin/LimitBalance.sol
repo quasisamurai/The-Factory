@@ -18,7 +18,7 @@ contract LimitBalance {
 
   modifier limitedPayable() { 
     if (this.balance > limit) {
-      throw;
+      revert();
     }
     _;
     

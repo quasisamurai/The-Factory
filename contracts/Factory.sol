@@ -53,7 +53,7 @@ contract Factory {
     }
 
     modifier onlyDao(){
-        if (msg.sender != dao) throw;
+        if (msg.sender != dao) revert();
         _;
     }
 

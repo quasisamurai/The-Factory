@@ -20,17 +20,17 @@ contract PullPayment {
     uint payment = payments[payee];
     
     if (payment == 0) {
-      throw;
+      revert();
     }
 
     if (this.balance < payment) {
-      throw;
+      revert();
     }
 
     payments[payee] = 0;
 
     if (!payee.send(payment)) {
-      throw;
+      revert();
     }
   }
 }
