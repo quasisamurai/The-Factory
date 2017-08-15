@@ -18,7 +18,7 @@ contract Factory {
 
     address dao;
 
-    whitelist Whitelist;
+    network Sonm;
 
     //Profile type
     enum TypeW {
@@ -57,9 +57,9 @@ contract Factory {
         _;
     }
 
-    function changeAdresses(address _dao, whitelist _whitelist) public onlyDao {
+    function changeAdresses(address _dao, network _Sonm) public onlyDao {
         dao = _dao;
-        Whitelist = whitelist(_whitelist);
+        Sonm = network(_Sonm);
     }
 
 
@@ -82,12 +82,12 @@ contract Factory {
     }
 
     function createH(address _hubowner, bool _privat) private returns (address) {
-        return address(new HubProfile(_hubowner, dao, Whitelist, sharesTokenAddress,_privat));
+        return address(new HubProfile(_hubowner, dao, Sonm, sharesTokenAddress,_privat));
         LogCr(_hubowner);
     }
 
     function createM(address _minowner) private returns (address) {
-        return address(new MinerProfile(_minowner, dao, Whitelist, sharesTokenAddress));
+        return address(new MinerProfile(_minowner, dao, Sonm, sharesTokenAddress));
         LogCr(_minowner);
     }
 
