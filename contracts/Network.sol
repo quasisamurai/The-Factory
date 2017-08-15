@@ -25,7 +25,7 @@ contract factory{
 }
 
 
-
+// SONM social network
 contract Network{
 
   factory ProfilesFactory;
