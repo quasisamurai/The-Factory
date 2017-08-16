@@ -19,7 +19,6 @@ import { default as contract } from 'truffle-contract'
 //import constructor_artifacts from '../../build/contracts/TokenConstructor.json'
 import token_artifacts from '../../build/contracts/SDT.json'
 import factory_artifacts from '../../build/contracts/Factory.json'
-import whitelist_artifacts from '../../build/contracts/Whitelist.json'
 import hub_artifacts from '../../build/contracts/HubProfile.json'
 import miner_artifacts from '../../build/contracts/MinerProfile.json'
 
@@ -32,7 +31,6 @@ import miner_artifacts from '../../build/contracts/MinerProfile.json'
 //
 var Token = contract(token_artifacts);
 var Factory = contract(factory_artifacts);
-var Whitelist = contract(whitelist_artifacts);
 var Hub = contract(hub_artifacts);
 var Miner = contract(miner_artifacts);
 
@@ -65,7 +63,6 @@ window.App = {
     // Bootstrap the MetaCoin abstraction for Use.
     Token.setProvider(web3.currentProvider);
     Factory.setProvider(web3.currentProvider);
-    Whitelist.setProvider(web3.currentProvider);
     Hub.setProvider(web3.currentProvider);
     Miner.setProvider(web3.currentProvider);
 
