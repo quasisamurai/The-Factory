@@ -56,19 +56,19 @@ contract SNM  is StandardToken {
   // ERC20 functions
   // =========================
 
-  function transfer(address _to, uint _value) public {
+  function transfer(address _to, uint _value) public returns (bool) {
     require(!tokensAreFrozen);
     super.transfer(_to, _value);
   }
 
 
-  function transferFrom(address _from, address _to, uint _value) public {
+  function transferFrom(address _from, address _to, uint256 _value) public returns (bool) {
     require(!tokensAreFrozen);
     super.transferFrom(_from, _to, _value);
   }
 
 
-  function approve(address _spender, uint _value) public {
+  function approve(address _spender, uint _value) public returns (bool) {
     require(!tokensAreFrozen);
     super.approve(_spender, _value);
   }
