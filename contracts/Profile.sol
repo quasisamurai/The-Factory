@@ -49,7 +49,7 @@ contract Profile  is Ownable {
 
       uint DaoCollect;
 
-      uint public localRate;
+      uint public localRate = 0;
 
 
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
@@ -125,6 +125,41 @@ contract Profile  is Ownable {
       return true;
     }
 
+
+    // RATINGS --------------------------------------------------------------
+
+    function plusRate(uint amount) internal returns (bool success){
+
+        localRate=localRate + amount;
+        return true;
+        }
+
+    function minusRate(uint amount) internal returns (bool success){
+        localRate=localRate - amount;
+        return true;
+        }
+
+    function getRate() public returns (uint localR){
+      uint r=localRate;
+      return r;
+      }
+
+    function buyRate(uint amount) public onlyOwner {
+
+      if(currentPhase!=Phase.Registred) revert();
+      uint lock = lockedFunds;
+
+      if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
+
+      lockedFunds = lockedFunds + amount;
+      localRate = localRate + amount;
+
+    }
+
+
+
+//------TOKEN ITERACTION-------------------------------------------------------
+
     function transfer(address _to, uint _value) public onlyOwner {
 
       if(currentPhase!=Phase.Registred) revert();
@@ -160,32 +195,6 @@ contract Profile  is Ownable {
       sharesTokenAddress.transferFrom(Profile,this,val);
 
     }
-
-      // RATINGS --------------------------------------------------------------
-
-      function plusRate(uint amount) internal returns (bool success){
-
-        localRate=localRate + amount;
-        return true;
-      }
-
-      function minusRate(uint amount) internal returns (bool success){
-        localRate=localRate - amount;
-        return true;
-      }
-
-
-      function buyRate(uint amount) public onlyOwner {
-
-        if(currentPhase!=Phase.Registred) revert();
-        uint lock = lockedFunds;
-
-        if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
-
-        lockedFunds = lockedFunds + amount;
-        localRate = localRate + amount;
-
-      }
 
 //------------------------------------------------------------------------------
       function PayDay() public onlyOwner {

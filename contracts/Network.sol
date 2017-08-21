@@ -6,7 +6,7 @@ pragma solidity ^0.4.11;
 
 
 
-
+// Factory safe definition
 contract factory{
 
   //Profile type
@@ -25,6 +25,8 @@ contract factory{
 }
 
 
+
+
 // SONM social network
 contract Network{
 
@@ -33,6 +35,7 @@ contract Network{
 
 
   mapping (address => bool) public isRegistred;
+  mapping (address => uint) public globalRate;
 
 
 /* TODO - make indexed events
@@ -51,7 +54,7 @@ contract Network{
   }
 
 
-  function Register(address _owner, address _Profile, uint64 time) public returns(bool) {
+  function Register(address _owner, address _Profile, uint64 time, uint localRate) public returns(bool) {
 
     address Profile = ProfilesFactory.getProfile(_owner);
     // Check that call comes from our Profile
@@ -60,6 +63,13 @@ contract Network{
 
     factory.TypeW _type;
     _type=ProfilesFactory.getType(_Profile);
+
+    if (globalRate[_Profile]==null){
+    globalRate[_Profile]=localRate;
+  } else {
+    globalRate[_Profile]=globalRate[_Profile] + localRate;
+  }
+
     //Appendix event
     Registred(_owner,Profile,time,_type);
     return true;
