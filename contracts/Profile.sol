@@ -92,8 +92,8 @@ contract Profile  is Ownable {
 
 
     //Register in Network
-    function CheckIn() public returns (bool success){
-        if(msg.sender!=address(this)) revert();
+    function CheckIn() internal returns (bool success){
+
         // double check
         if(currentPhase!=Phase.Idle) revert();
 
@@ -108,13 +108,13 @@ contract Profile  is Ownable {
 
 
     //DeRegister in Network
-    function CheckOut() public returns (bool success){
+    function CheckOut() internal returns (bool success){
 
-        if(msg.sender!=address(this)) revert();
+      
         //double check
         if(currentPhase!=Phase.Registred) revert();
 
-        // Comment it for test.
+        // Comment it for test usage.
       if(now < (frozenTime + freezePeriod)) revert();
 
       //Appendix to call register function from Network contract and check it.
@@ -187,7 +187,7 @@ contract Profile  is Ownable {
         // Comment it if you gonna run tests.
         if(now < (frozenTime + freezePeriod)) revert();
 
-        
+
 
         //dao got's 0.5% in such terms.
           sharesTokenAddress.transfer(DAO,DaoCollect);
