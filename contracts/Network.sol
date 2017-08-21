@@ -41,7 +41,7 @@ contract Network{
 /* TODO - make indexed events
 */
   event Registred(address _owner,address Profile, uint64 time, factory.TypeW _type);
-  event unRegistred(address _owner,address Profile, uint64 time, factory.TypeW _type);
+  event unRegistred(address _owner,address Profile, uint64 time, factory.TypeW _type, uint Diff);
 
 
 
@@ -54,7 +54,7 @@ contract Network{
   }
 
 
-  function Register(address _owner, address _Profile, uint64 time, uint localRate) public returns(bool) {
+  function Register(address _owner, address _Profile, uint64 time) public returns(bool) {
 
     address Profile = ProfilesFactory.getProfile(_owner);
     // Check that call comes from our Profile
@@ -63,12 +63,11 @@ contract Network{
 
     factory.TypeW _type;
     _type=ProfilesFactory.getType(_Profile);
-
+/*
     if (globalRate[_Profile]==null){
-    globalRate[_Profile]=localRate;
-  } else {
-    globalRate[_Profile]=globalRate[_Profile] + localRate;
-  }
+      globalRate[_Profile]=0;
+    }
+    */
 
     //Appendix event
     Registred(_owner,Profile,time,_type);
@@ -80,7 +79,7 @@ contract Network{
 
 
 // General deregister
-  function DeRegister(address _owner, address _Profile) public returns(bool) {
+  function DeRegister(address _owner, address _Profile, uint localR) public returns(bool) {
 
     address Profile = ProfilesFactory.getProfile(_owner);
     // Check that call comes from our Profile
@@ -91,8 +90,15 @@ contract Network{
     time=uint64(now);
     factory.TypeW _type;
     _type=ProfilesFactory.getType(_Profile);
+
+    uint g = globalRate[_Profile];
+    uint diff = g - localR;
+    globalRate[_Profile]= g + localR;
+
+
+
     //Appendix event
-    unRegistred(_owner,Profile,time,_type);
+    unRegistred(_owner,Profile,time,_type, diff);
 
     }
 

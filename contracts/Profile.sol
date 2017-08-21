@@ -118,7 +118,7 @@ contract Profile  is Ownable {
       if(now < (frozenTime + freezePeriod)) revert();
 
       //Appendix to call register function from Network contract and check it.
-      Network.DeRegister(owner,this);
+      Network.DeRegister(owner,this,localRate);
 
       currentPhase=Phase.Idle;
       LogPhaseSwitch(currentPhase);
