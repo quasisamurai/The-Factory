@@ -19,7 +19,7 @@ contract Profile  is Ownable {
 
       address public DAO;
       address public Factory;
-//
+
 
       //address public Network;
       network Network;
@@ -49,7 +49,7 @@ contract Profile  is Ownable {
 
       uint DaoCollect;
 
-      uint localRate;
+      uint public localRate;
 
 
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
@@ -57,7 +57,7 @@ contract Profile  is Ownable {
 
 
       /*/
-       *  Wallet state
+       *  Profile state
       /*/
 
       enum Phase {
@@ -110,7 +110,7 @@ contract Profile  is Ownable {
     //DeRegister in Network
     function CheckOut() internal returns (bool success){
 
-      
+
         //double check
         if(currentPhase!=Phase.Registred) revert();
 
@@ -161,6 +161,20 @@ contract Profile  is Ownable {
 
     }
 
+      // RATINGS --------------------------------------------------------------
+
+      function plusRate(uint amount) internal returns (bool success){
+
+        localRate=localRate + amount;
+        return true;
+      }
+
+      function minusRate(uint amount) internal returns (bool success){
+        localRate=localRate - amount;
+        return true;
+      }
+
+
       function buyRate(uint amount) public onlyOwner {
 
         if(currentPhase!=Phase.Registred) revert();
@@ -173,7 +187,7 @@ contract Profile  is Ownable {
 
       }
 
-
+//------------------------------------------------------------------------------
       function PayDay() public onlyOwner {
 
         if(currentPhase!=Phase.Registred) revert();
