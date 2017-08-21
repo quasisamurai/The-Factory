@@ -3,11 +3,8 @@ var Factory = artifacts.require("./Factory.sol");
 
 module.exports = function(deployer) {
 
-    deployer.deploy(SDT);
-//    deployer.deploy(Factory);
-
-    deployer.deploy(Factory,SDT.address, web3.eth.accounts[0]);
-
+  deployer.deploy(SDT).then(function() {
+  return deployer.deploy(Factory, SDT.address, web3.eth.accounts[0], SDT.address);
+});
 
 };
-//web3.eth.accounts[0]
