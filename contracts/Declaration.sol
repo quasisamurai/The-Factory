@@ -22,7 +22,7 @@ contract network {
 
 
   function Register(address _owner, address _wallet, uint64 time) public returns(bool);
-  function DeRegister(address _owner, address _wallet) public returns(bool);
+  function DeRegister(address _owner, address _wallet,  uint localR) public returns(bool);
 
 }
 

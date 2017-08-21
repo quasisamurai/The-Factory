@@ -19,7 +19,7 @@ contract Profile  is Ownable {
 
       address public DAO;
       address public Factory;
-//
+
 
       //address public Network;
       network Network;
@@ -49,7 +49,7 @@ contract Profile  is Ownable {
 
       uint DaoCollect;
 
-      uint localRate;
+      uint public localRate = 0;
 
 
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
@@ -57,7 +57,7 @@ contract Profile  is Ownable {
 
 
       /*/
-       *  Wallet state
+       *  Profile state
       /*/
 
       enum Phase {
@@ -110,7 +110,7 @@ contract Profile  is Ownable {
     //DeRegister in Network
     function CheckOut() internal returns (bool success){
 
-      
+
         //double check
         if(currentPhase!=Phase.Registred) revert();
 
@@ -118,12 +118,47 @@ contract Profile  is Ownable {
       if(now < (frozenTime + freezePeriod)) revert();
 
       //Appendix to call register function from Network contract and check it.
-      Network.DeRegister(owner,this);
+      Network.DeRegister(owner,this,localRate);
 
       currentPhase=Phase.Idle;
       LogPhaseSwitch(currentPhase);
       return true;
     }
+
+
+    // RATINGS --------------------------------------------------------------
+
+    function plusRate(uint amount) internal returns (bool success){
+
+        localRate=localRate + amount;
+        return true;
+        }
+
+    function minusRate(uint amount) internal returns (bool success){
+        localRate=localRate - amount;
+        return true;
+        }
+
+    function getRate() public returns (uint localR){
+      uint r=localRate;
+      return r;
+      }
+
+    function buyRate(uint amount) public onlyOwner {
+
+      if(currentPhase!=Phase.Registred) revert();
+      uint lock = lockedFunds;
+
+      if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
+
+      lockedFunds = lockedFunds + amount;
+      localRate = localRate + amount;
+
+    }
+
+
+
+//------TOKEN ITERACTION-------------------------------------------------------
 
     function transfer(address _to, uint _value) public onlyOwner {
 
@@ -161,19 +196,7 @@ contract Profile  is Ownable {
 
     }
 
-      function buyRate(uint amount) public onlyOwner {
-
-        if(currentPhase!=Phase.Registred) revert();
-        uint lock = lockedFunds;
-
-        if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
-
-        lockedFunds = lockedFunds + amount;
-        localRate = localRate + amount;
-
-      }
-
-
+//------------------------------------------------------------------------------
       function PayDay() public onlyOwner {
 
         if(currentPhase!=Phase.Registred) revert();
