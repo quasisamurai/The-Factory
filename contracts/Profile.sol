@@ -184,11 +184,10 @@ contract Profile  is Ownable {
         DaoCollect = DaoCollect + turn;
         lockedFunds= 0;
 
-        // Comment it for test.
+        // Comment it if you gonna run tests.
         if(now < (frozenTime + freezePeriod)) revert();
 
-        //For test usage
-      //  DaoCollect=0;
+        
 
         //dao got's 0.5% in such terms.
           sharesTokenAddress.transfer(DAO,DaoCollect);
