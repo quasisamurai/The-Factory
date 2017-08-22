@@ -171,16 +171,19 @@ contract Profile  is Ownable {
     function buyRate(uint amount) public onlyOwner {
 
       if(currentPhase!=Phase.Registred) revert();
-      uint p = localRate / 100;
-      
-      p = p * 10%;
 
+      uint g = Network.getGlobalRate(owner,this);
+      uint p = g / 100;
+      // Rates cannot be increased more than for 10% at one buy.
+      p = p * 10;
+
+      if (amount > p) revert();
       uint lock = lockedFunds + amount;
 
       if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
 
       lockedFunds = lock;
-      localRate = localRate + amount;
+      localRate += amount;
 
     }
 

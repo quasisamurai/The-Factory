@@ -78,7 +78,7 @@ contract Network{
 
 
 
-// General deregister
+  // General deregister
   function DeRegister(address _owner, address _Profile, uint localR) public returns(bool) {
 
     address Profile = ProfilesFactory.getProfile(_owner);
@@ -95,13 +95,17 @@ contract Network{
     uint diff = g - localR;
     globalRate[_Profile]= g + localR;
 
-
-
     //Appendix event
     unRegistred(_owner,Profile,time,_type, diff);
 
     }
 
-
+    function getGlobalRate(address _owner, address _Profile) public returns (uint) {
+      address Profile = ProfilesFactory.getProfile(_owner);
+      // Check that call comes from our Profile
+      if (Profile!=msg.sender) revert();
+      uint g = globalRate[_Profile];
+      return g;
+    }
 
 }
