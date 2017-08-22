@@ -173,6 +173,7 @@ contract Profile  is Ownable {
       if(currentPhase!=Phase.Registred) revert();
 
       uint g = Network.getGlobalRate(owner,this);
+      // Check this with intence in test stage
       uint p = g / 100;
       // Rates cannot be increased more than for 10% at one buy.
       p = p * 10;
