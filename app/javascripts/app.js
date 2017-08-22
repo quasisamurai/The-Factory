@@ -80,10 +80,11 @@ window.App = {
 
       accounts = accs;
       account = accounts[0];
+    });
 
-
+  /*
         //Need(!!) to remove it when deploying live
-        $("#transfer_to").val(accounts[1]);H
+        $("#transfer_to").val(accounts[1]);
          console.log("tx:");
          console.log(tx);
          msg="Transaction complete";
@@ -97,7 +98,7 @@ window.App = {
       self.setStatusPos(pos,msg);
      });
 
-
+     */
   },
 
 registerHub: function () {
