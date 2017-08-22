@@ -50,6 +50,7 @@ contract Profile  is Ownable {
       uint DaoCollect;
 
       uint public localRate = 0;
+      uint public stake = 0;
 
 
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
@@ -144,14 +145,33 @@ contract Profile  is Ownable {
       return r;
       }
 
-    function buyRate(uint amount) public onlyOwner {
-
+    function putStake(uint amount) public onlyOwner {
       if(currentPhase!=Phase.Registred) revert();
-      uint lock = lockedFunds;
+      uint lock = lockedFunds + amount;
 
       if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
 
-      lockedFunds = lockedFunds + amount;
+      uint l = stake + lock;
+      uint s = stake + amount;
+      stake = s;
+      lockedFunds = l;
+    }
+
+    function takeStake() internal {
+      if(currentPhase!=Phase.Registred) revert();
+      uint l = lockedFunds;
+      lockedFunds = l - stake;
+      stake = 0;
+    }
+
+    function buyRate(uint amount) public onlyOwner {
+
+      if(currentPhase!=Phase.Registred) revert();
+      uint lock = lockedFunds + amount;
+
+      if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
+
+      lockedFunds = lock;
       localRate = localRate + amount;
 
     }
@@ -179,7 +199,7 @@ contract Profile  is Ownable {
 
       if(currentPhase!=Phase.Registred) revert();
 
-          uint lockFee = _value * daoFee / 100;
+          uint lockFee = _value * daoFee / 1000;
           uint lock = lockedFunds + lockFee;
           uint value=_value - lockFee;
 
@@ -200,6 +220,8 @@ contract Profile  is Ownable {
       function PayDay() public onlyOwner {
 
         if(currentPhase!=Phase.Registred) revert();
+
+        takeStake();
 
         //uint balance = sharesTokenAddress.balanceOf(msg.sender);
 
