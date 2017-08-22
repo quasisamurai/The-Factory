@@ -59,6 +59,9 @@ var balance;
 window.App = {
   start: function() {
     var self = this;
+    var msg;
+    var tx;
+    var pos;
 
     // Bootstrap the MetaCoin abstraction for Use.
     Token.setProvider(web3.currentProvider);
@@ -81,21 +84,11 @@ window.App = {
       accounts = accs;
       account = accounts[0];
 
-
-
-        //Need(!!) to remove it when deploying live
-        $("#transfer_to").val(accounts[1]);
-         console.log("tx:");
-         console.log(tx);  // <- Вот здесь tx не определен, в остальных случаях логов он передается в аргументе
-         msg="Transaction complete";
-      //   msg=tx.valueOf();
-         self.setStatusPos(pos,msg);
-       }).catch(function(e) {    //<- Uncaught TypeError: Cannot read property 'catch' of undefined
-       console.log(e);
-
-      msg="Ошибка при отправке, смотри консоль";
-      self.setStatusPos(pos,msg);
-    });
+     console.log("tx:");
+     console.log(tx);
+     msg="Transaction complete";
+     self.setStatusPos(pos,msg);
+       })
 
 },
 
