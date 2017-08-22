@@ -131,12 +131,12 @@ contract Profile  is Ownable {
 
     function plusRate(uint amount) internal returns (bool success){
 
-        localRate=localRate + amount;
+        localRate += amount;
         return true;
         }
 
     function minusRate(uint amount) internal returns (bool success){
-        localRate=localRate - amount;
+        localRate -= amount;
         return true;
         }
 
@@ -183,7 +183,7 @@ contract Profile  is Ownable {
       if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
 
       lockedFunds = lock;
-      localRate += amount;
+      if(!plusRate(amount)) revert();
 
     }
 
@@ -262,9 +262,9 @@ contract Profile  is Ownable {
 
 
 
-    function suspect() public  {
+    function suspect() public onlyDao {
       if (currentPhase!=Phase.Registred) revert();
-      lockedFunds=sharesTokenAddress.balanceOf(this);
+
       frozenTime = uint64(now);
       currentPhase = Phase.Suspected;
       LogPhaseSwitch(currentPhase);
@@ -275,7 +275,8 @@ contract Profile  is Ownable {
     function gulag() public onlyDao {
       if (currentPhase!=Phase.Suspected) revert();
       if (now < (frozenTime + freezePeriod)) revert();
-      uint amount = lockedFunds;
+      lockedFunds=sharesTokenAddress.balanceOf(this);
+      uint amount = lockedFunds + stake;
       sharesTokenAddress.transfer(DAO,amount);
       currentPhase = Phase.Punished;
       LogPhaseSwitch(currentPhase);
