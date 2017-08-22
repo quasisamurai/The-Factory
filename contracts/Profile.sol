@@ -34,7 +34,7 @@ contract Profile  is Ownable {
 
 
       //lockedFunds - it is lockedFunds in percentage, which will be locked for every payday period.
-      uint public lockPercent;
+      //uint public lockPercent;
       uint public lockedFunds = 0;
 
       //TIMELOCK
@@ -179,7 +179,7 @@ contract Profile  is Ownable {
 
       if(currentPhase!=Phase.Registred) revert();
 
-          uint lockFee = _value * lockPercent / 100;
+          uint lockFee = _value * daoFee / 100;
           uint lock = lockedFunds + lockFee;
           uint value=_value - lockFee;
 
@@ -202,9 +202,12 @@ contract Profile  is Ownable {
         if(currentPhase!=Phase.Registred) revert();
 
         uint balance = sharesTokenAddress.balanceOf(msg.sender);
-        uint turn = balance * daoFee / 1000;
-        DaoCollect = lockedFunds * daoFee / 1000;
-        DaoCollect = DaoCollect + turn;
+
+        // !CONCEPTUAL
+        // should we take a fee from turn?
+        //  uint turn = balance * daoFee / 1000;
+        DaoCollect = lockedFunds;
+        //DaoCollect = DaoCollect + turn;
         lockedFunds= 0;
 
         // Comment it if you gonna run tests.
