@@ -83,6 +83,7 @@ window.App = {
 
       accounts = accs;
       account = accounts[0];
+    });
 
      console.log("tx:");
      console.log(tx);
