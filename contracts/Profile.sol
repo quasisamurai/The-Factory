@@ -145,6 +145,9 @@ contract Profile  is Ownable {
       return r;
       }
 
+
+    // Stake is a temprary value of tokens, which owner could hold on his accounts
+    // Stake has influence to the total score
     function putStake(uint amount) public onlyOwner {
       if(currentPhase!=Phase.Registred) revert();
       uint lock = lockedFunds + amount;
@@ -164,9 +167,14 @@ contract Profile  is Ownable {
       stake = 0;
     }
 
+
     function buyRate(uint amount) public onlyOwner {
 
       if(currentPhase!=Phase.Registred) revert();
+      uint p = localRate / 100;
+      
+      p = p * 10%;
+
       uint lock = lockedFunds + amount;
 
       if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
