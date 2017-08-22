@@ -1,5 +1,6 @@
 pragma solidity ^0.4.11;
 
+//import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import "./Declaration.sol";
 
 contract Dealable{
@@ -7,8 +8,9 @@ contract Dealable{
 
 
   enum DealStatus {
-      None,
       Aviable,
+      Open,
+      Accepted,
       Cancelled,
       Rejected,
       Done
@@ -25,48 +27,76 @@ contract Dealable{
 
   uint d_count = 0;
 
-  mapping (uint => EscrowInfo) public deals;
+  mapping (uint => DealInfo) public deals;
+  mapping (address => bool) public buyers;
 
 
-  function start(uint _lockId, string _dataInfo, uint _version) payable {
+  function start(uint _lockId, string _dataInfo, uint _amount, address _buyer) internal {
 
-      //reject money transfers for bad status
 
-      if(status != Available) throw;
-
-      if(feePromille > 1000) throw;
-      if(rewardPromille > 1000) throw;
-      if((feePromille + rewardPromille) > 1000) throw;
 
       //create default EscrowInfo struct or access existing
-      EscrowInfo info = escrows[_lockId];
+      DealInfo info = deals[_lockId];
 
       //lock only once for a given id
-      if(info.lockedFunds > 0) throw;
+      if(info.lockedFunds > 0) revert();
 
-      //lock funds
+    //  if(info.status != Available) throw;
+      // buyer init  deal.
+      info.buyer = _buyer;
+      info.lockedFunds = _amount;
+      info.status = DealStatus.Open;
 
-      uint fee = (msg.value * feePromille) / 1000;
-      //limit fees
-      if(fee > msg.value) throw;
-
-      uint funds = (msg.value - fee);
-      feeFunds += fee;
-      totalEscrows += 1;
-
-      // buyer init escrow deal.
-      info.buyer = msg.sender;
-      info.lockedFunds = funds;
-      info.frozenFunds = 0;
-      info.buyerNo = false;
-      info.sellerNo = false;
 
 
     //  pendingCount += _count;
-      buyers[msg.sender] = true;
 
+      buyers[msg.sender] = true;
       //Start order to event log
-      LogEvent(_lockId, _dataInfo, _version, Start, msg.sender, msg.value);
+      /* TODO make events for this
+      */
+    //  LogEvent(_lockId, _dataInfo, _version, Start, msg.sender, msg.value);
   }
+
+  function accept(uint _lockId) internal {
+
+      DealInfo info = deals[_lockId];
+      if(info.status != DealStatus.Open) revert();
+      info.status = DealStatus.Accepted;
+
+  // Here is could be rule for auto-accept or auto-throw
+
+
+  //Accept order to event log
+    //  LogEvent(_lockId, _dataInfo, _version, Accept, msg.sender, info.lockedFunds);
+  }
+
+  function reject(uint _lockId) internal {
+
+      DealInfo info = deals[_lockId];
+      if(info.status != DealStatus.Open) revert();
+      info.status = DealStatus.Rejected;
+
+  // Here is could be rule for auto-accept or auto-throw
+
+
+  //Accept order to event log
+    //  LogEvent(_lockId, _dataInfo, _version, Accept, msg.sender, info.lockedFunds);
+  }
+
+  function cancel(uint _lockId) internal {
+
+      DealInfo info = deals[_lockId];
+      if(info.status != DealStatus.Open) revert();
+      info.status = DealStatus.Cancelled;
+
+  // Here is could be rule for auto-accept or auto-throw
+
+
+  //Accept order to event log
+    //  LogEvent(_lockId, _dataInfo, _version, Accept, msg.sender, info.lockedFunds);
+  }
+
+
 
 }
