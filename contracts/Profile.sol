@@ -161,6 +161,7 @@ contract Profile  is Ownable {
     }
 
     function takeStake() internal {
+      // double chek of state here, may been improved
       if(currentPhase!=Phase.Registred) revert();
       uint l = lockedFunds;
       lockedFunds = l - stake;
