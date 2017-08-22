@@ -32,10 +32,10 @@ contract HubProfile is Ownable, Profile{
     freezeQuote = 1 * (1 ether / 1 wei);
 
     // in the future this percent will be defined by factory.
-    lockPercent= 30;
+    //lockPercent= 30;
 
     //in promilles
-    daoFee = 5;
+    daoFee = 10;
 
     freezePeriod = 10 days;
 
