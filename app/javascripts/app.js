@@ -82,23 +82,53 @@ window.App = {
       account = accounts[0];
 
 
+
         //Need(!!) to remove it when deploying live
-        $("#transfer_to").val(accounts[1]);H
+        $("#transfer_to").val(accounts[1]);
          console.log("tx:");
-         console.log(tx);
+         console.log(tx);  // <- Вот здесь tx не определен, в остальных случаях логов он передается в аргументе
          msg="Transaction complete";
       //   msg=tx.valueOf();
          self.setStatusPos(pos,msg);
-    //     self.refreshAddress();
-   }).catch(function(e) {
+       }).catch(function(e) {    //<- Uncaught TypeError: Cannot read property 'catch' of undefined
        console.log(e);
 
       msg="Ошибка при отправке, смотри консоль";
       self.setStatusPos(pos,msg);
-     });
+    });
+
+},
 
 
-  },
+setStatus: function(message) {
+  var status = document.getElementById("status");
+  status.innerHTML = message;
+},
+
+setStatusPos: function (pos, msg){
+$(pos).html(msg);
+
+},
+
+refreshAddress: function () {
+  var self=this;
+  var instance;
+  var tok;
+  //  console.log("refresh init");
+  Token.deployed().then(function(instance) {
+    tok=instance;
+  //  console.log(tok);
+    $("#tokdAddress").html(tok.address);
+  //  console.log(tok.address);
+
+  //  self.hubBalance();
+  //  self.whitelistAddr();
+    return tok.symbol.call();
+  }).then(function (sym) {
+    $("#t_sym1").html(sym);
+  //  console.log(sym);
+  });
+},
 
 registerHub: function () {
     var self=this;
@@ -126,6 +156,35 @@ registerHub: function () {
      });
 
   },
+
+  createHub : function () {
+
+      var self=this;
+      var pos="#hubCreate_result";
+      var instance;
+      var msg;
+      var priv = $("#privatehub").is(':checked');
+      var fac;
+
+      Factory.deployed().then(function(instance){
+        fac=instance;
+        return fac.createHub(priv, {from: account})
+      }).then(function (tx) {
+          hubaddress = tx;
+           console.log("tx:");
+           console.log(tx);
+           msg="Transaction complete";
+           self.setStatusPos(pos,msg);
+           self.refreshAddress();
+     }).catch(function(e) {
+         console.log(e);
+
+        msg="Ошибка при отправке, смотри консоль";
+        self.setStatusPos(pos,msg);
+      });
+
+
+    },
 
 createMiner : function () {
 
@@ -326,31 +385,6 @@ pullMoney: function () {
    });
 },
 
-/*unregHub: function(){
-  var self=this;
-  var pos="#unreg_result";
-  var instance;
-  var msg;
-  var mn;
-  Hub.at(hubaddress).then(function(instance){
-    hb=instance;
-    return mn.UnRegisterHub({from: account})
-  }).then(function (tx) {
-
-       console.log("tx:");
-       console.log(tx);
-       msg="Transaction complete";
-       self.setStatusPos(pos,msg);
-       self.refreshAddress();
- }).catch(function(e) {
-     console.log(e);
-
-    msg="Ошибка при отправке, смотри консоль";
-    self.setStatusPos(pos,msg);
-   });
-
-},
-*/
 
 unregMiner: function () {
   var self=this;
