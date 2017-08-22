@@ -201,7 +201,7 @@ contract Profile  is Ownable {
 
         if(currentPhase!=Phase.Registred) revert();
 
-        uint balance = sharesTokenAddress.balanceOf(msg.sender);
+        //uint balance = sharesTokenAddress.balanceOf(msg.sender);
 
         // !CONCEPTUAL
         // should we take a fee from turn?
@@ -224,7 +224,6 @@ contract Profile  is Ownable {
     function withdraw(address to, uint amount) public onlyOwner {
 
       if(currentPhase!=Phase.Idle) revert();
-    //  uint amount = sharesTokenAddress.balanceOf(this);
       sharesTokenAddress.transfer(to,amount);
     }
 
