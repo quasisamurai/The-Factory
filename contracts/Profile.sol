@@ -129,6 +129,11 @@ contract Profile  is Ownable, Dealable {
       return true;
     }
 
+/*
+    function DoneDeal(uint _lockId) public onlyOwner returns (bool success) {
+
+    }
+*/
 
     // Should it be onlyOwner?
     // NOTICE - this and next functions are actually call functions, which returns data
@@ -140,13 +145,11 @@ contract Profile  is Ownable, Dealable {
       uint i=0;
 
         do{
-          s = getStatus(i);
+          s = super.getStatus(i);
           _id = i;
           i++;
         }
         while(s!=DealStatus.Open || i<=d_count);
-
-
 
       if (s!=DealStatus.Open) {
         return (false,_id);
@@ -161,13 +164,11 @@ contract Profile  is Ownable, Dealable {
       uint i=0;
 
         do{
-          s = getStatus(i);
+          s = super.getStatus(i);
           _id = i;
           i++;
         }
         while(s!=DealStatus.Accepted || i<=d_count);
-
-
 
       if (s!=DealStatus.Accepted) {
         return (false,_id);

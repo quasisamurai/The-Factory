@@ -15,8 +15,8 @@ contract Dealable{
       Cancelled,
       Rejected,
       Aborted,
+      Ready,
       Done
-
   }
 
   /*
@@ -66,6 +66,8 @@ contract Dealable{
       /* TODO make events for this
       */
     //  LogEvent(_lockId, _dataInfo, _version, Start, msg.sender, msg.value);
+
+
     return true;
   }
 
@@ -85,19 +87,21 @@ contract Dealable{
 
   function accept(uint _lockId) internal returns (bool success){
 
-      DealInfo storage info = deals[_lockId];
+      DealInfo memory info = deals[_lockId];
 
       require(info.status == DealStatus.Open);
       info.status = DealStatus.Accepted;
+      deals[_lockId] = info;
 
     return true;
   }
 
   function reject(uint _lockId) internal returns (bool success){
 
-      DealInfo storage info = deals[_lockId];
+      DealInfo memory info = deals[_lockId];
       require(info.status == DealStatus.Open);
       info.status = DealStatus.Rejected;
+      deals[_lockId] = info;
 
     return true;
   }
@@ -105,10 +109,11 @@ contract Dealable{
 
   function cancel(uint _lockId,address _buyer) internal returns (bool success){
 
-      DealInfo storage info = deals[_lockId];
+      DealInfo memory info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
       require(info.buyer==_buyer);
       info.status = DealStatus.Cancelled;
+      deals[_lockId] = info;
 
     return true;
   }
@@ -116,14 +121,21 @@ contract Dealable{
   //Abort deal which already running
   function abort(uint _lockId,address _buyer) internal returns (bool success){
 
-          DealInfo storage info = deals[_lockId];
+          DealInfo memory info = deals[_lockId];
           if(info.status != DealStatus.Accepted) revert();
           require(info.buyer==_buyer);
           info.status = DealStatus.Aborted;
+          deals[_lockId] = info;
 
         return true;
   }
 
+/*
+  function ready(uint _lockId) internal returns (bool success){
+    DealInfo storage info = deals[_lockId];
+    if(info.status != DealStatus.Accepted) revert();
 
+  }
+*/
 
 }
