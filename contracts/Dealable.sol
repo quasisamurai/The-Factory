@@ -40,14 +40,11 @@ contract Dealable{
 
   }
 
-//  uint d_count = 0;
+
 
   mapping (uint => DealInfo) public deals;
   mapping (address => bool) public buyers;
-  // Opened Deals
-  //mapping (uint => bool) public status;
-  // Accepted Deals
-  //mapping (uint => bool) public
+
 
 
   function start(uint _lockId, uint _amount, address _buyer) internal returns (bool success){
@@ -92,10 +89,11 @@ contract Dealable{
 
   }
 
-  function accept(uint _lockId) internal {
+  function accept(uint _lockId) internal returns (bool success){
 
       DealInfo storage info = deals[_lockId];
-      if(info.status != DealStatus.Open) revert();
+    //  if(info.status != DealStatus.Open) revert();
+      require(info.status == DealStatus.Open);
       info.status = DealStatus.Accepted;
 
   // Here is could be rule for auto-accept or auto-throw
@@ -103,9 +101,10 @@ contract Dealable{
 
   //Accept order to event log
     //  LogEvent(_lockId, _dataInfo, _version, Accept, msg.sender, info.lockedFunds);
+    return true;
   }
 
-  function reject(uint _lockId) internal {
+  function reject(uint _lockId) internal returns (bool success){
 
       DealInfo storage info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
@@ -116,9 +115,10 @@ contract Dealable{
 
   //Accept order to event log
     //  LogEvent(_lockId, _dataInfo, _version, Accept, msg.sender, info.lockedFunds);
+    return true;
   }
 
-  function cancel(uint _lockId) internal {
+  function cancel(uint _lockId) internal returns (bool success){
 
       DealInfo storage info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
@@ -129,6 +129,7 @@ contract Dealable{
 
   //Accept order to event log
     //  LogEvent(_lockId, _dataInfo, _version, Accept, msg.sender, info.lockedFunds);
+    return true;
   }
 
 

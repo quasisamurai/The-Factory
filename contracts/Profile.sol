@@ -115,6 +115,8 @@ contract Profile  is Ownable, Dealable {
 
 
     // Should it be onlyOwner?
+    // NOTICE - this and next functions are actually call functions, which returns data
+    // from smart-contract, but does not change the state, therefore it is not consume gas
     function getOpened() public returns (bool success, uint id){
       require(currentPhase==Phase.Registred);
       uint _id;
