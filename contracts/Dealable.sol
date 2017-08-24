@@ -92,7 +92,7 @@ contract Dealable{
   function accept(uint _lockId) internal returns (bool success){
 
       DealInfo storage info = deals[_lockId];
-    //  if(info.status != DealStatus.Open) revert();
+
       require(info.status == DealStatus.Open);
       info.status = DealStatus.Accepted;
 
@@ -107,7 +107,7 @@ contract Dealable{
   function reject(uint _lockId) internal returns (bool success){
 
       DealInfo storage info = deals[_lockId];
-      if(info.status != DealStatus.Open) revert();
+      require(info.status == DealStatus.Open);
       info.status = DealStatus.Rejected;
 
   // Here is could be rule for auto-accept or auto-throw
@@ -118,6 +118,7 @@ contract Dealable{
     return true;
   }
 
+  // This function NEED to be refactor cause of unusual behavior
   function cancel(uint _lockId) internal returns (bool success){
 
       DealInfo storage info = deals[_lockId];
