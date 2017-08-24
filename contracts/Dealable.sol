@@ -77,6 +77,20 @@ contract Dealable{
     return true;
   }
 
+  function getInfo(uint _lockId) internal returns (DealInfo info){
+
+    DealInfo memory _info = deals[_lockId];
+    return _info;
+  }
+
+  function getStatus(uint _lockId) public returns (DealStatus status){
+    DealInfo memory _info = getInfo(_lockId);
+//    DealInfo memory info = deals[_lockId];
+    DealStatus _status = _info.status;
+    return _status;
+
+  }
+
   function accept(uint _lockId) internal {
 
       DealInfo storage info = deals[_lockId];
