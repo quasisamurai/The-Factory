@@ -8,7 +8,7 @@ contract Dealable{
 
 
   enum DealStatus {
-      Aviable,
+    //  Delayed,
       Open,
       Accepted,
       Cancelled,
@@ -22,6 +22,8 @@ contract Dealable{
       address buyer;
       uint lockedFunds;
       DealStatus status;
+      // Next one for delay deals function.
+      bool delayed;
 
   }
 
@@ -31,7 +33,7 @@ contract Dealable{
   mapping (address => bool) public buyers;
 
 
-  function start(uint _lockId, string _dataInfo, uint _amount, address _buyer) internal {
+  function start(uint _lockId, uint _amount, address _buyer) internal {
 
 
 
