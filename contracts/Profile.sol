@@ -96,7 +96,8 @@ contract Profile  is Ownable, Dealable {
 
     function OpenDeal(uint cost) public returns (bool success){
 
-      if(currentPhase!=Phase.Registred) revert();
+    //  if(currentPhase!=Phase.Registred) revert();
+      require(currentPhase==Phase.Registred);
       uint c = d_count;
       address _buyer = msg.sender;
       if (!super.start(c,cost,_buyer)) revert();
@@ -104,10 +105,17 @@ contract Profile  is Ownable, Dealable {
       return true;
 
     }
+/*
+    function AcceptDeal(uint _lockId) public onlyOwner returns (bool success){
+      if(currentPhase!=Phase.Registred) revert();
+      return true;
 
+    }
+*/
 
     // Should it be onlyOwner?
     function getOpened() public returns (bool success, uint id){
+      require(currentPhase==Phase.Registred);
       uint _id;
       DealStatus s = DealStatus.None;
       uint i=0;
@@ -151,7 +159,7 @@ contract Profile  is Ownable, Dealable {
 
 
 
-    //function AcceptDeal()
+
 
 
     //-------------------------------------------------------------------------
@@ -160,7 +168,7 @@ contract Profile  is Ownable, Dealable {
     function CheckIn() internal returns (bool success){
 
         // double check
-        if(currentPhase!=Phase.Idle) revert();
+        require(currentPhase==Phase.Idle);
 
       frozenTime=uint64(now);
       //Appendix to call register function from Network contract and check it.
@@ -177,7 +185,7 @@ contract Profile  is Ownable, Dealable {
 
 
         //double check
-        if(currentPhase!=Phase.Registred) revert();
+        require(currentPhase==Phase.Registred);
 
         // Comment it for test usage.
       if(now < (frozenTime + freezePeriod)) revert();
@@ -213,7 +221,7 @@ contract Profile  is Ownable, Dealable {
     // Stake is a temprary value of tokens, which owner could hold on his accounts
     // Stake has influence to the total score
     function putStake(uint amount) public onlyOwner {
-      if(currentPhase!=Phase.Registred) revert();
+      require(currentPhase==Phase.Registred);
       uint lock = lockedFunds + amount;
 
       if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
@@ -226,7 +234,7 @@ contract Profile  is Ownable, Dealable {
 
     function takeStake() internal {
       // double chek of state here, may been improved
-      if(currentPhase!=Phase.Registred) revert();
+      require(currentPhase==Phase.Registred);
       uint l = lockedFunds;
       lockedFunds = l - stake;
       stake = 0;
@@ -235,7 +243,7 @@ contract Profile  is Ownable, Dealable {
 
     function buyRate(uint amount) public onlyOwner {
 
-      if(currentPhase!=Phase.Registred) revert();
+      require(currentPhase==Phase.Registred);
 
       uint g = Network.getGlobalRate(owner,this);
       // Check this with intence in test stage
@@ -259,7 +267,7 @@ contract Profile  is Ownable, Dealable {
 
     function transfer(address _to, uint _value) public onlyOwner {
 
-      if(currentPhase!=Phase.Registred) revert();
+      require(currentPhase==Phase.Registred);
 
           uint lockFee = _value * daoFee / 1000;
           uint lock = lockedFunds + lockFee;
@@ -270,11 +278,11 @@ contract Profile  is Ownable, Dealable {
 
     }
 
-    //Otobrat i podelit
+
     function give(address _to, uint _value) public onlyOwner {
 
 
-      if(currentPhase!=Phase.Registred) revert();
+      require(currentPhase==Phase.Registred);
 
           uint lockFee = _value * daoFee / 1000;
           uint lock = lockedFunds + lockFee;
@@ -287,7 +295,7 @@ contract Profile  is Ownable, Dealable {
     }
 
     function pullMoney(address Profile) public{
-      if(currentPhase!=Phase.Registred) revert();
+      require(currentPhase==Phase.Registred);
       uint val = sharesTokenAddress.allowance(Profile,this);
       sharesTokenAddress.transferFrom(Profile,this,val);
 
@@ -296,7 +304,7 @@ contract Profile  is Ownable, Dealable {
 //------------------------------------------------------------------------------
       function PayDay() public onlyOwner {
 
-        if(currentPhase!=Phase.Registred) revert();
+        require(currentPhase==Phase.Registred);
 
         takeStake();
 
@@ -322,14 +330,14 @@ contract Profile  is Ownable, Dealable {
 
     function withdraw(address to, uint amount) public onlyOwner {
 
-      if(currentPhase!=Phase.Idle) revert();
+      require(currentPhase==Phase.Idle);
       sharesTokenAddress.transfer(to,amount);
     }
 
 
 
     function suspect() public onlyDao {
-      if (currentPhase!=Phase.Registred) revert();
+      require(currentPhase==Phase.Registred);
 
       frozenTime = uint64(now);
       currentPhase = Phase.Suspected;
@@ -338,8 +346,8 @@ contract Profile  is Ownable, Dealable {
      CheckOut();
     }
 
-    function gulag() public onlyDao {
-      if (currentPhase!=Phase.Suspected) revert();
+    function punish() public onlyDao {
+      require(currentPhase==Phase.Suspected);
       if (now < (frozenTime + freezePeriod)) revert();
       lockedFunds=sharesTokenAddress.balanceOf(this);
       uint amount = lockedFunds + stake;
@@ -350,7 +358,7 @@ contract Profile  is Ownable, Dealable {
     }
 
     function rehub() public onlyDao {
-      if (currentPhase!=Phase.Suspected) revert();
+      require(currentPhase==Phase.Suspected);
       lockedFunds = 0;
       currentPhase = Phase.Idle;
       LogPhaseSwitch(currentPhase);
