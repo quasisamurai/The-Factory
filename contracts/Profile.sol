@@ -103,16 +103,19 @@ contract Profile  is Ownable, Dealable {
       if (!super.start(c,cost,_buyer)) revert();
       d_count++;
       return true;
-
     }
 
     function AcceptDeal(uint _lockId) public onlyOwner returns (bool success){
       require(currentPhase==Phase.Registred);
       if (!super.accept(_lockId)) revert();
       return true;
-
     }
 
+    function RejectDeal(uint _lockId) public onlyOwner returns (bool success) {
+      require(currentPhase==Phase.Registred);
+      if (!super.reject(_lockId)) revert();
+      return true;
+    }
 
     // Should it be onlyOwner?
     // NOTICE - this and next functions are actually call functions, which returns data
