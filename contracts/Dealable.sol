@@ -21,6 +21,8 @@ contract Dealable{
 
   /*
 
+    TODO - events
+
     WARN - pay attention to the type of the struct.
     regarding this - https://ethereum.stackexchange.com/questions/21420/storage-warning-in-solidity
     we need to point what type of storage do we point is. If the struct is using as a persistent storage
@@ -110,7 +112,7 @@ contract Dealable{
   function cancel(uint _lockId,address _buyer) internal returns (bool success){
 
       DealInfo memory info = deals[_lockId];
-      if(info.status != DealStatus.Open) revert();
+      require(info.status == DealStatus.Open);
       require(info.buyer==_buyer);
       info.status = DealStatus.Cancelled;
       deals[_lockId] = info;
@@ -121,23 +123,45 @@ contract Dealable{
   //Abort deal which already running
   function abort(uint _lockId,address _buyer) internal returns (bool success){
 
-          DealInfo memory info = deals[_lockId];
-          if(info.status != DealStatus.Accepted) revert();
-          require(info.buyer==_buyer);
-          info.status = DealStatus.Aborted;
-          deals[_lockId] = info;
+      DealInfo memory info = deals[_lockId];
+      require(info.status == DealStatus.Accepted);
+      require(info.buyer==_buyer);
+      info.status = DealStatus.Aborted;
+      deals[_lockId] = info;
 
         return true;
   }
 
 
   function ready(uint _lockId) internal returns (bool success){
-    DealInfo memory info = deals[_lockId];
-    if(info.status != DealStatus.Accepted) revert();
-    info.status = DealStatus.Ready;
-    deals[_lockId] = info;
-    return true;
+      DealInfo memory info = deals[_lockId];
+      require(info.status == DealStatus.Accepted);
+      info.status = DealStatus.Ready;
+      deals[_lockId] = info;
+      return true;
   }
 
+  function done(uint _lockId,address _buyer) internal returns (bool success){
+
+      DealInfo memory info = deals[_lockId];
+      require(info.status == DealStatus.Ready);
+      require(info.buyer==_buyer);
+      info.status = DealStatus.Done;
+      deals[_lockId] = info;
+
+        return true;
+  }
+
+
+  function appeal(uint _lockId,address _buyer) internal returns (bool success){
+
+      DealInfo memory info = deals[_lockId];
+      require(info.status == DealStatus.Ready);
+      require(info.buyer==_buyer);
+      info.status = DealStatus.Aborted;
+      deals[_lockId] = info;
+
+        return true;
+  }
 
 }

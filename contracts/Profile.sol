@@ -24,13 +24,10 @@ contract Profile  is Ownable, Dealable {
 
       //address public Network;
       network Network;
-
-
       token public sharesTokenAddress;
 
-
-
       // FreezeQuote - it is defined amount of tokens need to be frozen on  this contract.
+      // TODO - remove this
       uint public freezeQuote;
 
 
@@ -45,20 +42,13 @@ contract Profile  is Ownable, Dealable {
 
       //Fee's
       uint daoFee;
-
-
-
       uint DaoCollect;
 
       uint public localRate = 0;
       uint public stake = 0;
       uint d_count = 0;
 
-
-
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
-
-
 
       /*/
        *  Profile state
@@ -71,21 +61,14 @@ contract Profile  is Ownable, Dealable {
           Suspected,
           Punished
       }
-
-
       Phase public currentPhase;
 
 
       /*/
        *  Events
       /*/
-
-
         event LogPhaseSwitch(Phase newPhase);
         event LogDebug(string message);
-
-
-
 
     /*/
      *  Public functions
@@ -133,6 +116,12 @@ contract Profile  is Ownable, Dealable {
     function ReadyDeal(uint _lockId) public onlyOwner returns (bool success) {
       require(currentPhase==Phase.Registred);
       require(super.ready(_lockId));
+      return true;
+    }
+
+    function AppealDeal(uint _lockId) public returns (bool success) {
+      require(currentPhase==Phase.Registred);
+      require(super.appeal(_lockId,msg.sender));
       return true;
     }
 
