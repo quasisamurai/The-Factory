@@ -87,7 +87,7 @@ contract Dealable{
   function getStatus(uint _lockId) public returns (DealStatus status){
     DealInfo memory _info = getInfo(_lockId);
 //    DealInfo memory info = deals[_lockId];
-    DealStatus _status = _info.status;
+    DealStatus  _status = _info.status;
     return _status;
 
   }

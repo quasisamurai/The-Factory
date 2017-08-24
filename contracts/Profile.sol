@@ -128,6 +128,29 @@ contract Profile  is Ownable, Dealable {
       }
     }
 
+    function getAccepted() public returns (bool success, uint id){
+      uint _id;
+      DealStatus s = DealStatus.None;
+      uint i=0;
+
+        do{
+          s = getStatus(i);
+          _id = i;
+          i++;
+        }
+        while(s!=DealStatus.Accepted || i<=d_count);
+
+
+
+      if (s!=DealStatus.Accepted) {
+        return (false,_id);
+      } else {
+      return (true, _id);
+      }
+    }
+
+
+
     //function AcceptDeal()
 
 
