@@ -129,11 +129,13 @@ contract Profile  is Ownable, Dealable {
       return true;
     }
 
-/*
-    function DoneDeal(uint _lockId) public onlyOwner returns (bool success) {
 
+    function ReadyDeal(uint _lockId) public onlyOwner returns (bool success) {
+      require(currentPhase==Phase.Registred);
+      require(super.ready(_lockId));
+      return true;
     }
-*/
+
 
     // Should it be onlyOwner?
     // NOTICE - this and next functions are actually call functions, which returns data

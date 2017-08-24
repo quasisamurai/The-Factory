@@ -130,12 +130,14 @@ contract Dealable{
         return true;
   }
 
-/*
-  function ready(uint _lockId) internal returns (bool success){
-    DealInfo storage info = deals[_lockId];
-    if(info.status != DealStatus.Accepted) revert();
 
+  function ready(uint _lockId) internal returns (bool success){
+    DealInfo memory info = deals[_lockId];
+    if(info.status != DealStatus.Accepted) revert();
+    info.status = DealStatus.Ready;
+    deals[_lockId] = info;
+    return true;
   }
-*/
+
 
 }
