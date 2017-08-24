@@ -105,13 +105,14 @@ contract Profile  is Ownable, Dealable {
       return true;
 
     }
-/*
+
     function AcceptDeal(uint _lockId) public onlyOwner returns (bool success){
-      if(currentPhase!=Phase.Registred) revert();
+      require(currentPhase==Phase.Registred);
+      if (!super.accept(_lockId)) revert();
       return true;
 
     }
-*/
+
 
     // Should it be onlyOwner?
     function getOpened() public returns (bool success, uint id){

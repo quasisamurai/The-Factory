@@ -36,7 +36,7 @@ contract Dealable{
       uint lockedFunds;
       DealStatus status;
       // Next one for delay deals function.
-      bool delayed;
+    //  bool delayed;
 
   }
 
@@ -68,7 +68,7 @@ contract Dealable{
 
 
 
-    //  pendingCount += _count;
+
 
       buyers[_buyer] = true;
       //Start order to event log
