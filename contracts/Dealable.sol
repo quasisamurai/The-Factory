@@ -43,6 +43,10 @@ contract Dealable{
 
   mapping (uint => DealInfo) public deals;
   mapping (address => bool) public buyers;
+  // Opened Deals
+  //mapping (uint => bool) public status;
+  // Accepted Deals
+  //mapping (uint => bool) public
 
 
   function start(uint _lockId, uint _amount, address _buyer) internal returns (bool success){
@@ -65,7 +69,7 @@ contract Dealable{
 
     //  pendingCount += _count;
 
-      buyers[msg.sender] = true;
+      buyers[_buyer] = true;
       //Start order to event log
       /* TODO make events for this
       */

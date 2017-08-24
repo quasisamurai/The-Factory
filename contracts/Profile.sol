@@ -99,9 +99,12 @@ contract Profile  is Ownable, Dealable {
       uint c = d_count;
       address _buyer = msg.sender;
       if (!super.start(c,cost,_buyer)) revert();
-      return true; 
+      d_count++;
+      return true;
 
     }
+
+    //function AcceptDeal()
 
 
     //-------------------------------------------------------------------------
