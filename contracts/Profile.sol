@@ -100,33 +100,32 @@ contract Profile  is Ownable, Dealable {
       require(currentPhase==Phase.Registred);
       uint c = d_count;
       address _buyer = msg.sender;
-      if (!super.start(c,cost,_buyer)) revert();
+      require(super.start(c,cost,_buyer));
       d_count++;
       return true;
     }
 
     function CancelDeal(uint _lockId) public returns (bool success) {
       require(currentPhase==Phase.Registred);
-
-      if (!super.cancel(_lockId,msg.sender)) revert();
+      require(super.cancel(_lockId,msg.sender));
       return true;
     }
 
     function AbortDeal(uint _lockId) public returns (bool success) {
       require(currentPhase==Phase.Registred);
-      if (!super.abort(_lockId,msg.sender)) revert();
+      require(super.abort(_lockId,msg.sender));
       return true;
     }
 
     function AcceptDeal(uint _lockId) public onlyOwner returns (bool success){
       require(currentPhase==Phase.Registred);
-      if (!super.accept(_lockId)) revert();
+      require(super.accept(_lockId));
       return true;
     }
 
     function RejectDeal(uint _lockId) public onlyOwner returns (bool success) {
       require(currentPhase==Phase.Registred);
-      if (!super.reject(_lockId)) revert();
+      require(super.reject(_lockId));
       return true;
     }
 
