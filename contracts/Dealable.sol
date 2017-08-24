@@ -50,7 +50,7 @@ contract Dealable{
 
 
       //create default Deal struct or access existing
-      DealInfo memory info = deals[_lockId];
+      DealInfo storage info = deals[_lockId];
 
       //lock only once for a given id
       if(info.lockedFunds > 0) revert();
@@ -74,7 +74,7 @@ contract Dealable{
 
   function accept(uint _lockId) internal {
 
-      DealInfo memory info = deals[_lockId];
+      DealInfo storage info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
       info.status = DealStatus.Accepted;
 
@@ -87,7 +87,7 @@ contract Dealable{
 
   function reject(uint _lockId) internal {
 
-      DealInfo memory info = deals[_lockId];
+      DealInfo storage info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
       info.status = DealStatus.Rejected;
 
@@ -100,7 +100,7 @@ contract Dealable{
 
   function cancel(uint _lockId) internal {
 
-      DealInfo memory info = deals[_lockId];
+      DealInfo storage info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
       info.status = DealStatus.Cancelled;
 
