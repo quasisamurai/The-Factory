@@ -17,6 +17,16 @@ contract Dealable{
 
   }
 
+  /*
+
+    WARN - pay attention to the type of the struct.
+    regarding this - https://ethereum.stackexchange.com/questions/21420/storage-warning-in-solidity
+    we need to point what type of storage do we point is. If the struct is using as a persistent storage
+    it should be point as 'storage'. If the struct is using only for the inside-cycle of function and should not be
+    persistent use 'memory'
+
+
+  */
   struct DealInfo {
 
       address buyer;
