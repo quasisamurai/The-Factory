@@ -25,11 +25,13 @@ contract Dealable{
     it should be point as 'storage'. If the struct is using only for the inside-cycle of function and should not be
     persistent use 'memory'
 
+    Also there is a compilator bug with warnings about this ^^^ issue and for fix it we need to upgrade compilator
+    version of all contracts to 0.4.14 or higher.
 
   */
-  struct DealInfo {
+  struct  DealInfo  {
 
-      address buyer;
+      address  buyer;
       uint lockedFunds;
       DealStatus status;
       // Next one for delay deals function.
@@ -47,8 +49,8 @@ contract Dealable{
 
 
 
-      //create default EscrowInfo struct or access existing
-      DealInfo info = deals[_lockId];
+      //create default Deal struct or access existing
+      DealInfo memory info = deals[_lockId];
 
       //lock only once for a given id
       if(info.lockedFunds > 0) revert();
@@ -72,7 +74,7 @@ contract Dealable{
 
   function accept(uint _lockId) internal {
 
-      DealInfo info = deals[_lockId];
+      DealInfo memory info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
       info.status = DealStatus.Accepted;
 
@@ -85,7 +87,7 @@ contract Dealable{
 
   function reject(uint _lockId) internal {
 
-      DealInfo info = deals[_lockId];
+      DealInfo memory info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
       info.status = DealStatus.Rejected;
 
@@ -98,7 +100,7 @@ contract Dealable{
 
   function cancel(uint _lockId) internal {
 
-      DealInfo info = deals[_lockId];
+      DealInfo memory info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
       info.status = DealStatus.Cancelled;
 
