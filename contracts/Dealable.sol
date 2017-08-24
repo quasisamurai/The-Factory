@@ -39,13 +39,13 @@ contract Dealable{
 
   }
 
-  uint d_count = 0;
+//  uint d_count = 0;
 
   mapping (uint => DealInfo) public deals;
   mapping (address => bool) public buyers;
 
 
-  function start(uint _lockId, uint _amount, address _buyer) internal {
+  function start(uint _lockId, uint _amount, address _buyer) internal returns (bool success){
 
 
 
@@ -70,6 +70,7 @@ contract Dealable{
       /* TODO make events for this
       */
     //  LogEvent(_lockId, _dataInfo, _version, Start, msg.sender, msg.value);
+    return true;
   }
 
   function accept(uint _lockId) internal {

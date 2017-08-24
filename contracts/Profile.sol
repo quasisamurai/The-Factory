@@ -52,6 +52,8 @@ contract Profile  is Ownable, Dealable {
 
       uint public localRate = 0;
       uint public stake = 0;
+      uint d_count = 0;
+
 
 
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
@@ -89,9 +91,20 @@ contract Profile  is Ownable, Dealable {
     /*/
 
 
+    // Deals-------------------------------------------------------------------
+
+    function OpenDeal(uint cost) public returns (bool success){
+
+      if(currentPhase!=Phase.Registred) revert();
+      uint c = d_count;
+      address _buyer = msg.sender;
+      if (!super.start(c,cost,_buyer)) revert();
+      return true; 
+
+    }
 
 
-
+    //-------------------------------------------------------------------------
 
     //Register in Network
     function CheckIn() internal returns (bool success){
