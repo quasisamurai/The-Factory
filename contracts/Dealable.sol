@@ -14,6 +14,7 @@ contract Dealable{
       Accepted,
       Cancelled,
       Rejected,
+      Aborted,
       Done
 
   }
@@ -48,9 +49,6 @@ contract Dealable{
 
 
   function start(uint _lockId, uint _amount, address _buyer) internal returns (bool success){
-
-
-
       //create default Deal struct or access existing
       DealInfo storage info = deals[_lockId];
 
@@ -62,10 +60,6 @@ contract Dealable{
       info.buyer = _buyer;
       info.lockedFunds = _amount;
       info.status = DealStatus.Open;
-
-
-
-
 
       buyers[_buyer] = true;
       //Start order to event log
@@ -96,11 +90,6 @@ contract Dealable{
       require(info.status == DealStatus.Open);
       info.status = DealStatus.Accepted;
 
-  // Here is could be rule for auto-accept or auto-throw
-
-
-  //Accept order to event log
-    //  LogEvent(_lockId, _dataInfo, _version, Accept, msg.sender, info.lockedFunds);
     return true;
   }
 
@@ -110,27 +99,29 @@ contract Dealable{
       require(info.status == DealStatus.Open);
       info.status = DealStatus.Rejected;
 
-  // Here is could be rule for auto-accept or auto-throw
-
-
-  //Accept order to event log
-    //  LogEvent(_lockId, _dataInfo, _version, Accept, msg.sender, info.lockedFunds);
     return true;
   }
 
-  // This function NEED to be refactor cause of unusual behavior
-  function cancel(uint _lockId) internal returns (bool success){
+
+  function cancel(uint _lockId,address _buyer) internal returns (bool success){
 
       DealInfo storage info = deals[_lockId];
       if(info.status != DealStatus.Open) revert();
+      require(info.buyer==_buyer);
       info.status = DealStatus.Cancelled;
 
-  // Here is could be rule for auto-accept or auto-throw
-
-
-  //Accept order to event log
-    //  LogEvent(_lockId, _dataInfo, _version, Accept, msg.sender, info.lockedFunds);
     return true;
+  }
+
+  //Abort deal which already running
+  function abort(uint _lockId,address _buyer) internal returns (bool success){
+
+          DealInfo storage info = deals[_lockId];
+          if(info.status != DealStatus.Accepted) revert();
+          require(info.buyer==_buyer);
+          info.status = DealStatus.Aborted;
+
+        return true;
   }
 
 
