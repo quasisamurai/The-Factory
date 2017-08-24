@@ -9,6 +9,7 @@ contract Dealable{
 
   enum DealStatus {
     //  Delayed,
+      None,
       Open,
       Accepted,
       Cancelled,

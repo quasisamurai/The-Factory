@@ -82,6 +82,7 @@ contract Profile  is Ownable, Dealable {
 
 
         event LogPhaseSwitch(Phase newPhase);
+        event LogDebug(string message);
 
 
 
@@ -102,6 +103,29 @@ contract Profile  is Ownable, Dealable {
       d_count++;
       return true;
 
+    }
+
+
+    // Should it be onlyOwner?
+    function getOpened() public returns (bool success, uint id){
+      uint _id;
+      DealStatus s = DealStatus.None;
+      uint i=0;
+
+        do{
+          s = getStatus(i);
+          _id = i;
+          i++;
+        }
+        while(s!=DealStatus.Open || i<=d_count);
+
+
+
+      if (s!=DealStatus.Open) {
+        return (false,_id);
+      } else {
+      return (true, _id);
+      }
     }
 
     //function AcceptDeal()
