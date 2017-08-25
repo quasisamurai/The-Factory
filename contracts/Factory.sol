@@ -1,17 +1,21 @@
 pragma solidity ^0.4.11;
 
 
-//Raw prototype of Profile factory
+//Raw prototype of Profile MEGAFACTORY
 
 
 //TODO - DOCS
 
-
+  import './Declaration.sol';
 //import './HubProfile.sol';
-import './MinerProfile.sol';
+//import './MinerProfile.sol';
 
 contract FactoryH{
   function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress, bool _privat) public returns (address);
+}
+
+contract FactoryM{
+  function createM(address _minowner, address dao, network Sonm, token sharesTokenAddress) public returns (address);
 }
 
 
@@ -24,6 +28,7 @@ contract Factory {
     network Sonm;
 
     FactoryH hf;
+    FactoryM mf;
 
 
 
@@ -54,10 +59,11 @@ contract Factory {
     event LogCr(address owner);
     //  event Weird(string thing);
 
-    function Factory(token TokenAddress, address _dao, FactoryH _hf){
+    function Factory(token TokenAddress, address _dao, FactoryH _hf,FactoryM _mf){
         sharesTokenAddress = TokenAddress;
         dao = _dao;
         hf = _hf;
+        mf = _mf;
 
     }
 
@@ -85,7 +91,8 @@ contract Factory {
 
     function createMiner() public returns (address) {
         address _minowner = msg.sender;
-        address minProfile = createM(_minowner);
+      //  address minProfile = createM(_minowner);
+        address minProfile = mf.createM(_minowner,dao, Sonm, sharesTokenAddress);
         Profiles[_minowner] = minProfile;
         types[_minowner] = TypeW.Miner;
         LogCreate(minProfile, _minowner);
@@ -99,13 +106,13 @@ contract Factory {
 
         LogCr(_hubowner);
     }
-    */
+
 
     function createM(address _minowner) private returns (address) {
         return address(new MinerProfile(_minowner, dao, Sonm, sharesTokenAddress));
         LogCr(_minowner);
     }
-
+*/
 
     function getProfile(address _owner) constant returns (address _Profile) {
         return Profiles[_owner];
