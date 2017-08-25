@@ -134,6 +134,7 @@ contract Profile  is Ownable, Dealable {
       uint lock = lockedFunds;
     //  if(sharesTokenAddress.balanceOf(msg.sender)< (lock + cost)) revert();
       require(sharesTokenAddress.balanceOf(msg.sender) >= (lock + cost));
+      require(plusRate(cost));
       require(super.done(_lockId,msg.sender));
       return true;
     }
@@ -144,8 +145,8 @@ contract Profile  is Ownable, Dealable {
       uint lockFee = cost * daoFee / 1000;
       lockedFunds -= cost;
       DaoCollect += lockFee;
-      uint lock = lockedFunds;
       require(super.appeal(_lockId,msg.sender));
+      require(minusRate(cost));
       return true;
     }
 
