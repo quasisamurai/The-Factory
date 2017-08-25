@@ -7,9 +7,12 @@ pragma solidity ^0.4.11;
 //TODO - DOCS
 
 
-import './HubProfile.sol';
+//import './HubProfile.sol';
 import './MinerProfile.sol';
 
+contract FactoryH{
+  function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress, bool _privat) public returns (address);
+}
 
 
 contract Factory {
@@ -19,6 +22,10 @@ contract Factory {
     address dao;
 
     network Sonm;
+
+    FactoryH hf;
+
+
 
     //Profile type
     enum TypeW {
@@ -47,9 +54,11 @@ contract Factory {
     event LogCr(address owner);
     //  event Weird(string thing);
 
-    function Factory(token TokenAddress, address _dao){
+    function Factory(token TokenAddress, address _dao, FactoryH _hf){
         sharesTokenAddress = TokenAddress;
         dao = _dao;
+        hf = _hf;
+
     }
 
     modifier onlyDao(){
@@ -66,7 +75,8 @@ contract Factory {
 
     function createHub(bool _privat) public returns (address) {
         address _hubowner = msg.sender;
-        address hubProfile = createH(_hubowner,_privat);
+    //    address hubProfile = createH(_hubowner,_privat);
+        address hubProfile = hf.createH(_hubowner, dao, Sonm, sharesTokenAddress,_privat);
         Profiles[_hubowner] = hubProfile;
         types[hubProfile] = TypeW.Hub;
         privat[hubProfile] = _privat;
@@ -81,10 +91,15 @@ contract Factory {
         LogCreate(minProfile, _minowner);
     }
 
+/*
     function createH(address _hubowner, bool _privat) private returns (address) {
-        return address(new HubProfile(_hubowner, dao, Sonm, sharesTokenAddress,_privat));
+      //  return address(new HubProfile(_hubowner, dao, Sonm, sharesTokenAddress,_privat));
+    //  return address(hp.Reproduce(_hubowner, dao, Sonm, sharesTokenAddress,_privat));
+
+
         LogCr(_hubowner);
     }
+    */
 
     function createM(address _minowner) private returns (address) {
         return address(new MinerProfile(_minowner, dao, Sonm, sharesTokenAddress));

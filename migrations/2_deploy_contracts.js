@@ -1,6 +1,7 @@
 var SDT = artifacts.require("./SDT.sol");
 var Factory = artifacts.require("./Factory.sol");
 var Profile = artifacts.require("./Profile.sol");
+var HP = artifacts.require("./HubProfile.sol");
 
 module.exports = function(deployer) {
 
