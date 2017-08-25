@@ -268,6 +268,7 @@ contract Profile  is Ownable, Dealable {
       if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
 
       lockedFunds = lock;
+      DaoCollect += amount;
       if(!plusRate(amount)) revert();
 
     }
@@ -285,6 +286,7 @@ contract Profile  is Ownable, Dealable {
           uint value=_value - lockFee;
           if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) revert();
           lockedFunds=lock;
+          DaoCollect += lockFee;
           sharesTokenAddress.transfer(_to,value);
 
     }
@@ -302,6 +304,7 @@ contract Profile  is Ownable, Dealable {
           if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) revert();
 
           lockedFunds=lock;
+          DaoCollect += lockFee;
           sharesTokenAddress.approve(_to,value);
     }
 
@@ -324,7 +327,7 @@ contract Profile  is Ownable, Dealable {
         // !CONCEPTUAL
         // should we take a fee from turn?
         //  uint turn = balance * daoFee / 1000;
-        DaoCollect = lockedFunds;
+      //  DaoCollect = lockedFunds;
         //DaoCollect = DaoCollect + turn;
         lockedFunds= 0;
 
@@ -336,6 +339,8 @@ contract Profile  is Ownable, Dealable {
         //dao got's 0.5% in such terms.
           sharesTokenAddress.transfer(DAO,DaoCollect);
           if (!CheckOut()) revert();
+
+          DaoCollect = 0;
 
       }
 
@@ -349,12 +354,13 @@ contract Profile  is Ownable, Dealable {
 
     function suspect() public onlyDao {
       require(currentPhase==Phase.Registred);
-
+      frozenTime = 0;
+      CheckOut();
       frozenTime = uint64(now);
       currentPhase = Phase.Suspected;
       LogPhaseSwitch(currentPhase);
       freezePeriod = 120 days;
-     CheckOut();
+
     }
 
     function punish() public onlyDao {
