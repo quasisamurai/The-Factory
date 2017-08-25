@@ -8,8 +8,7 @@ pragma solidity ^0.4.11;
 
 
 import './HubProfile.sol';
-//import './MinerProfile.sol';
-//import './Declaration.sol';
+
 
 contract FactoryH {
 

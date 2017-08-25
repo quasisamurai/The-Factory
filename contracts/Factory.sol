@@ -98,21 +98,7 @@ contract Factory {
         LogCreate(minProfile, _minowner);
     }
 
-/*
-    function createH(address _hubowner, bool _privat) private returns (address) {
-      //  return address(new HubProfile(_hubowner, dao, Sonm, sharesTokenAddress,_privat));
-    //  return address(hp.Reproduce(_hubowner, dao, Sonm, sharesTokenAddress,_privat));
 
-
-        LogCr(_hubowner);
-    }
-
-
-    function createM(address _minowner) private returns (address) {
-        return address(new MinerProfile(_minowner, dao, Sonm, sharesTokenAddress));
-        LogCr(_minowner);
-    }
-*/
 
     function getProfile(address _owner) constant returns (address _Profile) {
         return Profiles[_owner];

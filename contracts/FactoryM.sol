@@ -7,9 +7,9 @@ pragma solidity ^0.4.11;
 //TODO - DOCS
 
 
-//import './HubProfile.sol';
+
 import './MinerProfile.sol';
-//import './Declaration.sol';
+
 
 contract FactoryM {
 
