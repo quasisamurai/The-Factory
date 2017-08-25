@@ -87,6 +87,18 @@ contract Dealable{
 
   }
 
+  function getCost(uint _lockId) public returns (uint cost){
+    DealInfo memory info = getInfo(_lockId);
+    uint _cost = info.lockedFunds;
+    return _cost;
+  }
+
+  function getBuyer(uint _lockId) public returns (address buyer){
+    DealInfo memory info = getInfo(_lockId);
+    address _buyer = info.buyer;
+    return _buyer;
+  }
+
   function accept(uint _lockId) internal returns (bool success){
 
       DealInfo memory info = deals[_lockId];
