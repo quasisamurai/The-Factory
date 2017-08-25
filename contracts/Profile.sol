@@ -125,8 +125,26 @@ contract Profile  is Ownable, Dealable {
       return true;
     }
 
+    function DoneDeal(uint _lockId) public returns (bool success) {
+      require(currentPhase==Phase.Registred);
+      uint cost = super.getCost(_lockId);
+      uint lockFee = cost * daoFee / 1000;
+      lockedFunds -= cost;
+      DaoCollect += lockFee;
+      uint lock = lockedFunds;
+    //  if(sharesTokenAddress.balanceOf(msg.sender)< (lock + cost)) revert();
+      require(sharesTokenAddress.balanceOf(msg.sender) >= (lock + cost));
+      require(super.done(_lockId,msg.sender));
+      return true;
+    }
+
     function AppealDeal(uint _lockId) public returns (bool success) {
       require(currentPhase==Phase.Registred);
+      uint cost = super.getCost(_lockId);
+      uint lockFee = cost * daoFee / 1000;
+      lockedFunds -= cost;
+      DaoCollect += lockFee;
+      uint lock = lockedFunds;
       require(super.appeal(_lockId,msg.sender));
       return true;
     }
@@ -298,19 +316,20 @@ contract Profile  is Ownable, Dealable {
     }
 
 
-    function give(address _to, uint _value) public onlyOwner {
+    function give(address _to, uint value) internal {
 
 
       require(currentPhase==Phase.Registred);
 
-          uint lockFee = _value * daoFee / 1000;
-          uint lock = lockedFunds + lockFee;
-          uint value=_value - lockFee;
+        //  uint lockFee = _value * daoFee / 1000;
+        //  uint lock = lockedFunds + lockFee;
+          uint lock = lockedFunds;
+        //  uint value=_value - lockFee;
 
           if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) revert();
 
-          lockedFunds=lock;
-          DaoCollect += lockFee;
+        //  lockedFunds=lock;
+        //  DaoCollect += lockFee;
           sharesTokenAddress.approve(_to,value);
     }
 
