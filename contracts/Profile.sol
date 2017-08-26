@@ -131,12 +131,23 @@ contract Profile  is Ownable, Dealable {
       uint lockFee = cost * daoFee / 1000;
       lockedFunds -= cost;
       DaoCollect += lockFee;
-      uint lock = lockedFunds;
+    //  uint lock = lockedFunds;
     //  if(sharesTokenAddress.balanceOf(msg.sender)< (lock + cost)) revert();
-      require(sharesTokenAddress.balanceOf(msg.sender) >= (lock + cost));
+    //  require(sharesTokenAddress.balanceOf(msg.sender) >= (lock + cost));
       require(plusRate(cost));
       require(super.done(_lockId,msg.sender));
       return true;
+    }
+
+    function Donehard(uint _lockId) internal returns (bool success){
+      uint cost = super.getCost(_lockId);
+      uint lockFee = cost * daoFee / 1000;
+      lockedFunds -= cost;
+      DaoCollect += lockFee;
+      require(plusRate(cost));
+      require(super.hardDone(_lockId));
+      return true;
+
     }
 
     function AppealDeal(uint _lockId) public returns (bool success) {
@@ -229,8 +240,18 @@ contract Profile  is Ownable, Dealable {
       return a;
     }
 
-
-
+    /* This function close all ready but not accepted by buyer deals */
+    function hodor() public onlyOwner returns (bool success){
+        require(currentPhase==Phase.Registred);
+        require(now >= (frozenTime + freezePeriod));
+        require(checkReady() == true);
+        do {
+          var(a,b) = getReady();
+          require(Donehard(b) == true);
+        }
+        while(checkReady() == true);
+        return true;
+    }
 
 
     //-------------------------------------------------------------------------
@@ -259,10 +280,11 @@ contract Profile  is Ownable, Dealable {
         require(currentPhase==Phase.Registred);
         bool accepted = checkAccepted();
         require(accepted == false);
-
+        bool ready = checkReady();
+        require(ready == false);
 
         // Comment it for test usage.
-      if(now < (frozenTime + freezePeriod)) revert();
+      require(now >= (frozenTime + freezePeriod));
 
       //Appendix to call register function from Network contract and check it.
       Network.DeRegister(owner,this,localRate);

@@ -165,6 +165,15 @@ contract Dealable{
   }
 
 
+  function hardDone(uint _lockId) internal returns (bool success){
+    DealInfo memory info = deals[_lockId];
+    require(info.status == DealStatus.Ready);
+    info.status = DealStatus.Done;
+    deals[_lockId] = info;
+
+      return true;
+  }
+
   function appeal(uint _lockId,address _buyer) internal returns (bool success){
 
       DealInfo memory info = deals[_lockId];
