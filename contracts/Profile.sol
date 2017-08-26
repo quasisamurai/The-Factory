@@ -193,6 +193,25 @@ contract Profile  is Ownable, Dealable {
       }
     }
 
+    function getReady() public returns (bool sucess, uint id){
+      uint _id;
+      DealStatus s = DealStatus.None;
+      uint i=0;
+
+        do{
+          s = super.getStatus(i);
+          _id = i;
+          i++;
+        }
+        while(s!=DealStatus.Ready || i<=d_count);
+
+      if (s!=DealStatus.Accepted) {
+        return (false,_id);
+      } else {
+      return (true, _id);
+      }
+
+    }
 
 
 
