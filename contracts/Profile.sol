@@ -213,6 +213,22 @@ contract Profile  is Ownable, Dealable {
 
     }
 
+    function checkAccepted() public returns (bool flag){
+      var(a,b) = getAccepted();
+      if (a==true){
+        LogDebug("You have non ready but accepted deals!");
+      }
+      return a;
+    }
+
+    function checkReady() public returns (bool flag){
+      var(a,b) = getReady();
+      if (a==true){
+        LogDebug("You have non closed but ready deals!");
+      }
+      return a;
+    }
+
 
 
 
@@ -241,6 +257,9 @@ contract Profile  is Ownable, Dealable {
 
         //double check
         require(currentPhase==Phase.Registred);
+        bool accepted = checkAccepted();
+        require(accepted == false);
+
 
         // Comment it for test usage.
       if(now < (frozenTime + freezePeriod)) revert();

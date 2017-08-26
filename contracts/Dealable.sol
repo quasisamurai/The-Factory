@@ -52,7 +52,7 @@ contract Dealable{
 
   function start(uint _lockId, uint _amount, address _buyer) internal returns (bool success){
       //create default Deal struct or access existing
-      DealInfo storage info = deals[_lockId];
+      DealInfo memory info = deals[_lockId];
 
       //lock only once for a given id
       if(info.lockedFunds > 0) revert();
@@ -68,7 +68,7 @@ contract Dealable{
       /* TODO make events for this
       */
     //  LogEvent(_lockId, _dataInfo, _version, Start, msg.sender, msg.value);
-
+    deals[_lockId] = info;
 
     return true;
   }
