@@ -1,16 +1,29 @@
 pragma solidity ^0.4.11;
 
 
-//Raw prototype of Profile factory
+//Raw prototype of Profile MEGAFACTORY
 
 
 //TODO - DOCS
 
+  import './Declaration.sol';
+//import './HubProfile.sol';
+//import './MinerProfile.sol';
+// import './ClientProfile.sol'
 
-import './HubProfile.sol';
-import './MinerProfile.sol';
+contract FactoryH{
+  function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress, bool _privat) public returns (address);
+}
 
+contract FactoryM{
+  function createM(address _minowner, address dao, network Sonm, token sharesTokenAddress) public returns (address);
+}
 
+/*
+contract FactoryC{
+  function createC(address , address dao, network Sonm, token sharesTokenAddress) public returns (address);
+}
+*/
 
 contract Factory {
 
@@ -19,6 +32,12 @@ contract Factory {
     address dao;
 
     network Sonm;
+
+    FactoryH hf;
+    FactoryM mf;
+  //  FactoryC cf;
+
+
 
     //Profile type
     enum TypeW {
@@ -47,9 +66,13 @@ contract Factory {
     event LogCr(address owner);
     //  event Weird(string thing);
 
-    function Factory(token TokenAddress, address _dao){
+    function Factory(token TokenAddress, address _dao, FactoryH _hf,FactoryM _mf){
         sharesTokenAddress = TokenAddress;
         dao = _dao;
+        hf = _hf;
+        mf = _mf;
+  //      cf = _cf;
+
     }
 
     modifier onlyDao(){
@@ -66,7 +89,8 @@ contract Factory {
 
     function createHub(bool _privat) public returns (address) {
         address _hubowner = msg.sender;
-        address hubProfile = createH(_hubowner,_privat);
+    //    address hubProfile = createH(_hubowner,_privat);
+        address hubProfile = hf.createH(_hubowner, dao, Sonm, sharesTokenAddress,_privat);
         Profiles[_hubowner] = hubProfile;
         types[hubProfile] = TypeW.Hub;
         privat[hubProfile] = _privat;
@@ -75,21 +99,21 @@ contract Factory {
 
     function createMiner() public returns (address) {
         address _minowner = msg.sender;
-        address minProfile = createM(_minowner);
+      //  address minProfile = createM(_minowner);
+        address minProfile = mf.createM(_minowner,dao, Sonm, sharesTokenAddress);
         Profiles[_minowner] = minProfile;
         types[_minowner] = TypeW.Miner;
         LogCreate(minProfile, _minowner);
     }
-
-    function createH(address _hubowner, bool _privat) private returns (address) {
-        return address(new HubProfile(_hubowner, dao, Sonm, sharesTokenAddress,_privat));
-        LogCr(_hubowner);
+/*
+    function createProfile() public returns (address) {
+      address _clientowner = msg.sender;
+      address clientProfile = cf.createC(_clientowner, dao, Sonm, sharesTokenAddress);
+      Profiles[_clientowner] = clientProfile;
+      types[_clientowner] = TypeW.Client;
+      LogCreate(clientProfile, _clientowner);
     }
-
-    function createM(address _minowner) private returns (address) {
-        return address(new MinerProfile(_minowner, dao, Sonm, sharesTokenAddress));
-        LogCr(_minowner);
-    }
+*/
 
 
     function getProfile(address _owner) constant returns (address _Profile) {

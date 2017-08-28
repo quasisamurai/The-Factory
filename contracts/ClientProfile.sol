@@ -19,8 +19,8 @@ contract ClientProfile is Ownable, Profile{
 
 
   ///@dev constructor
-  function ClientProfile(address _Clientowner,address _dao,network _Network,token sharesAddress){
-    owner=_Clientowner;
+  function ClientProfile(address _clientowner,address _dao,network _Network,token sharesAddress){
+    owner=_clientowner;
     DAO=_dao;
     Network= network(_Network);
     Factory=msg.sender;

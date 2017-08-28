@@ -47,7 +47,16 @@ contract HubProfile is Ownable, Profile{
 
   }
 
+/*
+  function Reproduce(address _hubowner,address _dao,network _Network,token sharesAddress, bool _privat) returns (address){
+  //  address newprofile = new HubProfile(address _hubowner,address _dao,network _Network,token sharesAddress, bool _privat);
+  //  return newprofile;
 
+      address newprofile = new HubProfile(_hubowner, _dao, _Network, sharesTokenAddress,_privat);
+      return newprofile;
+      //return address(new HubProfile(_hubowner, _dao, _Network, sharesTokenAddress,_privat));
+  }
+  */
 
   /*/
    *  Public functions
