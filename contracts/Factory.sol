@@ -9,6 +9,7 @@ pragma solidity ^0.4.11;
   import './Declaration.sol';
 //import './HubProfile.sol';
 //import './MinerProfile.sol';
+// import './ClientProfile.sol'
 
 contract FactoryH{
   function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress, bool _privat) public returns (address);
@@ -18,6 +19,11 @@ contract FactoryM{
   function createM(address _minowner, address dao, network Sonm, token sharesTokenAddress) public returns (address);
 }
 
+/*
+contract FactoryC{
+  function createC(address , address dao, network Sonm, token sharesTokenAddress) public returns (address);
+}
+*/
 
 contract Factory {
 
@@ -29,6 +35,7 @@ contract Factory {
 
     FactoryH hf;
     FactoryM mf;
+  //  FactoryC cf;
 
 
 
@@ -64,6 +71,7 @@ contract Factory {
         dao = _dao;
         hf = _hf;
         mf = _mf;
+  //      cf = _cf;
 
     }
 
@@ -97,7 +105,15 @@ contract Factory {
         types[_minowner] = TypeW.Miner;
         LogCreate(minProfile, _minowner);
     }
-
+/*
+    function createProfile() public returns (address) {
+      address _clientowner = msg.sender;
+      address clientProfile = cf.createC(_clientowner, dao, Sonm, sharesTokenAddress);
+      Profiles[_clientowner] = clientProfile;
+      types[_clientowner] = TypeW.Client;
+      LogCreate(clientProfile, _clientowner);
+    }
+*/
 
 
     function getProfile(address _owner) constant returns (address _Profile) {
