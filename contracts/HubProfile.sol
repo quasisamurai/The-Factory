@@ -2,14 +2,7 @@ pragma solidity ^0.4.11;
 
 //Raw prototype for Hub Profile contract.
 
-
-
-
-
-
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-//import "./zeppelin/ownership/Ownable.sol";
-//import "./Declaration.sol";
 import "./Profile.sol";
 
 
@@ -31,51 +24,23 @@ contract HubProfile is Ownable, Profile{
     //1 SNM token is needed to registrate in Network
     freezeQuote = 1 * (1 ether / 1 wei);
 
-    // in the future this percent will be defined by factory.
-    //lockPercent= 30;
-
     //in promilles
     daoFee = 10;
 
     freezePeriod = 10 days;
 
-
-      privat=_privat;
-
-
+    privat=_privat;
     currentPhase = Phase.Idle;
 
   }
 
-/*
-  function Reproduce(address _hubowner,address _dao,network _Network,token sharesAddress, bool _privat) returns (address){
-  //  address newprofile = new HubProfile(address _hubowner,address _dao,network _Network,token sharesAddress, bool _privat);
-  //  return newprofile;
-
-      address newprofile = new HubProfile(_hubowner, _dao, _Network, sharesTokenAddress,_privat);
-      return newprofile;
-      //return address(new HubProfile(_hubowner, _dao, _Network, sharesTokenAddress,_privat));
-  }
-  */
-
-  /*/
-   *  Public functions
-  /*/
-
   function Registration() public returns (bool success){
 
 
-      if(currentPhase!=Phase.Idle) revert();
-
-    if (sharesTokenAddress.balanceOf(this) <= freezeQuote) revert();
-
-    //Appendix to call register function from Network contract and check it.
+    require(currentPhase==Phase.Idle);
+    require(sharesTokenAddress.balanceOf(this) >= freezeQuote);
 
     if(!super.CheckIn()) revert();
-  //super.CheckIn();
-
-
-
     return true;
   }
 

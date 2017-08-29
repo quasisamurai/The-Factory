@@ -4,8 +4,6 @@ pragma solidity ^0.4.11;
 ///@author Sergey Ponomarev
 
 
-
-
 // Factory safe definition
 contract factory{
 
@@ -25,14 +23,10 @@ contract factory{
 }
 
 
-
-
 // SONM social network
 contract Network{
 
   factory ProfilesFactory;
-
-
 
   mapping (address => bool) public isRegistred;
   mapping (address => uint) public globalRate;
@@ -58,7 +52,7 @@ contract Network{
 
     address Profile = ProfilesFactory.getProfile(_owner);
     // Check that call comes from our Profile
-    if (Profile!=msg.sender) revert();
+    require(Profile == msg.sender);
     isRegistred[Profile]=true;
 
     factory.TypeW _type;
@@ -72,18 +66,15 @@ contract Network{
     //Appendix event
     Registred(_owner,Profile,time,_type);
     return true;
-
   }
 
 
 
-
-  // General deregister
   function DeRegister(address _owner, address _Profile, uint localR) public returns(bool) {
 
     address Profile = ProfilesFactory.getProfile(_owner);
     // Check that call comes from our Profile
-    if (Profile!=msg.sender) revert();
+    require(Profile == msg.sender);
     isRegistred[Profile]=false;
 
     uint64 time;
@@ -103,7 +94,7 @@ contract Network{
     function getGlobalRate(address _owner, address _Profile) public returns (uint) {
       address Profile = ProfilesFactory.getProfile(_owner);
       // Check that call comes from our Profile
-      if (Profile!=msg.sender) revert();
+      require(Profile == msg.sender);
       uint g = globalRate[_Profile];
       return g;
     }

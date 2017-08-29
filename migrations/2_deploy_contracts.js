@@ -5,6 +5,7 @@ var Profile = artifacts.require("./Profile.sol");
 var FactoryH = artifacts.require("./FactoryH.sol");
 var FactoryM = artifacts.require("./FactoryM.sol");
 var FactoryC = artifacts.require("./FactoryC.sol");
+var Network = artifacts.require("./Network.sol");
 
 module.exports = function(deployer) {
 
@@ -13,14 +14,14 @@ module.exports = function(deployer) {
   }).then(function () {
     return deployer.deploy(FactoryM);
   }).then(function () {
-    return deployer.deploy(FactoryC); 
+    return deployer.deploy(FactoryC);
   }).then(function () {
       return deployer.deploy(Factory, SDT.address, web3.eth.accounts[0], FactoryH.address, FactoryM.address, FactoryC.address);
-
-
+  }).then(function () {
+      return deployer.deploy(Network,Factory.address);
 });
 
 
-    //deployer.deploy(Profile);
+
 
 };
