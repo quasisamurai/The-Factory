@@ -36,7 +36,7 @@ var Miner = contract(miner_artifacts)
 var accounts
 var account
 var event
-
+var dao
 var address
 
 var hubaddress
@@ -108,6 +108,28 @@ window.App = {
       $('#t_sym1').html(sym)
       //  console.log(sym);
     })
+  },
+
+  changeAdresses: function() {
+    var self = this
+    var pos = '#network_address'
+    var msg
+    var fac
+    var ntwradr = $('#network_address').val()
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.changeAdresses(web3.eth.accounts[0], ntwradr, {from: account})
+    }).then(function (tx) {
+      networkadress = tx
+      console.log('tx:')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+    }).catch(function (e) {
+      console.log(e)
+
+    })
+
   },
 
   registerHub: function () {
