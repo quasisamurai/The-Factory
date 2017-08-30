@@ -132,6 +132,33 @@ window.App = {
 
   },
 
+  createHub: function () {
+    var self = this
+    var pos = '#hubCreate_result'
+    var instance
+    var msg
+    var priv = $('#privatehub').is(':checked')
+    var fac
+
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.createHub(priv, {from: account})
+    }).then(function (tx) {
+      hubaddress = tx
+      console.log('tx:')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
+  },
+
   registerHub: function () {
     var self = this
     var pos = '#hubreg_result'
@@ -157,19 +184,42 @@ window.App = {
     })
   },
 
-  createHub: function () {
+  createClient: function () {
     var self = this
-    var pos = '#hubCreate_result'
+    var pos = '#clientCreate_result'
     var instance
     var msg
-    var priv = $('#privatehub').is(':checked')
     var fac
 
     Factory.deployed().then(function (instance) {
       fac = instance
-      return fac.createHub(priv, {from: account})
+      return fac.createClient({from: account})
     }).then(function (tx) {
-      hubaddress = tx
+      clientaddress = tx
+      console.log('tx:')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
+  },
+
+  registerMiner: function () {
+    var self = this
+    var pos = '#clientreg_result'
+    var instance
+    var msg
+    var cli
+    ClientProfile.at(cliraddress).then(function (instance) {
+      cli = instance
+      return cli.Registration({from: account})
+    }).then(function (tx) {
+
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'

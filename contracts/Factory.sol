@@ -66,7 +66,7 @@ contract Factory {
     event LogCr(address owner);
     //  event Weird(string thing);
 
-    function Factory(token TokenAddress, address _dao, FactoryH _hf,FactoryM _mf){
+    function Factory(token TokenAddress, address _dao, FactoryH _hf,FactoryM _mf, FactoryC _cf){
         sharesTokenAddress = TokenAddress;
         dao = _dao;
         hf = _hf;
@@ -106,7 +106,7 @@ contract Factory {
         LogCreate(minProfile, _minowner);
     }
 
-    function createProfile() public returns (address) {
+    function createClient() public returns (address) {
       address _clientowner = msg.sender;
       address clientProfile = cf.createC(_clientowner, dao, Sonm, sharesTokenAddress);
       Profiles[_clientowner] = clientProfile;
