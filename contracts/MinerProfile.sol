@@ -3,11 +3,7 @@ pragma solidity ^0.4.11;
 //Raw prototype for Miner Profile contract.
 
 
-
-
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-//import "./zeppelin/ownership/Ownable.sol";
-
 import "./Profile.sol";
 
 
@@ -20,17 +16,13 @@ contract MinerProfile is Ownable, Profile{
     Network= network(_Network);
     Factory=msg.sender;
     genesisTime=uint64(now);
-
     sharesTokenAddress = token(sharesAddress);
 
     //1 SNM token is needed to registrate in Network
     freezeQuote = 1 * (1 ether / 1 wei);
 
-
-
     //in promilles
     daoFee = 5;
-
     // time of work period.
     freezePeriod = 10 days;
 
@@ -38,17 +30,11 @@ contract MinerProfile is Ownable, Profile{
 
 
 
-  /*/
-   *  Public functions
-  /*/
-
   function Registration() public onlyOwner returns (bool success){
-      if(currentPhase!=Phase.Idle) revert();
-    if (sharesTokenAddress.balanceOf(this) <= freezeQuote) revert();
+    require(currentPhase==Phase.Idle);
+    require(sharesTokenAddress.balanceOf(this) >= freezeQuote);
 
-    //Appendix to call register function from Network contract and check it.
     if(!super.CheckIn()) revert();
-    //Network.RegisterMin(owner,this,frozenTime);
 
     return true;
   }
