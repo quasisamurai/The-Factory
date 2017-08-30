@@ -16,9 +16,9 @@ module.exports = function(deployer) {
   }).then(function () {
     return deployer.deploy(FactoryC);
   }).then(function () {
-      return deployer.deploy(Factory, SDT.address, web3.eth.accounts[0], FactoryH.address, FactoryM.address, FactoryC.address);
+      return deployer.deploy(Factory, SDT.address, web3.eth.accounts[0], FactoryH.address, FactoryM.address, FactoryC.address, SDT.address, FactoryH.address, FactoryM.address, FactoryC.address);
   }).then(function () {
-      return deployer.deploy(Network,Factory.address);
+      return deployer.deploy(Network,Factory.address, SDT.address, FactoryH.address, FactoryM.address, FactoryC.address, Factory.address);
 });
 
 
