@@ -19,6 +19,7 @@ import token_artifacts from '../../build/contracts/SDT.json'
 import factory_artifacts from '../../build/contracts/Factory.json'
 import hub_artifacts from '../../build/contracts/HubProfile.json'
 import miner_artifacts from '../../build/contracts/MinerProfile.json'
+import client_artifacts from '../../build/contracts/ClientProfile.json'
 
 // const async = require('async');
 
@@ -209,13 +210,13 @@ window.App = {
 
   },
 
-  registerMiner: function () {
+  registerClient: function () {
     var self = this
     var pos = '#clientreg_result'
     var instance
     var msg
     var cli
-    ClientProfile.at(cliraddress).then(function (instance) {
+    ClientProfile.at(cliaraddress).then(function (instance) {
       cli = instance
       return cli.Registration({from: account})
     }).then(function (tx) {
