@@ -19,6 +19,7 @@ import token_artifacts from '../../build/contracts/SDT.json'
 import factory_artifacts from '../../build/contracts/Factory.json'
 import hub_artifacts from '../../build/contracts/HubProfile.json'
 import miner_artifacts from '../../build/contracts/MinerProfile.json'
+import client_artifacts from '../../build/contracts/ClientProfile.json'
 
 // const async = require('async');
 
@@ -36,7 +37,7 @@ var Miner = contract(miner_artifacts)
 var accounts
 var account
 var event
-
+var dao
 var address
 
 var hubaddress
@@ -110,6 +111,55 @@ window.App = {
     })
   },
 
+  changeAdresses: function() {
+    var self = this
+    var pos = '#network_address'
+    var msg
+    var fac
+    var ntwradr = $('#network_address').val()
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.changeAdresses(web3.eth.accounts[0], ntwradr, {from: account})
+    }).then(function (tx) {
+      networkadress = tx
+      console.log('tx:')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+    }).catch(function (e) {
+      console.log(e)
+
+    })
+
+  },
+
+  createHub: function () {
+    var self = this
+    var pos = '#hubCreate_result'
+    var instance
+    var msg
+    var priv = $('#privatehub').is(':checked')
+    var fac
+
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.createHub(priv, {from: account})
+    }).then(function (tx) {
+      hubaddress = tx
+      console.log('tx:')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
+  },
+
   registerHub: function () {
     var self = this
     var pos = '#hubreg_result'
@@ -135,19 +185,42 @@ window.App = {
     })
   },
 
-  createHub: function () {
+  createClient: function () {
     var self = this
-    var pos = '#hubCreate_result'
+    var pos = '#clientCreate_result'
     var instance
     var msg
-    var priv = $('#privatehub').is(':checked')
     var fac
 
     Factory.deployed().then(function (instance) {
       fac = instance
-      return fac.createHub(priv, {from: account})
+      return fac.createClient({from: account})
     }).then(function (tx) {
-      hubaddress = tx
+      clientaddress = tx
+      console.log('tx:')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
+  },
+
+  registerClient: function () {
+    var self = this
+    var pos = '#clientreg_result'
+    var instance
+    var msg
+    var cli
+    ClientProfile.at(cliaraddress).then(function (instance) {
+      cli = instance
+      return cli.Registration({from: account})
+    }).then(function (tx) {
+
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
