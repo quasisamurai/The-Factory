@@ -3,7 +3,8 @@ Miner
 //  TODO : cleanup code
 //  TODO : clean appendix
 // Import the page's CSS. Webpack will know what to do with it.
-import '../stylesheets/app.css'
+// Uncomment if you want to make the page more stylish
+//import '../stylesheets/app.css'
 
 // Import libraries we need.
 
@@ -641,6 +642,88 @@ window.App = {
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
+
+  },
+
+  getProfile: function () {
+    var self = this
+    var pos
+    var msg
+    var fac
+    var addr = $('#address_to_check').val()
+
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.getProfile(addr, {from: account})
+    }).then(function (tx) {
+
+      address = tx
+      console.log('Here is address of ')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
+  },
+
+  getType: function () {
+    var self = this
+    var pos
+    var msg
+    var fac
+    var addr = $('#address_to_check').val()
+
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.getType(addr, {from: account})
+    }).then(function (tx) {
+
+      address = tx
+      console.log('Type of this address is ')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
+  },
+
+  isPrivate: function () {
+    var self = this
+    var pos = 'IsPrivate'
+    var msg
+    var fac
+    var addr = $('#address_to_check').val()
+
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.isPrivate(addr, {from: account})
+    }).then(function (tx) {
+
+      address = tx
+      console.log('Is it private profile? ')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
 
   },
 
