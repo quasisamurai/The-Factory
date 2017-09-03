@@ -64,6 +64,8 @@ contract Factory {
     event LogCreate(address Profile, address owner);
 
     event LogCr(address owner);
+    event LogDebug(string message);
+    event DebugAddress(address lookup);
     //  event Weird(string thing);
 
     function Factory(token TokenAddress, address _dao, FactoryH _hf,FactoryM _mf){
@@ -76,11 +78,15 @@ contract Factory {
     }
 
     modifier onlyDao(){
-        if (msg.sender != dao) revert();
+        if (msg.sender != dao) {
+        LogDebug("msg.sender!= dao");
+        DebugAddress(msg.sender);
+        DebugAddress(dao);
+      }
         _;
     }
 
-    function changeAdresses(address _dao, address _Sonm) public  {
+    function changeAdresses(address _dao, address _Sonm) public onlyDao {
         //network _Sonm
         dao = _dao;
         Sonm = network(_Sonm);

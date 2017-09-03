@@ -136,15 +136,33 @@ window.App = {
   var msg;
   var fac;
   var dao = account;
+  var debugMsg;
+  var debugAdr;
 
   var to = $("#address1").val();
 
   Factory.deployed().then(function(instance){
     fac=instance;
+    // Listening evetns for debugging
+    debugMsg = fac.LogDebug({},{fromBlock: 0, toBlock: 'latest'});
+    debugMsg.watch(function(error, result){
+      var r1=JSON.stringify(result);
+      console.log(r1);
+      console.log(error);
+    }
+  );
+  debugAdr = fac.DebugAddress({},{fromBlock: 0, toBlock: 'latest'});
+  debugAdr.watch(function(error, result){
+    var r1=JSON.stringify(result);
+    console.log(r1);
+    console.log(error);
+  }
+  );
     return fac.changeAdresses(dao, to, {from: account})
   }).then(function (tx) {
        console.log("tx:");
        console.log(tx);
+
        msg="Transaction complete";
        self.setStatusPos(pos,msg);
        self.refreshAddress();
