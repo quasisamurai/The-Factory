@@ -19,6 +19,7 @@ import token_artifacts from '../../build/contracts/SDT.json'
 import factory_artifacts from '../../build/contracts/Factory.json'
 import hub_artifacts from '../../build/contracts/HubProfile.json'
 import miner_artifacts from '../../build/contracts/MinerProfile.json'
+import network_artifacts from '../../build/contracts/Network.json'
 
 // const async = require('async');
 
@@ -29,6 +30,7 @@ var Token = contract(token_artifacts)
 var Factory = contract(factory_artifacts)
 var Hub = contract(hub_artifacts)
 var Miner = contract(miner_artifacts)
+var Network = contract(network_artifacts)
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -52,11 +54,12 @@ window.App = {
     var tx
     var pos
 
-    // Bootstrap the MetaCoin abstraction for Use.
+    // Bootstrap the SONM contracts abstraction for Use.
     Token.setProvider(web3.currentProvider)
     Factory.setProvider(web3.currentProvider)
     Hub.setProvider(web3.currentProvider)
     Miner.setProvider(web3.currentProvider)
+    Network.setProvider(web3.currentProvider)
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
@@ -91,7 +94,7 @@ window.App = {
   },
 
   refreshAddress: function () {
-    // var self=this
+    var self=this
     // var instance
     var tok
     //  console.log("refresh init");
@@ -102,13 +105,57 @@ window.App = {
       //  console.log(tok.address);
 
       //  self.hubBalance();
-      //  self.whitelistAddr();
+        self.networkAddr();
       return tok.symbol.call()
     }).then(function (sym) {
       $('#t_sym1').html(sym)
       //  console.log(sym);
     })
   },
+
+  networkAddr: function () {
+  var self=this;
+  var pos="#network";
+  var instance;
+  var msg;
+  var whl;
+
+
+
+  Network.deployed().then(function(instance){
+    whl=instance;
+      $("#network").html(whl.address);
+      console.log(whl.address);
+});
+},
+
+  changeAdresses: function () {
+  var self=this;
+  var pos="#network";
+  var instance;
+  var msg;
+  var fac;
+  var dao = account;
+
+  var to = $("#address1").val();
+
+  Factory.deployed().then(function(instance){
+    fac=instance;
+    return fac.changeAdresses(dao, to, {from: account})
+  }).then(function (tx) {
+       console.log("tx:");
+       console.log(tx);
+       msg="Transaction complete";
+       self.setStatusPos(pos,msg);
+       self.refreshAddress();
+ }).catch(function(e) {
+     console.log(e);
+
+    msg="Ошибка при отправке, смотри консоль";
+    self.setStatusPos(pos,msg);
+   });
+
+},
 
   registerHub: function () {
     var self = this

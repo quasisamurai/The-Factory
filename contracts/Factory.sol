@@ -80,7 +80,8 @@ contract Factory {
         _;
     }
 
-    function changeAdresses(address _dao, network _Sonm) public onlyDao {
+    function changeAdresses(address _dao, address _Sonm) public  {
+        //network _Sonm
         dao = _dao;
         Sonm = network(_Sonm);
     }
