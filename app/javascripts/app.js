@@ -3,8 +3,7 @@ Miner
 //  TODO : cleanup code
 //  TODO : clean appendix
 // Import the page's CSS. Webpack will know what to do with it.
-// Uncomment if you want to make the page more stylish
-//import '../stylesheets/app.css'
+import '../stylesheets/app.css'
 
 // Import libraries we need.
 
@@ -20,11 +19,7 @@ import token_artifacts from '../../build/contracts/SDT.json'
 import factory_artifacts from '../../build/contracts/Factory.json'
 import hub_artifacts from '../../build/contracts/HubProfile.json'
 import miner_artifacts from '../../build/contracts/MinerProfile.json'
-<<<<<<< HEAD
 import network_artifacts from '../../build/contracts/Network.json'
-=======
-import client_artifacts from '../../build/contracts/ClientProfile.json'
->>>>>>> a99337b110b33f0999220e70cf02bee2a91efada
 
 // const async = require('async');
 
@@ -43,7 +38,7 @@ var Network = contract(network_artifacts)
 var accounts
 var account
 var event
-var dao
+
 var address
 
 var hubaddress
@@ -118,7 +113,6 @@ window.App = {
     })
   },
 
-<<<<<<< HEAD
   networkAddr: function () {
   var self=this;
   var pos="#network";
@@ -180,56 +174,6 @@ window.App = {
    });
 
 },
-=======
-  changeAdresses: function() {
-    var self = this
-    var pos = '#network_address'
-    var msg
-    var fac
-    var ntwradr = $('#network_address').val()
-    Factory.deployed().then(function (instance) {
-      fac = instance
-      return fac.changeAdresses(web3.eth.accounts[0], ntwradr, {from: account})
-    }).then(function (tx) {
-      networkadress = tx
-      console.log('tx:')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
-    }).catch(function (e) {
-      console.log(e)
-
-    })
-
-  },
-
-  createHub: function () {
-    var self = this
-    var pos = '#hubCreate_result'
-    var instance
-    var msg
-    var priv = $('#privatehub').is(':checked')
-    var fac
-
-    Factory.deployed().then(function (instance) {
-      fac = instance
-      return fac.createHub(priv, {from: account})
-    }).then(function (tx) {
-      hubaddress = tx
-      console.log('tx:')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
-      self.refreshAddress()
-    }).catch(function (e) {
-      console.log(e)
-
-      msg = 'Ошибка при отправке, смотри консоль'
-      self.setStatusPos(pos, msg)
-    })
-
-  },
->>>>>>> a99337b110b33f0999220e70cf02bee2a91efada
 
   registerHub: function () {
     var self = this
@@ -256,42 +200,19 @@ window.App = {
     })
   },
 
-  createClient: function () {
+  createHub: function () {
     var self = this
-    var pos = '#clientCreate_result'
+    var pos = '#hubCreate_result'
     var instance
     var msg
+    var priv = $('#privatehub').is(':checked')
     var fac
 
     Factory.deployed().then(function (instance) {
       fac = instance
-      return fac.createClient({from: account})
+      return fac.createHub(priv, {from: account})
     }).then(function (tx) {
-      clientaddress = tx
-      console.log('tx:')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
-      self.refreshAddress()
-    }).catch(function (e) {
-      console.log(e)
-      msg = 'Ошибка при отправке, смотри консоль'
-      self.setStatusPos(pos, msg)
-    })
-
-  },
-
-  registerClient: function () {
-    var self = this
-    var pos = '#clientreg_result'
-    var instance
-    var msg
-    var cli
-    ClientProfile.at(cliaraddress).then(function (instance) {
-      cli = instance
-      return cli.Registration({from: account})
-    }).then(function (tx) {
-
+      hubaddress = tx
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -712,88 +633,6 @@ window.App = {
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
-
-  },
-
-  getProfile: function () {
-    var self = this
-    var pos
-    var msg
-    var fac
-    var addr = $('#address_to_check').val()
-
-    Factory.deployed().then(function (instance) {
-      fac = instance
-      return fac.getProfile(addr, {from: account})
-    }).then(function (tx) {
-
-      address = tx
-      console.log('Here is address of ')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
-      self.refreshAddress()
-    }).catch(function (e) {
-      console.log(e)
-
-      msg = 'Ошибка при отправке, смотри консоль'
-      self.setStatusPos(pos, msg)
-    })
-
-  },
-
-  getType: function () {
-    var self = this
-    var pos
-    var msg
-    var fac
-    var addr = $('#address_to_check').val()
-
-    Factory.deployed().then(function (instance) {
-      fac = instance
-      return fac.getType(addr, {from: account})
-    }).then(function (tx) {
-
-      address = tx
-      console.log('Type of this address is ')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
-      self.refreshAddress()
-    }).catch(function (e) {
-      console.log(e)
-
-      msg = 'Ошибка при отправке, смотри консоль'
-      self.setStatusPos(pos, msg)
-    })
-
-  },
-
-  isPrivate: function () {
-    var self = this
-    var pos = 'IsPrivate'
-    var msg
-    var fac
-    var addr = $('#address_to_check').val()
-
-    Factory.deployed().then(function (instance) {
-      fac = instance
-      return fac.isPrivate(addr, {from: account})
-    }).then(function (tx) {
-
-      address = tx
-      console.log('Is it private profile? ')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
-      self.refreshAddress()
-    }).catch(function (e) {
-      console.log(e)
-
-      msg = 'Ошибка при отправке, смотри консоль'
-      self.setStatusPos(pos, msg)
-    })
-
 
   },
 
