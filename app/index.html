@@ -48,8 +48,13 @@
 
   <h1>Factory</h1>
   <div class="section">
+<<<<<<< HEAD
     <label> Current Network </label> <span id="network"></span><br>
     <label>Enter valid Whitelist address here <input id="address1"><br>
+=======
+    <label> Current Network: </label> <span id="whitelist"></span><br>
+    <label>Enter valid Network address here <input id="network_address"><br>
+>>>>>>> a99337b110b33f0999220e70cf02bee2a91efada
       <button id='adr' onclick="App.changeAdresses()">Change!</button><br>
       <hr>
 
@@ -59,7 +64,7 @@
       </div>
 
           <div class="section">
-            <h3> Create new hub wallet </h3>
+            <h3> Create new Hub Profile </h3>
             <span id="createStatus"></span>
             <input type="checkbox" id="privatehub">Private<Br>
             <br><br><td align="right"> <button id="CreateHub" onclick="App.createHub()">New</button></td> <hr>
@@ -67,7 +72,7 @@
 
           <div class="section">
             <h3>Register hubWallet</h3 >
-            <label> Address Hub Wallet <input type="text" id="hub_address" /> <br> <br>
+            <label> Address Hub profile <input type="text" id="hub_address" /> <br> <br>
             <label>  HubOwner </label><span id="hub_owner"></span>
             <button  onclick="App.registerHub()">Отчеканить!</button>
             <span id="hubreg_result"></span>
@@ -113,7 +118,7 @@
       </div> <hr>
 
         <div class="section">
-          <h3>Create Miner Wallet</h3>
+          <h3>Create Miner profile</h3>
           <button id= onclick="App.createMiner()">Ввод!</button><br>
           <span id="minCreate_result"></span>
         </div><hr>
@@ -152,13 +157,34 @@
         </div><hr>
 
 
+
+        <div class="section">
+          <center><h2>Clients section</h2> </center><hr>
+        </div>
+
+            <div class="section">
+              <h3> Create new client profile </h3>
+              <span id="createStatus"></span>
+              <br><br><td align="right"> <button id="CreateHub" onclick="App.createProfile()">New</button></td> <hr>
+            </div>
+
+            <div class="section">
+              <h3>Register hubWallet</h3 >
+              <label> Address Client Profile <input type="text" id="hub_address" /> <br> <br>
+              <label>  HubOwner </label><span id="hub_owner"></span>
+              <button  onclick="App.registerClient()">Отчеканить!</button>
+              <span id="hubreg_result"></span>
+            </div><hr>
+
+
+
         <div class="section">
           <center><h1>DAO section</h1></center>
         </div><hr>
 
               <div class="section">
                 <h3> Suspect Hub </h3> </br>
-                <label>Enter wallet address here <input id="hub_address"><br>
+                <label>Enter profile address here <input id="hub_address"><br>
                 <button id='adr' onclick="App.suspectHub()">Press!</button><br>
                 <span id="suspect_hub"></span>
               </div><hr>
@@ -166,7 +192,7 @@
 
               <div class="section">
                   <h3> Suspect Miner </h3> </br>
-                  <label>Enter wallet address here <input id="min_address"><br>
+                  <label>Enter profile address here <input id="min_address"><br>
                   <button id='adr' onclick="App.suspectMiner()">Press!</button><br>
                   <span id="suspect_miner"></span>
               </div><hr>
@@ -174,7 +200,7 @@
 
               <div class="section">
                   <h3> Gulag Hub </h3></br>
-                  <label>Enter wallet address here <input id="hub_address"><br>
+                  <label>Enter profile address here <input id="hub_address"><br>
                   <button id='adr' onclick="App.gulagHub()">Press!</button><br>
                   <span id="gulag_hub"></span>
               </div><hr>
@@ -182,7 +208,7 @@
 
               <div class="section">
                 <h3> Gulag Miner </h3> </br>
-                <label>Enter wallet address here <input id="address"><br>
+                <label>Enter profile address here <input id="address"><br>
                 <button id='adr' onclick="App.gulagMiner()">Press!</button><br>
                 <span id="gulag_miner"></span>
               </div><hr>
@@ -190,16 +216,32 @@
 
               <div class="section">
                 <h3> Rehub Hub </h3> </br>
-                <label>Enter wallet address here <input id="hub_address"><br>
+                <label>Enter profile address here <input id="hub_address"><br>
                 <button id='adr' onclick="App.rehubHub()">Press!</button><br>
                 <span id="rehub_hub"></span>
               </div><hr>
 
               <div class="section">
                 <h3> Rehub Miner </h3> </br>
-                <label>Enter wallet address here <input id="address"><br>
+                <label>Enter profile address here <input id="address"><br>
                 <button id='adr' onclick="App.rehubMiner()">Press!</button><br>
                 <span id="rehub_miner"></span>
+              </div><hr>
+
+          <div class="section">
+            <center><h1>Public section</h1></center>
+            </div><hr>
+
+              <div class="section">
+                <h3> Public factory functions </h3> </br>
+                <label>Enter profile address here <input id="address_to_check"><br>
+                <button id='adr' onclick="App.getProfile()">Check who's owner</button><br>
+                <span id="get_profile"></span>
+                <button id='adr' onclick="App.getType()">Check profile's type</button><br>
+                <span id="get_type"></span>
+                <button id='adr' onclick="App.isPrivate()">Private profile?</button><br>
+                <span id="is_private"></span>
+
               </div><hr>
 
 <!--
