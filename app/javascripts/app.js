@@ -20,6 +20,7 @@ import factory_artifacts from '../../build/contracts/Factory.json'
 import hub_artifacts from '../../build/contracts/HubProfile.json'
 import miner_artifacts from '../../build/contracts/MinerProfile.json'
 import network_artifacts from '../../build/contracts/Network.json'
+//import client_artifacts from '../../build/contracts/ClientProfile.json'
 
 // const async = require('async');
 
@@ -31,6 +32,7 @@ var Factory = contract(factory_artifacts)
 var Hub = contract(hub_artifacts)
 var Miner = contract(miner_artifacts)
 var Network = contract(network_artifacts)
+//var Client = contracts(client_artifacts)
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -60,6 +62,7 @@ window.App = {
     Hub.setProvider(web3.currentProvider)
     Miner.setProvider(web3.currentProvider)
     Network.setProvider(web3.currentProvider)
+  //  Client.setProvider(web3.currentProvider)
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
@@ -136,6 +139,8 @@ window.App = {
   var msg;
   var fac;
   var dao = account;
+  var debugMsg;
+  var debugAdr;
   var r1;
 
   var to = $("#address1").val();
@@ -176,104 +181,158 @@ window.App = {
 },
 
   registerHub: function () {
-    var self = this
-    var pos = '#hubreg_result'
+    var self = this;
+    var pos = '#hubreg_result';
     // var instance;
-    var msg
-    var hb
+    var msg;
+    var hb;
     var hbdr = $('#hub_address').val()
     Hub.at(hbdr).then(function (instance) {
-      hb = instance
-      console.log('hmm')
-      return hb.Registration({from: account, gas: 3000000})
+      hb = instance;
+      console.log('hmm');
+      return hb.Registration({from: account, gas: 3000000});
     }).then(function (tx) {
 
-      console.log('tx:')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
+      console.log('tx:');
+      console.log(tx);
+      msg = 'Transaction complete';
+      self.setStatusPos(pos, msg);
       //   self.refreshAddress();
     }).catch(function (e) {
-      console.log(e)
-      msg = 'Ошибка при отправке, смотри консоль'
-      self.setStatusPos(pos, msg)
+      console.log(e);
+      msg = 'Ошибка при отправке, смотри консоль';
+      self.setStatusPos(pos, msg);
     })
   },
 
-  createHub: function () {
-    var self = this
-    var pos = '#hubCreate_result'
-    var instance
-    var msg
-    var priv = $('#privatehub').is(':checked')
-    var fac
-
-    Factory.deployed().then(function (instance) {
-      fac = instance
-      return fac.createHub(priv, {from: account})
+  registerClient: function () {
+    var self = this;
+    var pos = '#clientreg_result';
+    var instance;
+    var msg;
+    var cli;
+    ClientProfile.at(cliaraddress).then(function (instance) {
+      cli = instance;
+      return cli.Registration({from: account})
     }).then(function (tx) {
-      hubaddress = tx
-      console.log('tx:')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
-      self.refreshAddress()
-    }).catch(function (e) {
-      console.log(e)
 
-      msg = 'Ошибка при отправке, смотри консоль'
-      self.setStatusPos(pos, msg)
+      console.log('tx:');
+      console.log(tx);
+      msg = 'Transaction complete';
+      self.setStatusPos(pos, msg);
+      //   self.refreshAddress();
+    }).catch(function (e) {
+      console.log(e);
+      msg = 'Ошибка при отправке, смотри консоль';
+      self.setStatusPos(pos, msg);
+    })
+  },
+
+
+    createHub: function () {
+      var self = this;
+      var pos = '#hubCreate_result';
+      var instance;
+      var msg;
+      var priv = $('#privatehub').is(':checked');
+      var fac;
+
+      Factory.deployed().then(function (instance) {
+        fac = instance;
+        return fac.createHub(priv, {from: account})
+      }).then(function (tx) {
+        hubaddress = tx;
+        console.log('tx:');
+        console.log(tx);
+        msg = 'Transaction complete';
+        self.setStatusPos(pos, msg);
+        self.refreshAddress();
+      }).catch(function (e) {
+        console.log(e);
+
+        msg = 'Ошибка при отправке, смотри консоль';
+        self.setStatusPos(pos, msg);
+      })
+
+    },
+
+    createClient: function () {
+
+     var self = this;
+    var pos = '#clientCreate_result';
+
+     var instance;
+     var msg;
+
+     var fac;
+
+     Factory.deployed().then(function (instance) {
+       fac = instance;
+     return fac.createClient({from: account})
+    }).then(function (tx) {
+      clientaddress = tx;
+      console.log('tx:');
+      console.log(tx);
+      msg = 'Transaction complete';
+      self.setStatusPos(pos, msg);
+      self.refreshAddress();
+    }).catch(function (e) {
+      console.log(e);
+      msg = 'Ошибка при отправке, смотри консоль';
+      self.setStatusPos(pos, msg);
     })
 
   },
+
+
 
   createMiner: function () {
 
-    var self = this
-    var pos = '#minCreate_result'
-    var instance
-    var msg
+    var self = this;
+    var pos = '#minCreate_result';
+    var instance;
+    var msg;
 
     Factory.deployed().then(function (instance) {
-      fac = instance
+      fac = instance;
       return fac.createMiner({from: account})
     }).then(function (tx) {
-      mineraddress = tx
-      console.log('tx:')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
-      self.refreshAddress()
+      mineraddress = tx;
+      console.log('tx:');
+      console.log(tx);
+      msg = 'Transaction complete';
+      self.setStatusPos(pos, msg);
+      self.refreshAddress();
     }).catch(function (e) {
-      console.log(e)
+      console.log(e);
 
-      msg = 'Ошибка при отправке, смотри консоль'
-      self.setStatusPos(pos, msg)
+      msg = 'Ошибка при отправке, смотри консоль';
+      self.setStatusPos(pos, msg);
     })
 
   },
 
   registerMiner: function () {
-    var self = this
-    var pos = '#minreg_result'
-    var instance
-    var msg
-    var mn
+    var self = this;
+    var pos = '#minreg_result';
+    var instance;
+    var msg;
+    var mn;
     Miner.at(mineraddress).then(function (instance) {
-      mn = instance
+      mn = instance;
       return mn.Registration({from: account})
     }).then(function (tx) {
 
-      console.log('tx:')
-      console.log(tx)
-      msg = 'Transaction complete'
-      self.setStatusPos(pos, msg)
-      self.refreshAddress()
+      console.log('tx:');
+      console.log(tx);
+      msg = 'Transaction complete';
+      self.setStatusPos(pos, msg);
+      self.refreshAddress();
     }).catch(function (e) {
-      console.log(e)
+      console.log(e);
 
-      msg = 'Ошибка при отправке, смотри консоль'
-      self.setStatusPos(pos, msg)
+      msg = 'Ошибка при отправке, смотри консоль';
+      self.setStatusPos(pos, msg);
     })
 
   },
@@ -633,6 +692,88 @@ window.App = {
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
+
+  },
+
+  getProfile: function () {
+    var self = this
+    var pos
+    var msg
+    var fac
+    var addr = $('#address_to_check').val()
+
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.getProfile(addr, {from: account})
+    }).then(function (tx) {
+
+      address = tx
+      console.log('Here is address of ')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
+  },
+
+  getType: function () {
+    var self = this
+    var pos
+    var msg
+    var fac
+    var addr = $('#address_to_check').val()
+
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.getType(addr, {from: account})
+    }).then(function (tx) {
+
+      address = tx
+      console.log('Type of this address is ')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
+  },
+
+  isPrivate: function () {
+    var self = this
+    var pos = 'IsPrivate'
+    var msg
+    var fac
+    var addr = $('#address_to_check').val()
+
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      return fac.isPrivate(addr, {from: account})
+    }).then(function (tx) {
+
+      address = tx
+      console.log('Is it private profile? ')
+      console.log(tx)
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
+
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+    })
+
 
   },
 

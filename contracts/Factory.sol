@@ -7,9 +7,7 @@ pragma solidity ^0.4.11;
 //TODO - DOCS
 
   import './Declaration.sol';
-//import './HubProfile.sol';
-//import './MinerProfile.sol';
-// import './ClientProfile.sol'
+
 
 contract FactoryH{
   function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress, bool _privat) public returns (address);
@@ -19,11 +17,11 @@ contract FactoryM{
   function createM(address _minowner, address dao, network Sonm, token sharesTokenAddress) public returns (address);
 }
 
-/*
+
 contract FactoryC{
   function createC(address , address dao, network Sonm, token sharesTokenAddress) public returns (address);
 }
-*/
+
 
 contract Factory {
 
@@ -35,7 +33,7 @@ contract Factory {
 
     FactoryH hf;
     FactoryM mf;
-  //  FactoryC cf;
+    FactoryC cf;
 
 
 
@@ -68,12 +66,12 @@ contract Factory {
     event DebugAddress(address lookup);
     //  event Weird(string thing);
 
-    function Factory(token TokenAddress, FactoryH _hf,FactoryM _mf){
+    function Factory(token TokenAddress, FactoryH _hf,FactoryM _mf, FactoryC _cf){
         sharesTokenAddress = TokenAddress;
         dao = msg.sender;
         hf = _hf;
         mf = _mf;
-  //      cf = _cf;
+        cf = _cf;
 
     }
 
@@ -113,7 +111,7 @@ contract Factory {
         types[_minowner] = TypeW.Miner;
         LogCreate(minProfile, _minowner);
     }
-/*
+
     function createProfile() public returns (address) {
       address _clientowner = msg.sender;
       address clientProfile = cf.createC(_clientowner, dao, Sonm, sharesTokenAddress);
@@ -121,7 +119,7 @@ contract Factory {
       types[_clientowner] = TypeW.Client;
       LogCreate(clientProfile, _clientowner);
     }
-*/
+
 
 
     function getProfile(address _owner) constant returns (address _Profile) {
