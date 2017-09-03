@@ -68,9 +68,9 @@ contract Factory {
     event DebugAddress(address lookup);
     //  event Weird(string thing);
 
-    function Factory(token TokenAddress, address _dao, FactoryH _hf,FactoryM _mf){
+    function Factory(token TokenAddress, FactoryH _hf,FactoryM _mf){
         sharesTokenAddress = TokenAddress;
-        dao = _dao;
+        dao = msg.sender;
         hf = _hf;
         mf = _mf;
   //      cf = _cf;
@@ -82,6 +82,7 @@ contract Factory {
         LogDebug("msg.sender!= dao");
         DebugAddress(msg.sender);
         DebugAddress(dao);
+        revert();
       }
         _;
     }
