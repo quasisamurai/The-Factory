@@ -7,9 +7,7 @@ pragma solidity ^0.4.11;
 //TODO - DOCS
 
   import './Declaration.sol';
-//import './HubProfile.sol';
-//import './MinerProfile.sol';
-// import './ClientProfile.sol'
+
 
 contract FactoryH{
   function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress, bool _privat) public returns (address);
@@ -64,11 +62,13 @@ contract Factory {
     event LogCreate(address Profile, address owner);
 
     event LogCr(address owner);
+    event LogDebug(string message);
+    event DebugAddress(address lookup);
     //  event Weird(string thing);
 
-    function Factory(token TokenAddress, address _dao, FactoryH _hf,FactoryM _mf, FactoryC _cf){
+    function Factory(token TokenAddress, FactoryH _hf,FactoryM _mf, FactoryC _cf){
         sharesTokenAddress = TokenAddress;
-        dao = _dao;
+        dao = msg.sender;
         hf = _hf;
         mf = _mf;
         cf = _cf;
@@ -76,11 +76,17 @@ contract Factory {
     }
 
     modifier onlyDao(){
-        if (msg.sender != dao) revert();
+        if (msg.sender != dao) {
+        LogDebug("msg.sender!= dao");
+        DebugAddress(msg.sender);
+        DebugAddress(dao);
+        revert();
+      }
         _;
     }
 
-    function changeAdresses(address _dao, network _Sonm) public onlyDao {
+    function changeAdresses(address _dao, address _Sonm) public onlyDao {
+        //network _Sonm
         dao = _dao;
         Sonm = network(_Sonm);
     }
@@ -106,7 +112,7 @@ contract Factory {
         LogCreate(minProfile, _minowner);
     }
 
-    function createClient() public returns (address) {
+    function createProfile() public returns (address) {
       address _clientowner = msg.sender;
       address clientProfile = cf.createC(_clientowner, dao, Sonm, sharesTokenAddress);
       Profiles[_clientowner] = clientProfile;
