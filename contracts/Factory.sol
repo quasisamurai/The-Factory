@@ -112,7 +112,7 @@ contract Factory {
         LogCreate(minProfile, _minowner);
     }
 
-    function createProfile() public returns (address) {
+    function createClient() public returns (address) {
       address _clientowner = msg.sender;
       address clientProfile = cf.createC(_clientowner, dao, Sonm, sharesTokenAddress);
       Profiles[_clientowner] = clientProfile;
