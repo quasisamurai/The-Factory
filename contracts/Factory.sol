@@ -64,6 +64,9 @@ contract Factory {
     event LogCr(address owner);
     event LogDebug(string message);
     event DebugAddress(address lookup);
+    // remove after debug
+    // we gonna check if changeAdresses was runned (it's really necessary!)
+    address fish = 0x0000000000000000000000000000000000000000;
     //  event Weird(string thing);
 
     function Factory(token TokenAddress, FactoryH _hf,FactoryM _mf, FactoryC _cf){
@@ -94,6 +97,7 @@ contract Factory {
 
 
     function createHub(bool _privat) public returns (address) {
+        require(Sonm != fish);
         address _hubowner = msg.sender;
     //    address hubProfile = createH(_hubowner,_privat);
         address hubProfile = hf.createH(_hubowner, dao, Sonm, sharesTokenAddress,_privat);
@@ -104,6 +108,7 @@ contract Factory {
     }
 
     function createMiner() public returns (address) {
+        require(Sonm != fish);
         address _minowner = msg.sender;
       //  address minProfile = createM(_minowner);
         address minProfile = mf.createM(_minowner,dao, Sonm, sharesTokenAddress);
@@ -113,6 +118,7 @@ contract Factory {
     }
 
     function createClient() public returns (address) {
+      require(Sonm != fish);
       address _clientowner = msg.sender;
       address clientProfile = cf.createC(_clientowner, dao, Sonm, sharesTokenAddress);
       Profiles[_clientowner] = clientProfile;
