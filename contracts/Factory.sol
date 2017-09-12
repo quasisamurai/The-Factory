@@ -66,7 +66,7 @@ contract Factory {
     event DebugAddress(address lookup);
     // remove after debug
     // we gonna check if changeAdresses was runned (it's really necessary!)
-    address fish = 0x0000000000000000000000000000000000000000;
+    address fish = 0x0;
     //  event Weird(string thing);
 
     function Factory(token TokenAddress, FactoryH _hf,FactoryM _mf, FactoryC _cf){
