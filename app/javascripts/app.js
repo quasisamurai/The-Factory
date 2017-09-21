@@ -3,7 +3,8 @@ Miner
 //  TODO : cleanup code
 //  TODO : clean appendix
 // Import the page's CSS. Webpack will know what to do with it.
-import '../stylesheets/app.css'
+
+//import '../stylesheets/app.css'
 
 // Import libraries we need.
 
@@ -40,12 +41,9 @@ var Network = contract(network_artifacts)
 var accounts
 var account
 var event
-
 var address
-
 var hubaddress
 var mineraddress
-
 var balance
 // var tokend;
 
@@ -62,7 +60,7 @@ window.App = {
     Hub.setProvider(web3.currentProvider)
     Miner.setProvider(web3.currentProvider)
     Network.setProvider(web3.currentProvider)
-  //  Client.setProvider(web3.currentProvider)
+    //  Client.setProvider(web3.currentProvider)
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
@@ -70,15 +68,12 @@ window.App = {
         alert('There was an error fetching your accounts.')
         return
       }
-
       if (accs.length === 0) {
         alert('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.')
         return
       }
-
       accounts = accs
       account = accounts[0]
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -93,14 +88,11 @@ window.App = {
 
   setStatusPos: function (pos, msg) {
     $(pos).html(msg)
-
   },
 
   refreshAddress: function () {
     var self=this
-    // var instance
     var tok
-    //  console.log("refresh init");
     Token.deployed().then(function (instance) {
       tok = instance
       //  console.log(tok);
@@ -117,68 +109,63 @@ window.App = {
   },
 
   networkAddr: function () {
-  var self=this;
-  var pos="#network";
-  var instance;
-  var msg;
-  var whl;
-
-
-
-  Network.deployed().then(function(instance){
-    whl=instance;
-      $("#network").html(whl.address);
-      console.log(whl.address);
-});
-},
+    var self = this
+    var pos = '#network'
+    var instance
+    var msg
+    var whl
+    Network.deployed().then(function (instance) {
+      whl = instance
+      $('#network').html(whl.address)
+      console.log(whl.address)
+    })
+  },
 
   changeAdresses: function () {
-  var self=this;
-  var pos="#network";
-  var instance;
-  var msg;
-  var fac;
-  var dao = account;
-  var debugMsg;
-  var debugAdr;
-  var r1;
+    var self = this
+    var pos = '#network'
+    var instance
+    var msg
+    var fac
+    var dao = account
+    var debugMsg
+    var debugAdr
+    var r1
+    var to = $('#address1').val()
+    Factory.deployed().then(function (instance) {
+      fac = instance
+      // Listening evetns for debugging
+      debugMsg = fac.LogDebug({}, {fromBlock: 0, toBlock: 'latest'})
+      debugMsg.watch(function (error, result) {
+          r1 = JSON.stringify(result)
+          //  console.log(r1);
+          //  console.log(error);
+        }
+      )
+      debugAdr = fac.DebugAddress({}, {fromBlock: 0, toBlock: 'latest'})
+      debugAdr.watch(function (error, result) {
+          r1 = JSON.stringify(result)
+          //  console.log(r1);
+          //  console.log(error);
+        }
+      )
+      return fac.changeAdresses(dao, to, {from: account})
+    }).then(function (tx) {
+      console.log('tx:')
+      console.log(tx)
 
-  var to = $("#address1").val();
+      msg = 'Transaction complete'
+      self.setStatusPos(pos, msg)
+      self.refreshAddress()
+    }).catch(function (e) {
+      console.log(e)
 
-  Factory.deployed().then(function(instance){
-    fac=instance;
-    // Listening evetns for debugging
-    debugMsg = fac.LogDebug({},{fromBlock: 0, toBlock: 'latest'});
-    debugMsg.watch(function(error, result){
-    r1=JSON.stringify(result);
-    //  console.log(r1);
-    //  console.log(error);
-    }
-  );
-  debugAdr = fac.DebugAddress({},{fromBlock: 0, toBlock: 'latest'});
-  debugAdr.watch(function(error, result){
-   r1=JSON.stringify(result);
-  //  console.log(r1);
-  //  console.log(error);
-  }
-  );
-    return fac.changeAdresses(dao, to, {from: account})
-  }).then(function (tx) {
-       console.log("tx:");
-       console.log(tx);
+      msg = 'Ошибка при отправке, смотри консоль'
+      self.setStatusPos(pos, msg)
+      console.log(r1)
+    })
 
-       msg="Transaction complete";
-       self.setStatusPos(pos,msg);
-       self.refreshAddress();
- }).catch(function(e) {
-     console.log(e);
-
-    msg="Ошибка при отправке, смотри консоль";
-    self.setStatusPos(pos,msg);
-    console.log(r1);
-   });
-
-},
+  },
 
   registerHub: function () {
     var self = this;
@@ -228,15 +215,13 @@ window.App = {
     })
   },
 
-
-    createHub: function () {
+  createHub: function () {
       var self = this;
       var pos = '#hubCreate_result';
       var instance;
       var msg;
       var priv = $('#privatehub').is(':checked');
       var fac;
-
       Factory.deployed().then(function (instance) {
         fac = instance;
         return fac.createHub(priv, {from: account})
@@ -259,12 +244,10 @@ window.App = {
     createClient: function () {
 
      var self = this;
-    var pos = '#clientCreate_result';
-
-     var instance;
-     var msg;
-
-     var fac;
+      var pos = '#clientCreate_result'
+      var instance
+      var msg
+      var fac
 
      Factory.deployed().then(function (instance) {
        fac = instance;
@@ -287,12 +270,10 @@ window.App = {
 
 
   createMiner: function () {
-
     var self = this;
     var pos = '#minCreate_result';
     var instance;
     var msg;
-
     Factory.deployed().then(function (instance) {
       fac = instance;
       return fac.createMiner({from: account})
@@ -305,7 +286,6 @@ window.App = {
       self.refreshAddress();
     }).catch(function (e) {
       console.log(e);
-
       msg = 'Ошибка при отправке, смотри консоль';
       self.setStatusPos(pos, msg);
     })
@@ -322,7 +302,6 @@ window.App = {
       mn = instance;
       return mn.Registration({from: account})
     }).then(function (tx) {
-
       console.log('tx:');
       console.log(tx);
       msg = 'Transaction complete';
@@ -330,7 +309,6 @@ window.App = {
       self.refreshAddress();
     }).catch(function (e) {
       console.log(e);
-
       msg = 'Ошибка при отправке, смотри консоль';
       self.setStatusPos(pos, msg);
     })
@@ -345,20 +323,16 @@ window.App = {
     var hb
     var hbdr = $('#hub_address').val()
     console.log(hbdr)
-
     var val = $('#transfer_am').val()
     var to = $('#transfer_to').val()
-
     console.log(to)
     console.log(val)
-
     Hub.at(hbdr).then(function (instance) {
       hb = instance
       console.log(hb)
       //  return hb.transfer({from: account, gas: 3000000})
       return hb.transfer(to, val, {from: account, gas: 3000000})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -366,7 +340,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -407,14 +380,11 @@ window.App = {
     var instance
     var msg
     var hb
-
     var hbdr = $('#hub_address').val()
-
     Hub.at(hbdr).then(function (instance) {
       hb = instance
       return hb.DaoTransfer({from: account, gas: 4000000})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -422,7 +392,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -435,14 +404,11 @@ window.App = {
     var instance
     var msg
     var hb
-
     var hbdr = $('#hub_address').val()
-
     Hub.at(hbdr).then(function (instance) {
       hb = instance
       return hb.withdraw({from: account, gas: 4000000})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -450,7 +416,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -463,14 +428,11 @@ window.App = {
     var instance
     var msg
     var mn
-
     var from = $('#pull_from').val()
-
     Miner.at(mineraddress).then(function (instance) {
       mn = instance
       return mn.pullMoney(from, {from: account})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -478,7 +440,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -494,7 +455,6 @@ window.App = {
       mn = instance
       return mn.PayDay({from: account})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -502,7 +462,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -518,7 +477,6 @@ window.App = {
       mn = instance
       return mn.withdraw({from: account})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -526,7 +484,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -538,14 +495,11 @@ window.App = {
     var instance
     var msg
     var hb
-
     var addr = $('#hub_address').val()
-
     Hub.at(addr).then(function (instance) {
       hb = instance
       return hb.suspect({from: account})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -553,7 +507,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -561,7 +514,6 @@ window.App = {
   },
 
   suspectMiner: function () {
-
     var self = this
     var pos = '#suspect_miner'
     var instance
@@ -572,7 +524,6 @@ window.App = {
       mn = instance
       return mn.suspect({from: account})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -580,7 +531,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -594,12 +544,10 @@ window.App = {
     var msg
     var hb
     var addr = $('#hub_address').val()
-
     Hub.at(addr).then(function (instance) {
       hb = instance
       return hb.gulag({from: account})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -607,7 +555,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -621,12 +568,10 @@ window.App = {
     var msg
     var hb
     var addr = $('#hub_address').val()
-
     Hub.at(addr).then(function (instance) {
       hb = instance
       return hb.rehub({from: account})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -634,7 +579,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -642,7 +586,6 @@ window.App = {
   },
 
   gulagMiner: function () {
-
     var self = this
     var pos = '#gulag_miner'
     var instance
@@ -653,7 +596,6 @@ window.App = {
       mn = instance
       return mn.gulag({from: account})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -661,7 +603,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -669,7 +610,6 @@ window.App = {
   },
 
   rehubMiner: function () {
-
     var self = this
     var pos = '#rehub_miner'
     var instance
@@ -680,7 +620,6 @@ window.App = {
       mn = instance
       return mn.rehub({from: account})
     }).then(function (tx) {
-
       console.log('tx:')
       console.log(tx)
       msg = 'Transaction complete'
@@ -688,7 +627,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -701,12 +639,10 @@ window.App = {
     var msg
     var fac
     var addr = $('#address_to_check').val()
-
     Factory.deployed().then(function (instance) {
       fac = instance
       return fac.getProfile(addr, {from: account})
     }).then(function (tx) {
-
       address = tx
       console.log('Here is address of ')
       console.log(tx)
@@ -715,7 +651,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -728,12 +663,10 @@ window.App = {
     var msg
     var fac
     var addr = $('#address_to_check').val()
-
     Factory.deployed().then(function (instance) {
       fac = instance
       return fac.getType(addr, {from: account})
     }).then(function (tx) {
-
       address = tx
       console.log('Type of this address is ')
       console.log(tx)
@@ -742,7 +675,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -755,12 +687,10 @@ window.App = {
     var msg
     var fac
     var addr = $('#address_to_check').val()
-
     Factory.deployed().then(function (instance) {
       fac = instance
       return fac.isPrivate(addr, {from: account})
     }).then(function (tx) {
-
       address = tx
       console.log('Is it private profile? ')
       console.log(tx)
@@ -769,7 +699,6 @@ window.App = {
       self.refreshAddress()
     }).catch(function (e) {
       console.log(e)
-
       msg = 'Ошибка при отправке, смотри консоль'
       self.setStatusPos(pos, msg)
     })
@@ -815,7 +744,6 @@ window.App = {
 
   deployContract: function () {
     var self = this
-
     var name = $('#t_name').val()
     var sym = $('#t_sym').val()
     var val = $('#t_val').val()
