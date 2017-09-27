@@ -3,8 +3,9 @@ pragma solidity ^0.4.11;
 //sonm profile abstraction
 
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-//import "./zeppelin/ownership/Ownable.sol";
+//import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+// ^ uncomment this after debug
+import "./Ownable.sol";
 //import "./Declaration.sol";
 import "./Dealable.sol";
 
@@ -69,6 +70,7 @@ contract Profile  is Ownable, Dealable {
       /*/
         event LogPhaseSwitch(Phase newPhase);
         event LogDebug(string message);
+        event DebugAddress(address lookup);
 
     /*/
      *  Public functions
@@ -78,7 +80,7 @@ contract Profile  is Ownable, Dealable {
     // Deals-------------------------------------------------------------------
 
     function OpenDeal(uint cost) public returns (bool success){
-
+      DebugAddress(this);
     //  if(currentPhase!=Phase.Registred) revert();
       require(currentPhase==Phase.Registred);
       uint c = d_count;
@@ -90,18 +92,21 @@ contract Profile  is Ownable, Dealable {
     }
 
     function CancelDeal(uint _lockId) public returns (bool success) {
+      DebugAddress(this);
       require(currentPhase==Phase.Registred);
       require(super.cancel(_lockId,msg.sender));
       return true;
     }
 
     function AbortDeal(uint _lockId) public returns (bool success) {
+      DebugAddress(this);
       require(currentPhase==Phase.Registred);
       require(super.abort(_lockId,msg.sender));
       return true;
     }
 
     function AcceptDeal(uint _lockId) public onlyOwner returns (bool success){
+      DebugAddress(this);
       require(currentPhase==Phase.Registred);
 
       uint cost = super.getCost(_lockId);

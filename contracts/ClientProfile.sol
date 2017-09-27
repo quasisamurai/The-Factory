@@ -2,7 +2,9 @@ pragma solidity ^0.4.11;
 
 //Raw prototype for Client Profile contract.
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+//import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+// ^ uncomment this after debug
+import "./Ownable.sol";
 import "./Profile.sol";
 
 
