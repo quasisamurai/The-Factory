@@ -57,18 +57,7 @@ contract Registrator {
 
   */
 
-  /*
-  function facebook (bytes32 link) public returns (bool success) {
 
-    //Appendix for Profile address getter
-    address profile = ProfilesFactory.getProfile(msg.sender);
-
-
-    SocLinks memory links = entangled[profile];
-    links.fcb = link;
-    return true;
-  }
-*/
 
   function facebook (bytes32 link, address profile) internal returns (bool success) {
     SocLinks memory links = entangled[profile];
@@ -76,6 +65,38 @@ contract Registrator {
     entangled[profile] = links;
     return true;
   }
+
+
+    function vk (bytes32 link, address profile) internal returns (bool success) {
+      SocLinks memory links = entangled[profile];
+      links.vk = link;
+      entangled[profile] = links;
+      return true;
+    }
+
+
+      function git (bytes32 link, address profile) internal returns (bool success) {
+        SocLinks memory links = entangled[profile];
+        links.git = link;
+        entangled[profile] = links;
+        return true;
+      }
+
+
+        function email (bytes32 link, address profile) internal returns (bool success) {
+          SocLinks memory links = entangled[profile];
+          links.eml = link;
+          entangled[profile] = links;
+          return true;
+        }
+
+
+          function telegram (bytes32 link, address profile) internal returns (bool success) {
+            SocLinks memory links = entangled[profile];
+            links.tlgr = link;
+            entangled[profile] = links;
+            return true;
+          }
 
     function entangle (bytes32 _link,uint8 _type) public returns (bool success) {
 
@@ -88,6 +109,11 @@ contract Registrator {
     */
 
     if (_type==1) require(facebook(_link,profile));
+    if (_type==2) require(vk(_link,profile));
+    if (_type==3) require(gitl(_link,profile));
+    if (_type==4) require(email(_link,profile));
+    if (_type==5) require(telegram(_link,profile));
+
 
     return true;
     }
