@@ -26,7 +26,7 @@ contract Registrator {
     ProfilesFactory = factory(Factory);
   }
 
-  /*
+/*
   // tyoe of entangle link
   enum TypeL {
     facebook,
@@ -35,7 +35,7 @@ contract Registrator {
     email,
     telegram
   }
-  */
+*/
 
 
 
@@ -54,27 +54,43 @@ contract Registrator {
 
   /* NOTE I should notice, that we cannot simply use array of links cause every link is bytes32 array itself.
 
-    Also I should NOTE, that this contract should be deployed from us (and not from user) + it should be cheap in use for user, so
-    I think we need to write it in style with many different fuctions. So we can avoid unaccecary chek.
 
   */
 
-
+  /*
   function facebook (bytes32 link) public returns (bool success) {
 
     //Appendix for Profile address getter
     address profile = ProfilesFactory.getProfile(msg.sender);
 
-  //  address profile = msg.sender;
-
 
     SocLinks memory links = entangled[profile];
     links.fcb = link;
     return true;
+  }
+*/
 
-
+  function facebook (bytes32 link, address profile) internal returns (bool success) {
+    SocLinks memory links = entangled[profile];
+    links.fcb = link;
+    entangled[profile] = links;
+    return true;
   }
 
+    function entangle (bytes32 _link,uint8 _type) public returns (bool success) {
+
+      address profile = ProfilesFactory.getProfile(msg.sender);
+
+    //  if (_type==TypeL.facebook) facebook(_link,profile);
+
+    /* NOTE here we are CASE structure. someone probably will improve it in future
+
+    */
+
+    if (_type==1) require(facebook(_link,profile));
+
+    return true;
+    }
 
 
 }
