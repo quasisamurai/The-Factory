@@ -4,7 +4,7 @@ pragma solidity ^0.4.11;
 ///@author Sergey Ponomarev
 
 
-// Factory safe definition
+// Factory safe definition (we need it for external functions calls)
 contract factory{
 
   //Profile type
