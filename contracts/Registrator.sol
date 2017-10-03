@@ -1,6 +1,11 @@
 pragma solidity ^0.4.11;
 
-// Desctiortion
+
+/*
+
+    NOTE
+    This contract should be used for Registrate neta-data for profile,
+*/
 
 //imports
 
@@ -110,7 +115,7 @@ contract Registrator {
 
     if (_type==1) require(facebook(_link,profile));
     if (_type==2) require(vk(_link,profile));
-    if (_type==3) require(gitl(_link,profile));
+    if (_type==3) require(git(_link,profile));
     if (_type==4) require(email(_link,profile));
     if (_type==5) require(telegram(_link,profile));
 
@@ -118,5 +123,14 @@ contract Registrator {
     return true;
     }
 
+    function getLinks(address profile) public returns (bytes32 f, bytes32 v, bytes32 g, bytes32 e, bytes32 t) {
+      SocLinks memory links = entangled[profile];
+      f = links.fcb;
+      v = links.vk;
+      g = links.git;
+      e = links.eml;
+      t = links.tlgr;
+      return (f,v,g,e,t);
+    }
 
 }
