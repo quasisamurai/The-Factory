@@ -13,6 +13,7 @@ pragma solidity ^0.4.11;
 
 contract Registrator {
 
+  /*
   // tyoe of entangle link
   enum TypeL {
     facebook,
@@ -20,19 +21,23 @@ contract Registrator {
     github,
     email,
     telegram
+  }
+  */
 
+
+
+
+  struct SocLinks {
+    bytes64 fcb;
+    bytes64 vk;
+    bytes64 git;
+    bytes64 eml;
+    bytes64 tlgr;
   }
 
-  TypeL public linktype;
-
-  struct ProfileInfo {
-    TypeL linktype;
-    bytes32 link;
-  }
 
 
-
-//  mapping (address => linktype) public entangled;
+  mapping (address => SocLinks) public entangled;
 
 
 
