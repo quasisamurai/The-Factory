@@ -70,7 +70,7 @@ contract Registrator {
 
     SocLinks memory links = entangled[profile];
     links.fcb = link;
-    
+    return true;
 
 
   }

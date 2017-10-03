@@ -14,9 +14,9 @@ contract FactoryH {
 
   event LogCr(address owner);
 
-  function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress, bool _privat) public returns (address) {
-    return address(new HubProfile(_hubowner, dao, Sonm, sharesTokenAddress,_privat));
-  //  return address(hp.Reproduce(_hubowner, dao, Sonm, sharesTokenAddress,_privat));
+  function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress) public returns (address) {
+    return address(new HubProfile(_hubowner, dao, Sonm, sharesTokenAddress));
+  //  return address(hp.Reproduce(_hubowner, dao, Sonm, sharesTokenAddress));
 
       LogCr(_hubowner);
   }

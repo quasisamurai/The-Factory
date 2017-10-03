@@ -11,10 +11,10 @@ import "./Profile.sol";
 contract HubProfile is Ownable, Profile{
 
 
-  bool privat = false;
+
 
   ///@dev constructor
-  function HubProfile(address _hubowner,address _dao,network _Network,token sharesAddress, bool _privat){
+  function HubProfile(address _hubowner,address _dao,network _Network,token sharesAddress){
     owner=_hubowner;
     DAO=_dao;
     Network= network(_Network);
@@ -31,7 +31,7 @@ contract HubProfile is Ownable, Profile{
 
     freezePeriod = 10 days;
 
-    privat=_privat;
+    
     currentPhase = Phase.Idle;
 
   }
