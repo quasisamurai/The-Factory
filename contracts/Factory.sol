@@ -129,6 +129,7 @@ contract Factory {
 
 
     function getProfile(address _owner) constant returns (address _Profile) {
+        if (Profiles[_owner]==0) LogDebug("Address has not have profile!");
         return Profiles[_owner];
     }
 

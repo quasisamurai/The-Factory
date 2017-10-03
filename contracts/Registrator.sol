@@ -9,10 +9,22 @@ pragma solidity ^0.4.11;
 
 // External calls
 
+contract factory {
+
+function getProfile(address _owner) constant returns (address _Profile);
+
+}
 
 
 contract Registrator {
 
+  factory ProfilesFactory;
+
+
+  // KonstrUktor
+  function Registrator(address Factory){
+    ProfilesFactory = factory(Factory);
+  }
 
   /*
   // tyoe of entangle link
@@ -50,14 +62,15 @@ contract Registrator {
 
   function facebook (bytes32 link) public returns (bool success) {
 
-    //Appendix for authorization
-
     //Appendix for Profile address getter
+    address profile = ProfilesFactory.getProfile(msg.sender);
 
-    address profile = msg.sender;
+  //  address profile = msg.sender;
 
-    SocLinks links;
+
+    SocLinks memory links = entangled[profile];
     links.fcb = link;
+    
 
 
   }
