@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.14;
 
 /* This contract is added only for debug.
 Sure, we shouldnt multiply weird code to delete after debug

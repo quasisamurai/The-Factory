@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.14;
 
 // Alpha prototype of Factory fo client Profiles;
 
