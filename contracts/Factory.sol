@@ -2,21 +2,14 @@ pragma solidity ^0.4.11;
 
 
 //Raw prototype of Profile MEGAFACTORY
-
-
 //TODO - DOCS
 
-  import './Declaration.sol';
+import './Declaration.sol';
 
 
 contract FactoryH{
   function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress) public returns (address);
 }
-
-contract FactoryM{
-  function createM(address _minowner, address dao, network Sonm, token sharesTokenAddress) public returns (address);
-}
-
 
 contract FactoryC{
   function createC(address , address dao, network Sonm, token sharesTokenAddress) public returns (address);
@@ -32,10 +25,9 @@ contract Factory is factory {
     network Sonm;
 
     FactoryH hf;
-    FactoryM mf;
     FactoryC cf;
 
-  TypeW public ProfileType;
+    TypeW public ProfileType;
 
 
     // owner => Profile
@@ -55,13 +47,11 @@ contract Factory is factory {
     address fish = 0x0;
     //  event Weird(string thing);
 
-    function Factory(token TokenAddress, FactoryH _hf,FactoryM _mf, FactoryC _cf){
+    function Factory(token TokenAddress, FactoryH _hf, FactoryC _cf){
         sharesTokenAddress = TokenAddress;
         dao = msg.sender;
         hf = _hf;
-        mf = _mf;
         cf = _cf;
-
     }
 
     modifier onlyDao(){
@@ -93,16 +83,6 @@ contract Factory is factory {
         LogCreate(hubProfile, _hubowner);
     }
 
-    function createMiner() public returns (address) {
-        require(Sonm != fish);
-        address _minowner = msg.sender;
-      //  address minProfile = createM(_minowner);
-        address minProfile = mf.createM(_minowner,dao, Sonm, sharesTokenAddress);
-        Profiles[_minowner] = minProfile;
-        types[_minowner] = TypeW.Miner;
-        LogCreate(minProfile, _minowner);
-    }
-
     function createClient() public returns (address) {
       require(Sonm != fish);
       address _clientowner = msg.sender;
@@ -112,8 +92,6 @@ contract Factory is factory {
       LogCreate(clientProfile, _clientowner);
     }
 
-
-
     function getProfile(address _owner) constant returns (address _Profile) {
         if (Profiles[_owner]==0) LogDebug("Address has not have profile!");
         return Profiles[_owner];
@@ -122,7 +100,4 @@ contract Factory is factory {
     function getType(address _Profile) constant returns (TypeW _type) {
         return types[_Profile];
     }
-
-    
-
 }

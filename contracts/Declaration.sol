@@ -1,7 +1,7 @@
 pragma solidity ^0.4.11;
 
-//Declaration contains declaretion of existed contracts and their functions
 
+//Declaration contains declaretion of existed contracts and their functions
 
 
 /* The token is used as a voting shares */
@@ -12,28 +12,21 @@ contract token {
     function balanceOf(address _owner) constant returns (uint balance);
     function approve(address _spender, uint _value) returns (bool success);
     function allowance(address _owner, address _spender) constant returns (uint remaining);
-
 }
-
-
 
 
 contract network {
-
-
   function Register(address _owner, address _wallet, uint64 time) public returns(bool);
   function DeRegister(address _owner, address _wallet,  uint localR) public returns(bool);
   function getGlobalRate(address _owner, address _Profile) public returns (uint);
-
 }
+
 
 // Factory safe definition
 contract factory{
-
     //Profile type
     enum TypeW {
     Hub,
-    Miner,
     Client
     }
 
@@ -42,7 +35,6 @@ contract factory{
 
     function getProfile(address _owner) constant returns (address _Profile);
     function getType(address _Profile) constant returns (TypeW _type);
-
 }
 
 contract Declaration {
