@@ -3,25 +3,7 @@ pragma solidity ^0.4.11;
 //Sonm social network contract
 ///@author Sergey Ponomarev
 
-
-// Factory safe definition
-contract factory{
-
-  //Profile type
-  enum TypeW {
-   Hub,
-   Miner,
-   Client
- }
-
-  mapping (address => address) public Profiles;
-  mapping (address => TypeW) public types;
-
-  function getProfile(address _owner) constant returns (address _Profile);
-  function getType(address _Profile) constant returns (TypeW _type);
-
-}
-
+import './Declaration.sol';
 
 // SONM social network
 contract Network{
