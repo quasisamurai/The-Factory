@@ -23,7 +23,7 @@ contract FactoryC{
 }
 
 
-contract Factory {
+contract Factory is factory {
 
     token sharesTokenAddress;
 
@@ -34,15 +34,6 @@ contract Factory {
     FactoryH hf;
     FactoryM mf;
     FactoryC cf;
-
-
-
-    //Profile type
-    enum TypeW {
-     Hub,
-     Miner,
-     Client
-   }
 
   TypeW public ProfileType;
 

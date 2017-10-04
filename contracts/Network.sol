@@ -4,23 +4,7 @@ pragma solidity ^0.4.11;
 ///@author Sergey Ponomarev
 
 
-// Factory safe definition (we need it for external functions calls)
-contract factory{
-
-  //Profile type
-  enum TypeW {
-   Hub,
-   Miner,
-   Client
- }
-
-  mapping (address => address) public Profiles;
-  mapping (address => TypeW) public types;
-
-  function getProfile(address _owner) constant returns (address _Profile);
-  function getType(address _Profile) constant returns (TypeW _type);
-
-}
+import './Declaration.sol';
 
 
 // SONM social network

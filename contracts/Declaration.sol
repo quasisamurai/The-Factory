@@ -27,6 +27,24 @@ contract network {
 
 }
 
+// Factory safe definition
+contract factory{
+
+    //Profile type
+    enum TypeW {
+    Hub,
+    Miner,
+    Client
+    }
+
+    mapping (address => address) public Profiles;
+    mapping (address => TypeW) public types;
+
+    function getProfile(address _owner) constant returns (address _Profile);
+    function getType(address _Profile) constant returns (TypeW _type);
+
+}
+
 contract Declaration {
 
 }
