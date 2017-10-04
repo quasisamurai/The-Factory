@@ -10,7 +10,7 @@ pragma solidity ^0.4.11;
 
 
 contract FactoryH{
-  function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress, bool _privat) public returns (address);
+  function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress) public returns (address);
 }
 
 contract FactoryM{
@@ -44,11 +44,6 @@ contract Factory is factory {
     //Profile types
     // Profile => type
     mapping (address => TypeW) public types;
-
-    //Type of hubs.
-    // Profile => type. true for private pools (clusters, datacentres, etc)
-    mapping (address => bool) public privat;
-
 
     event LogCreate(address Profile, address owner);
 
@@ -87,14 +82,14 @@ contract Factory is factory {
 
 
 
-    function createHub(bool _privat) public returns (address) {
+    function createHub() public returns (address) {
         require(Sonm != fish);
         address _hubowner = msg.sender;
     //    address hubProfile = createH(_hubowner,_privat);
-        address hubProfile = hf.createH(_hubowner, dao, Sonm, sharesTokenAddress,_privat);
+        address hubProfile = hf.createH(_hubowner, dao, Sonm, sharesTokenAddress);
         Profiles[_hubowner] = hubProfile;
         types[hubProfile] = TypeW.Hub;
-        privat[hubProfile] = _privat;
+
         LogCreate(hubProfile, _hubowner);
     }
 
@@ -120,6 +115,7 @@ contract Factory is factory {
 
 
     function getProfile(address _owner) constant returns (address _Profile) {
+        if (Profiles[_owner]==0) LogDebug("Address has not have profile!");
         return Profiles[_owner];
     }
 
@@ -127,8 +123,6 @@ contract Factory is factory {
         return types[_Profile];
     }
 
-    function isPrivate(address _Profile) constant returns (bool _private) {
-        return privat[_Profile];
-    }
+    
 
 }

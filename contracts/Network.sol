@@ -3,7 +3,9 @@ pragma solidity ^0.4.11;
 //Sonm social network contract
 ///@author Sergey Ponomarev
 
+
 import './Declaration.sol';
+
 
 // SONM social network
 contract Network{
