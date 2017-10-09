@@ -49,6 +49,10 @@ contract Profile  is Ownable, Dealable {
       uint public stake = 0;
       uint d_count = 0;
 
+      //adress of seller => dealnum => lockid
+      mapping(address =>mapping (uint =>  uint)) public  externaldeals;
+      uint ex_deals_count=0;
+
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
 
       /*/
@@ -72,23 +76,31 @@ contract Profile  is Ownable, Dealable {
         event LogDebug(string message);
         event DebugAddress(address lookup);
 
-    /*/
-     *  Public functions
-    /*/
 
+  // External Section
+
+    function OpenExternalDeal(address sellerAdress,uint cost) returns (bool success){
+      //  id of concrete deal
+      uint id;
+      Profile seller = Profile(sellerAdress);
+      id = seller.OpenDeal(cost);
+      sharesTokenAddress.approve(sellerAdress, cost);
+      externaldeals[sellerAdress][ex_deals_count] = id;
+      ex_deals_count++;
+      return true;
+      }
 
     // Deals-------------------------------------------------------------------
 
-    function OpenDeal(uint cost) public returns (bool success){
+    function OpenDeal(uint cost) public returns (uint lockId){
       DebugAddress(this);
     //  if(currentPhase!=Phase.Registred) revert();
       require(currentPhase==Phase.Registred);
-      uint c = d_count;
+      lockId= d_count;
       address _buyer = msg.sender;
-      require(super.start(c,cost,_buyer));
+      require(super.start(lockId,cost,_buyer));
       d_count++;
-    //  lockedFunds += cost;
-      return true;
+      return lockId;
     }
 
     function CancelDeal(uint _lockId) public returns (bool success) {
