@@ -99,6 +99,7 @@ contract Profile  is Ownable, Dealable {
       address _buyer = msg.sender;
       require(super.start(lockId,cost,_buyer));
       sharesTokenAddress.transferFrom(_buyer, this, cost);
+      lockedFunds+=cost;
       d_count++;
       return lockId;
     }
@@ -114,6 +115,9 @@ contract Profile  is Ownable, Dealable {
       DebugAddress(this);
       require(currentPhase==Phase.Registred);
       require(super.abort(_lockId,msg.sender));
+      lockedFunds = 0;
+      uint cost = super.getCost(_lockId);
+      transfer(msg.sender, cost);
       return true;
     }
 
@@ -121,10 +125,10 @@ contract Profile  is Ownable, Dealable {
       DebugAddress(this);
       require(currentPhase==Phase.Registred);
 
-      uint cost = super.getCost(_lockId);
-      address buyer = super.getBuyer(_lockId);
-      require(pullMoney(buyer));
-      lockedFunds += cost;
+      //uint cost = super.getCost(_lockId);
+      //address buyer = super.getBuyer(_lockId);
+      //require(pullMoney(buyer));
+      //lockedFunds += cost;
       require(super.accept(_lockId));
       return true;
     }
