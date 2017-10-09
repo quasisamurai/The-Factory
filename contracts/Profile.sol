@@ -94,11 +94,11 @@ contract Profile  is Ownable, Dealable {
 
     function OpenDeal(uint cost) public returns (uint lockId){
       DebugAddress(this);
-    //  if(currentPhase!=Phase.Registred) revert();
       require(currentPhase==Phase.Registred);
       lockId= d_count;
       address _buyer = msg.sender;
       require(super.start(lockId,cost,_buyer));
+      sharesTokenAddress.transferFrom(_buyer, this, cost);
       d_count++;
       return lockId;
     }
@@ -379,7 +379,7 @@ contract Profile  is Ownable, Dealable {
 
 //------TOKEN ITERACTION-------------------------------------------------------
 
-    function transfer(address _to, uint _value) public onlyOwner {
+    function transfer(address _to, uint _value) internal {
 
       require(currentPhase==Phase.Registred);
 
