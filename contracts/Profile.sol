@@ -11,9 +11,7 @@ import "./Dealable.sol";
 
 
 
-contract Profile  is Ownable, Dealable {
-
-
+contract Profile is Ownable, Dealable {
 
       /*/
        *  Constants
