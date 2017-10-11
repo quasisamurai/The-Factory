@@ -49,8 +49,9 @@ contract Profile  is Ownable, Dealable {
       uint public stake = 0;
       uint d_count = 0;
 
-      //adress of seller => dealnum => lockid
-      mapping(address =>mapping (uint =>  uint)) public  externaldeals;
+      //adress of seller =>  lockid
+      mapping (address => uint[]) externaldeals;
+      mapping (address => uint[]) mydeals;
       uint ex_deals_count=0;
 
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
@@ -85,10 +86,20 @@ contract Profile  is Ownable, Dealable {
       Profile seller = Profile(sellerAdress);
       id = seller.OpenDeal(cost);
       sharesTokenAddress.approve(sellerAdress, cost);
-      externaldeals[sellerAdress][ex_deals_count] = id;
+      externaldeals[sellerAdress].push(id);
       ex_deals_count++;
       return true;
       }
+      
+    // Get deals i've opened with *address*
+    function GetExternalDeals(address _selleraddres) constant returns (uint256[]){
+      return externaldeals[_selleraddres];
+    }
+
+    //Get deals *adress* opened with me
+    function GetDeals(address _buyeraddress) constant returns (uint256[]){
+      return mydeals[_buyeraddress];
+    }
 
     // Deals-------------------------------------------------------------------
 
@@ -100,6 +111,7 @@ contract Profile  is Ownable, Dealable {
       require(super.start(lockId,cost,_buyer));
       pullMoney(_buyer);
       lockedFunds+=cost;
+      mydeals[_buyer].push(lockId);
       d_count++;
       return lockId;
     }
