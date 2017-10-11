@@ -4,11 +4,10 @@ pragma solidity ^0.4.14;
 
 //import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 // ^ uncomment this after debug
-import "./Ownable.sol";
 import "./Profile.sol";
 
 
-contract ClientProfile is Ownable, Profile{
+contract ClientProfile is Profile{
 
 
   ///@dev constructor
@@ -40,8 +39,5 @@ contract ClientProfile is Ownable, Profile{
     if(!super.CheckIn()) revert();
     return true;
   }
-
-
-
 
 }
