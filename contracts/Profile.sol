@@ -47,6 +47,10 @@ contract Profile is Ownable, Dealable {
       uint public stake = 0;
       uint d_count = 0;
 
+      //adress of seller => dealnum => lockid
+      mapping(address =>mapping (uint =>  uint)) public  externaldeals;
+      uint ex_deals_count=0;
+
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
 
       /*/
@@ -70,23 +74,32 @@ contract Profile is Ownable, Dealable {
         event LogDebug(string message);
         event DebugAddress(address lookup);
 
-    /*/
-     *  Public functions
-    /*/
 
+  // External Section
+
+    function OpenExternalDeal(address sellerAdress,uint cost) returns (bool success){
+      //  id of concrete deal
+      uint id;
+      Profile seller = Profile(sellerAdress);
+      id = seller.OpenDeal(cost);
+      sharesTokenAddress.approve(sellerAdress, cost);
+      externaldeals[sellerAdress][ex_deals_count] = id;
+      ex_deals_count++;
+      return true;
+      }
 
     // Deals-------------------------------------------------------------------
 
-    function OpenDeal(uint cost) public returns (bool success){
+    function OpenDeal(uint cost) public returns (uint lockId){
       DebugAddress(this);
-    //  if(currentPhase!=Phase.Registred) revert();
       require(currentPhase==Phase.Registred);
-      uint c = d_count;
+      lockId= d_count;
       address _buyer = msg.sender;
-      require(super.start(c,cost,_buyer));
+      require(super.start(lockId,cost,_buyer));
+      pullMoney(_buyer);
+      lockedFunds+=cost;
       d_count++;
-    //  lockedFunds += cost;
-      return true;
+      return lockId;
     }
 
     function CancelDeal(uint _lockId) public returns (bool success) {
@@ -100,6 +113,9 @@ contract Profile is Ownable, Dealable {
       DebugAddress(this);
       require(currentPhase==Phase.Registred);
       require(super.abort(_lockId,msg.sender));
+      lockedFunds-=cost;
+      uint cost = super.getCost(_lockId);
+      transfer(msg.sender, cost);
       return true;
     }
 
@@ -107,10 +123,10 @@ contract Profile is Ownable, Dealable {
       DebugAddress(this);
       require(currentPhase==Phase.Registred);
 
-      uint cost = super.getCost(_lockId);
-      address buyer = super.getBuyer(_lockId);
-      require(pullMoney(buyer));
-      lockedFunds += cost;
+      //uint cost = super.getCost(_lockId);
+      //address buyer = super.getBuyer(_lockId);
+      //require(pullMoney(buyer));
+      //lockedFunds += cost;
       require(super.accept(_lockId));
       return true;
     }
@@ -365,7 +381,7 @@ contract Profile is Ownable, Dealable {
 
 //------TOKEN ITERACTION-------------------------------------------------------
 
-    function transfer(address _to, uint _value) public onlyOwner {
+    function transfer(address _to, uint _value) internal {
 
       require(currentPhase==Phase.Registred);
 
