@@ -40,7 +40,6 @@ contract Profile  is Ownable, Dealable {
       uint64 public frozenTime;
       uint public freezePeriod;
       uint64 public genesisTime;
-
       //Fee's
       uint daoFee;
       uint DaoCollect;
@@ -48,6 +47,11 @@ contract Profile  is Ownable, Dealable {
       uint public localRate = 0;
       uint public stake = 0;
       uint d_count = 0;
+
+      //adress of seller =>  lockid
+      mapping (address => uint[]) externaldeals;
+      mapping (address => uint[]) mydeals;
+      uint ex_deals_count=0;
 
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
 
@@ -68,33 +72,66 @@ contract Profile  is Ownable, Dealable {
       /*/
        *  Events
       /*/
-        event LogPhaseSwitch(Phase newPhase);
-        event LogDebug(string message);
-        event DebugAddress(address lookup);
+      event LogPhaseSwitch(Phase newPhase);
+      event LogDebug(string message);
+      event DebugAddress(address lookup);
+      event DealOpened(address buyer, address seller, uint cost, uint lockid);
+      event DealAccepted(address buyer, address seller, uint cost, uint lockid);
+      event DealAborted(address buyer, address seller, uint cost, uint lockid);
+      event DealCanceled(address buyer, address seller, uint cost, uint lockid);
+      event DealRejected(address buyer, address seller, uint cost, uint lockid);
+      event DealIsReady(address buyer, address seller, uint cost, uint lockid);
+      event DealIsDone(address buyer, address seller, uint cost, uint lockid);
+      event DealAppealed(address buyer, address selle, uint cost, uint lockid);
 
-    /*/
-     *  Public functions
-    /*/
 
+
+  // External Section
+
+    function OpenExternalDeal(address _sellerAddress,uint cost, uint _endTime) returns (bool success){
+      //  id of concrete deal
+      uint id;
+      Profile seller = Profile(_sellerAddress);
+      id = seller.OpenDeal(cost, _endTime);
+      sharesTokenAddress.approve(_sellerAddress, cost);
+      externaldeals[_sellerAddress].push(id);
+      ex_deals_count++;
+
+      return true;
+      }
+
+    // Get deals i've opened with *address*
+    function GetExternalDeals(address _sellerAddress) constant returns (uint256[]){
+      return externaldeals[_sellerAddress];
+    }
+
+    //Get deals *adress* opened with me
+    function GetDeals(address _buyerAddress) constant returns (uint256[]){
+      return mydeals[_buyerAddress];
+    }
 
     // Deals-------------------------------------------------------------------
 
-    function OpenDeal(uint cost) public returns (bool success){
+    function OpenDeal(uint cost, uint _endTime) public returns (uint lockId){
       DebugAddress(this);
-    //  if(currentPhase!=Phase.Registred) revert();
       require(currentPhase==Phase.Registred);
-      uint c = d_count;
+      lockId= d_count;
       address _buyer = msg.sender;
-      require(super.start(c,cost,_buyer));
+      require(super.start(lockId,cost,_buyer, _endTime));
+      pullMoney(_buyer);
+      lockedFunds+=cost;
+      mydeals[_buyer].push(lockId);
       d_count++;
-    //  lockedFunds += cost;
-      return true;
+      DealOpened(msg.sender, this, cost, lockId);
+      return lockId;
     }
 
     function CancelDeal(uint _lockId) public returns (bool success) {
       DebugAddress(this);
       require(currentPhase==Phase.Registred);
       require(super.cancel(_lockId,msg.sender));
+      uint cost = super.getCost(_lockId);
+      DealCanceled(msg.sender, this, cost, _lockId);
       return true;
     }
 
@@ -102,24 +139,31 @@ contract Profile  is Ownable, Dealable {
       DebugAddress(this);
       require(currentPhase==Phase.Registred);
       require(super.abort(_lockId,msg.sender));
+      lockedFunds-=cost;
+      uint cost = super.getCost(_lockId);
+      //address buyer = super.getBuyer(_lockId);
+      transfer(msg.sender, cost);
+      DealAborted(msg.sender, this, cost, _lockId);
       return true;
     }
 
     function AcceptDeal(uint _lockId) public onlyOwner returns (bool success){
       DebugAddress(this);
       require(currentPhase==Phase.Registred);
-
+      require(super.accept(_lockId));
       uint cost = super.getCost(_lockId);
       address buyer = super.getBuyer(_lockId);
-      require(pullMoney(buyer));
-      lockedFunds += cost;
-      require(super.accept(_lockId));
+      DealAccepted(buyer, msg.sender, cost, _lockId);
       return true;
     }
 
     function RejectDeal(uint _lockId) public onlyOwner returns (bool success) {
       require(currentPhase==Phase.Registred);
       require(super.reject(_lockId));
+      uint cost = super.getCost(_lockId);
+      address buyer = super.getBuyer(_lockId);
+      transfer(buyer, cost);
+      DealRejected(buyer, msg.sender, cost, _lockId);
       return true;
     }
 
@@ -127,6 +171,9 @@ contract Profile  is Ownable, Dealable {
     function ReadyDeal(uint _lockId) public onlyOwner returns (bool success) {
       require(currentPhase==Phase.Registred);
       require(super.ready(_lockId));
+      uint cost = super.getCost(_lockId);
+      address buyer = super.getBuyer(_lockId);
+      DealIsReady(buyer, msg.sender, cost, _lockId);
       return true;
     }
 
@@ -136,11 +183,9 @@ contract Profile  is Ownable, Dealable {
       uint lockFee = cost * daoFee / 1000;
       lockedFunds -= cost;
       DaoCollect += lockFee;
-    //  uint lock = lockedFunds;
-    //  if(sharesTokenAddress.balanceOf(msg.sender)< (lock + cost)) revert();
-    //  require(sharesTokenAddress.balanceOf(msg.sender) >= (lock + cost));
       require(plusRate(cost));
       require(super.done(_lockId,msg.sender));
+      DealIsDone(msg.sender, this, cost, _lockId);
       return true;
     }
 
@@ -163,6 +208,21 @@ contract Profile  is Ownable, Dealable {
       DaoCollect += lockFee;
       require(super.appeal(_lockId,msg.sender));
       require(minusRate(cost));
+      DealAppealed(msg.sender, this, cost, _lockId);
+      return true;
+    }
+
+    // hub receives funds, in proportion to time worked
+    function PayAsYouGo(_lockId) onlyOwner returns (bool success){
+      nowTime = block.timestamp;
+      cost = super.getCost(_lockId);
+      endTime = super.getEndTime(_lockId);
+      startTime = super.getStartTime(_lockId);
+      withdrawAmount = super.getWithdrawedFunds(_lockId);
+      //pps = price per second;
+      pps = cost / (endTime - startTime);
+      withdrawAmount = (nowTime - startTime) * pps - withdrawAmount;
+      transfer(msg.sender, withdrawAmount);
       return true;
     }
 
@@ -367,7 +427,7 @@ contract Profile  is Ownable, Dealable {
 
 //------TOKEN ITERACTION-------------------------------------------------------
 
-    function transfer(address _to, uint _value) public onlyOwner {
+    function transfer(address _to, uint _value) internal {
 
       require(currentPhase==Phase.Registred);
 
