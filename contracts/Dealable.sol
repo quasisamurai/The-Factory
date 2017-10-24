@@ -33,6 +33,9 @@ contract Dealable{
     address  buyer;
     uint lockedFunds;
     DealStatus status;
+    uint startTime;
+    uint endTime;
+    uint withdrawedFunds;
     // Next one for delay deals function.
     //  bool delayed;
   }
@@ -44,18 +47,19 @@ contract Dealable{
 
 
 
-  function start(uint _lockId, uint _amount, address _buyer) internal returns (bool success){
+  function start(uint _lockId, uint _amount, address _buyer, uint _endTime) internal returns (bool success){
     //create default Deal struct or access existing
     DealInfo memory info = deals[_lockId];
 
     //lock only once for a given id
     if(info.lockedFunds > 0) revert();
 
-    //  if(info.status != Available) throw;
-    // buyer init  deal.
     info.buyer = _buyer;
     info.lockedFunds = _amount;
     info.status = DealStatus.Open;
+    info.startTime = block.timestamp;
+    info.endTime = _endTime;
+    info.withdrawedFunds = 0;
 
     buyers[_buyer] = true;
     //Start order to event log
@@ -89,6 +93,24 @@ contract Dealable{
     DealInfo memory info = getInfo(_lockId);
     address _buyer = info.buyer;
     return _buyer;
+  }
+
+  function getStartTime(uint _lockId) public returns (uint startTime){
+    DealInfo memory info = getInfo(_lockId);
+    uint _startTime = info.startTime;
+    return _startTime;
+  }
+
+  function getEndTime(uint _lockId) public returns (uint endTime){
+    DealInfo memory info = getInfo(_lockId);
+    uint _endTime = info.endTime;
+    return _endTime;
+  }
+
+  function getWithdrawedFunds(uint _lockId) public returns (uint _withdrawedFunds){
+    DealInfo memory info = getInfo(_lockId);
+    uint _withdrawedFunds = info.withdrawedFunds;
+    return _withdrawedFunds;
   }
 
   function accept(uint _lockId) internal returns (bool success){
