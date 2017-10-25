@@ -48,9 +48,14 @@ contract Profile  is Ownable, Dealable {
       uint public stake = 0;
       uint d_count = 0;
 
+<<<<<<< HEAD
       //adress of seller =>  lockid
       mapping (address => uint[]) externaldeals;
       mapping (address => uint[]) mydeals;
+=======
+      //adress of seller => dealnum => lockid
+      mapping(address =>mapping (uint =>  uint)) public  externaldeals;
+>>>>>>> cd815bec4a31ed7aecd42ae2f663c7245b87c273
       uint ex_deals_count=0;
 
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
