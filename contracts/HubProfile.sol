@@ -4,14 +4,10 @@ pragma solidity ^0.4.14;
 
 //import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 // ^ uncomment this after debug
-import "./Ownable.sol";
 import "./Profile.sol";
 
 
-contract HubProfile is Ownable, Profile{
-
-
-
+contract HubProfile is Profile{
 
   ///@dev constructor
   function HubProfile(address _hubowner,address _dao,network _Network,token sharesAddress){
@@ -31,13 +27,12 @@ contract HubProfile is Ownable, Profile{
 
     freezePeriod = 10 days;
 
-    
+
     currentPhase = Phase.Idle;
 
   }
 
   function Registration() public returns (bool success){
-
 
     require(currentPhase==Phase.Idle);
     require(sharesTokenAddress.balanceOf(this) >= freezeQuote);
@@ -45,6 +40,5 @@ contract HubProfile is Ownable, Profile{
     if(!super.CheckIn()) revert();
     return true;
   }
-
 
 }
