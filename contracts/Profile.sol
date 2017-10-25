@@ -48,16 +48,11 @@ contract Profile  is Ownable, Dealable {
       uint public stake = 0;
       uint d_count = 0;
 
-<<<<<<< HEAD
       //adress of seller =>  lockid
       mapping (address => uint[]) externaldeals;
       mapping (address => uint[]) mydeals;
-=======
-      //adress of seller => dealnum => lockid
-      mapping(address =>mapping (uint =>  uint)) public  externaldeals;
->>>>>>> cd815bec4a31ed7aecd42ae2f663c7245b87c273
-      uint ex_deals_count=0;
 
+      uint ex_deals_count = 0;
       modifier onlyDao()     { if(msg.sender != DAO) revert(); _; }
 
       /*/
@@ -218,14 +213,14 @@ contract Profile  is Ownable, Dealable {
     }
 
     // hub receives funds, in proportion to time worked
-    function PayAsYouGo(_lockId) onlyOwner returns (bool success){
-      nowTime = block.timestamp;
-      cost = super.getCost(_lockId);
-      endTime = super.getEndTime(_lockId);
-      startTime = super.getStartTime(_lockId);
-      withdrawAmount = super.getWithdrawedFunds(_lockId);
+    function PayAsYouGo(uint _lockId) onlyOwner returns (bool success){
+      uint nowTime = block.timestamp;
+      uint cost = super.getCost(_lockId);
+      uint endTime = super.getEndTime(_lockId);
+      uint startTime = super.getStartTime(_lockId);
+       uint withdrawAmount = super.getWithdrawedFunds(_lockId);
       //pps = price per second;
-      pps = cost / (endTime - startTime);
+      uint pps = cost / (endTime - startTime);
       withdrawAmount = (nowTime - startTime) * pps - withdrawAmount;
       transfer(msg.sender, withdrawAmount);
       return true;

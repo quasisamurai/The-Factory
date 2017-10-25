@@ -107,7 +107,7 @@ contract Dealable{
     return _endTime;
   }
 
-  function getWithdrawedFunds(uint _lockId) public returns (uint _withdrawedFunds){
+  function getWithdrawedFunds(uint _lockId) public returns (uint withdrawedFunds){
     DealInfo memory info = getInfo(_lockId);
     uint _withdrawedFunds = info.withdrawedFunds;
     return _withdrawedFunds;
