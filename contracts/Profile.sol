@@ -48,8 +48,7 @@ contract Profile  is Ownable, Dealable {
       uint public stake = 0;
       uint d_count = 0;
 
-      //adress of seller =>  lockid
-      mapping (address => uint[]) externaldeals;
+      //adress of seller(for client profile)/ buyer (for hub profile) =>  lockid
       mapping (address => uint[]) mydeals;
 
       uint ex_deals_count = 0;
@@ -94,7 +93,7 @@ contract Profile  is Ownable, Dealable {
       Profile seller = Profile(_sellerAddress);
       id = seller.OpenDeal(cost, _endTime);
       sharesTokenAddress.approve(_sellerAddress, cost);
-      externaldeals[_sellerAddress].push(id);
+      mydeals[_sellerAddress].push(id);
       ex_deals_count++;
 
       return true;
@@ -218,7 +217,7 @@ contract Profile  is Ownable, Dealable {
       uint cost = super.getCost(_lockId);
       uint endTime = super.getEndTime(_lockId);
       uint startTime = super.getStartTime(_lockId);
-       uint withdrawAmount = super.getWithdrawedFunds(_lockId);
+      uint withdrawAmount = super.getWithdrawedFunds(_lockId);
       //pps = price per second;
       uint pps = cost / (endTime - startTime);
       withdrawAmount = (nowTime - startTime) * pps - withdrawAmount;
