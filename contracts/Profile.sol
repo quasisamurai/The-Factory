@@ -97,14 +97,9 @@ contract Profile is Ownable, Dealable {
       return true;
       }
 
-    // Get deals i've opened with *address*
-    function GetExternalDeals(address _sellerAddress) constant returns (uint256[]){
-      return externaldeals[_sellerAddress];
-    }
 
-    //Get deals *adress* opened with me
-    function GetDeals(address _buyerAddress) constant returns (uint256[]){
-      return mydeals[_buyerAddress];
+    function GetDeals(address _contragentAddress) constant returns (uint256[]){
+      return mydeals[_contragentAddress];
     }
 
     // Deals-------------------------------------------------------------------
