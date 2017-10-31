@@ -5,6 +5,7 @@ var Profile = artifacts.require("./Profile.sol");
 var FactoryH = artifacts.require("./FactoryH.sol");
 var FactoryC = artifacts.require("./FactoryC.sol");
 var Network = artifacts.require("./Network.sol");
+var creator = artifacts.require("./creator.sol");
 
 module.exports = function(deployer) {
 
@@ -16,5 +17,7 @@ module.exports = function(deployer) {
       return deployer.deploy(Factory, SDT.address, FactoryH.address, FactoryC.address);
   }).then(function () {
       return deployer.deploy(Network,Factory.address);
+  }).then(function () {
+      return deployer.deploy(creator);
   });
 };

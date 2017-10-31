@@ -17,10 +17,16 @@ import { default as contract } from 'truffle-contract'
 
 import token_artifacts from '../../build/contracts/SDT.json'
 import factory_artifacts from '../../build/contracts/Factory.json'
-import hub_artifacts from '../../build/contracts/HubProfile.json'
+
+import hub_artifacts from '../../build/contracts/Profile.json'
+
 //import miner_artifacts from '../../build/contracts/MinerProfile.json'
 import network_artifacts from '../../build/contracts/Network.json'
-import client_artifacts from '../../build/contracts/ClientProfile.json'
+
+import client_artifacts from '../../build/contracts/Profile.json'
+
+import cr_artifacts from '../../build/contracts/creator.json'
+
 
 // const async = require('async');
 
@@ -33,6 +39,7 @@ var Hub = contract(hub_artifacts)
 //var Miner = contract(miner_artifacts)
 var Network = contract(network_artifacts)
 var Client = contract(client_artifacts)
+var Creator = contract(cr_artifacts)
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -60,6 +67,7 @@ window.App = {
     //Miner.setProvider(web3.currentProvider)
     Network.setProvider(web3.currentProvider)
     Client.setProvider(web3.currentProvider)
+    Creator.setProvider(web3.currentProvider)
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
@@ -214,6 +222,27 @@ window.App = {
     })
   },
 
+  createNw: function () {
+    var self=this;
+    var instance;
+    var nwt;
+
+    Creator.deployed().then(function (instance) {
+      nwt = instance;
+      return nwt.rep({from: account})
+    }).then(function (tx) {
+
+      console.log('tx:');
+      console.log(tx);
+
+    }).catch(function (e) {
+      console.log(e);
+
+
+    })
+
+  },
+
   createHub: function () {
       var self = this;
       var pos = '#hubCreate_result';
@@ -323,7 +352,7 @@ window.App = {
     var cli;
     ClientProfile.at(cliaraddress).then(function (instance) {
       cli = instance;
-      return cli.CheckEx({from: account})
+      return cli.checkBug({from: account})
     }).then(function (tx) {
 
       console.log('tx:');
