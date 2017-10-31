@@ -48,12 +48,12 @@ contract Profile is Ownable, Dealable {
       address public DAO;
       address public Factory;
       //address public Network;
-      address Network;
+      address public Network;
       bool public isHub;
       address public sharesTokenAddress;
-      uint deals_count = 0;
+      uint public deals_count = 0;
       uint public lockedFunds = 0;
-      address owner;
+      address public owner;
 
       //adress of seller(for client profile)/ buyer (for hub profile) =>  lockid
       mapping (address => uint[]) mydeals;

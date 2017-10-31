@@ -19,5 +19,7 @@ module.exports = function(deployer) {
       return deployer.deploy(Network,Factory.address);
   }).then(function () {
       return deployer.deploy(creator);
+  }).then(function () {
+      return deployer.deploy(Profile,0x0,0x0,0x0,true);
   });
 };

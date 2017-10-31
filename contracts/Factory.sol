@@ -38,6 +38,7 @@ contract Factory is factory {
     event LogCr(address owner);
     event LogDebug(string message);
     event DebugAddress(address lookup);
+    event Acceptance1(address owner, address dao, address Sonm, address token);
     address fish = 0x0;
 
     function Factory(token TokenAddress, FactoryH _hf, FactoryC _cf){
@@ -68,6 +69,7 @@ contract Factory is factory {
     function createHub() public returns (address) {
         require(Sonm != fish);
         address _hubowner = msg.sender;
+        Acceptance1(_hubowner,dao,Sonm, sharesTokenAddress);
         address hubProfile = hf.createH(_hubowner, dao, Sonm, sharesTokenAddress);
         Profiles[_hubowner] = hubProfile;
         types[hubProfile] = TypeW.Hub;
