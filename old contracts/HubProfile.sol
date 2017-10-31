@@ -1,4 +1,4 @@
-pragma solidity ^0.4.14;
+pragma solidity ^0.4.13;
 
 //Raw prototype for Hub Profile contract.
 
@@ -10,14 +10,20 @@ import "./Profile.sol";
 contract HubProfile is Profile{
 
   ///@dev constructor
-  function HubProfile(address _hubowner,address _dao,network _Network,token sharesAddress){
+  function HubProfile(address _hubowner,address _dao,address _Network,address sharesAddress){
+
+/*
     owner=_hubowner;
     DAO=_dao;
-    Network= network(_Network);
+
+  //  Network= network(_Network);
+    Network= network(0x0);
+
     Factory=msg.sender;
     genesisTime=uint64(now);
 
-    sharesTokenAddress = token(sharesAddress);
+  //  sharesTokenAddress = token(sharesAddress);
+    sharesTokenAddress = token(0x0);
 
     //1 SNM token is needed to registrate in Network
     freezeQuote = 1 * (1 ether / 1 wei);
@@ -29,6 +35,7 @@ contract HubProfile is Profile{
 
 
     currentPhase = Phase.Idle;
+    */
 
   }
 

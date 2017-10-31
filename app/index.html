@@ -158,14 +158,20 @@
             <div class="section">
               <h3> Create new client profile </h3>
               <span id="createStatus"></span>
-              <br><br><td align="right"> <button id="CreateHub" onclick="App.createProfile()">New</button></td> <hr>
+              <br><br><td align="right"> <button id="CreateHub" onclick="App.createClient()">New</button></td> <hr>
             </div>
 
             <div class="section">
-              <h3>Register hubprofile</h3 >
+              <h3> Check functionality </h3>
+              <span id="checkStat"></span>
+              <br><br><td align="right"> <button id="CreateHub" onclick="App.checkClient()">New</button></td> <hr>
+            </div>
+
+            <div class="section">
+              <h3>Register client</h3 >
               <label> Address Client Profile <input type="text" id="hub_address" /> <br> <br>
-              <label>  HubOwner </label><span id="hub_owner"></span>
-              <button  onclick="App.registerClient()">Отчеканить!</button>
+              <label>  Register </label><span id="hub_owner"></span>
+              <button  onclick="App.registerClient()">Register</button>
               <span id="hubreg_result"></span>
             </div><hr>
 

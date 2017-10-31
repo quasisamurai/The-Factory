@@ -1,10 +1,10 @@
-Miner
+
 //  TODO : CONVERT FUNCTIOS.
 //  TODO : cleanup code
 //  TODO : clean appendix
 // Import the page's CSS. Webpack will know what to do with it.
 
-//import '../stylesheets/app.css'
+import '../stylesheets/app.css'
 
 // Import libraries we need.
 
@@ -14,14 +14,13 @@ import { default as contract } from 'truffle-contract'
 // import each from 'async/each';
 
 // Import our contract artifacts and turn them into usable abstractions.
-// import token_artifacts from '../../build/contracts/BigToken.json'
-// import constructor_artifacts from '../../build/contracts/TokenConstructor.json'
+
 import token_artifacts from '../../build/contracts/SDT.json'
 import factory_artifacts from '../../build/contracts/Factory.json'
 import hub_artifacts from '../../build/contracts/HubProfile.json'
-import miner_artifacts from '../../build/contracts/MinerProfile.json'
+//import miner_artifacts from '../../build/contracts/MinerProfile.json'
 import network_artifacts from '../../build/contracts/Network.json'
-//import client_artifacts from '../../build/contracts/ClientProfile.json'
+import client_artifacts from '../../build/contracts/ClientProfile.json'
 
 // const async = require('async');
 
@@ -31,9 +30,9 @@ import network_artifacts from '../../build/contracts/Network.json'
 var Token = contract(token_artifacts)
 var Factory = contract(factory_artifacts)
 var Hub = contract(hub_artifacts)
-var Miner = contract(miner_artifacts)
+//var Miner = contract(miner_artifacts)
 var Network = contract(network_artifacts)
-//var Client = contracts(client_artifacts)
+var Client = contract(client_artifacts)
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -58,9 +57,9 @@ window.App = {
     Token.setProvider(web3.currentProvider)
     Factory.setProvider(web3.currentProvider)
     Hub.setProvider(web3.currentProvider)
-    Miner.setProvider(web3.currentProvider)
+    //Miner.setProvider(web3.currentProvider)
     Network.setProvider(web3.currentProvider)
-    //  Client.setProvider(web3.currentProvider)
+    Client.setProvider(web3.currentProvider)
 
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function (err, accs) {
@@ -220,11 +219,11 @@ window.App = {
       var pos = '#hubCreate_result';
       var instance;
       var msg;
-      var priv = $('#privatehub').is(':checked');
+    //  var priv = $('#privatehub').is(':checked');
       var fac;
       Factory.deployed().then(function (instance) {
         fac = instance;
-        return fac.createHub(priv, {from: account})
+        return fac.createHub({from: account})
       }).then(function (tx) {
         hubaddress = tx;
         console.log('tx:');
@@ -268,7 +267,7 @@ window.App = {
   },
 
 
-
+  /*
   createMiner: function () {
     var self = this;
     var pos = '#minCreate_result';
@@ -313,6 +312,30 @@ window.App = {
       self.setStatusPos(pos, msg);
     })
 
+  },
+  */
+
+  checkClient: function () {
+    var self = this;
+    var pos = '#checkStat';
+    var instance;
+    var msg;
+    var cli;
+    ClientProfile.at(cliaraddress).then(function (instance) {
+      cli = instance;
+      return cli.CheckEx({from: account})
+    }).then(function (tx) {
+
+      console.log('tx:');
+      console.log(tx);
+      msg = 'Transaction complete';
+      self.setStatusPos(pos, msg);
+      //   self.refreshAddress();
+    }).catch(function (e) {
+      console.log(e);
+      msg = 'Ошибка при отправке, смотри консоль';
+      self.setStatusPos(pos, msg);
+    })
   },
 
   sendPay: function () {
@@ -422,6 +445,7 @@ window.App = {
 
   },
 
+/*
   pullMoney: function () {
     var self = this
     var pos = '#pullmoney_result'
@@ -488,7 +512,7 @@ window.App = {
       self.setStatusPos(pos, msg)
     })
   },
-
+*/
   suspectHub: function () {
     var self = this
     var pos = '#suspect_hub'
@@ -513,6 +537,7 @@ window.App = {
 
   },
 
+/*
   suspectMiner: function () {
     var self = this
     var pos = '#suspect_miner'
@@ -536,6 +561,7 @@ window.App = {
     })
 
   },
+  */
 
   gulagHub: function () {
     var self = this
@@ -585,6 +611,7 @@ window.App = {
 
   },
 
+/*
   gulagMiner: function () {
     var self = this
     var pos = '#gulag_miner'
@@ -632,7 +659,7 @@ window.App = {
     })
 
   },
-
+*/
   getProfile: function () {
     var self = this
     var pos
