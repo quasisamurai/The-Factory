@@ -11,9 +11,9 @@ contract FactoryH {
     bool isHub = true;
     LogCr(_profileowner);
     Acceptance2(_profileowner,dao,Sonm,sharesTokenAddress,isHub);
-  //  return address(new Profile(_profileowner, dao, Sonm, sharesTokenAddress, isHub));
-    address fish = 0x0;
-    return fish;
+    return address(new Profile(_profileowner, dao, Sonm, sharesTokenAddress, isHub));
+//    address fish = 0x0;
+//    return fish;
   }
 
 }
