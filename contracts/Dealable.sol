@@ -113,6 +113,12 @@ contract Dealable{
     return _withdrawedFunds;
   }
 
+  function updateWithdrawedFunds(uint _lockId, uint _amount) internal returns (uint){
+    DealInfo memory info = getInfo(_lockId);
+    info.withdrawedFunds+=_amount;
+    return info.withdrawedFunds;
+  }
+
   function accept(uint _lockId) internal returns (bool success){
 
     DealInfo memory info = deals[_lockId];
