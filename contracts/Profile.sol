@@ -150,7 +150,8 @@ contract Profile is Ownable, Dealable {
       lockedFunds-=cost;
       uint cost = super.getCost(_lockId);
       //address buyer = super.getBuyer(_lockId);
-      transfer(msg.sender, cost);
+      uint remainingFunds = cost - PaymentWithdraw(_lockId);
+      transfer(msg.sender, remainingFunds);
       DealAborted(msg.sender, this, cost, _lockId);
       return true;
     }
@@ -193,7 +194,6 @@ contract Profile is Ownable, Dealable {
       //DaoCollect += lockFee;
       //require(plusRate(cost));
       require(super.done(_lockId,msg.sender));
-      PaymentWithdraw(_lockId);
       DealIsDone(msg.sender, this, cost, _lockId);
       return true;
     }
@@ -238,7 +238,7 @@ contract Profile is Ownable, Dealable {
     }
 
     // unlock funds that hub should get. then, he can pull money whatever he wants by PAYG
-    function PaymentWithdraw(uint _lockId) internal onlyClient returns (bool success){
+    function PaymentWithdraw(uint _lockId) internal onlyClient returns (uint sum){
       require(msg.sender == super.getBuyer(_lockId));
       uint nowTime = block.timestamp;
       uint cost = super.getCost(_lockId);
@@ -247,8 +247,8 @@ contract Profile is Ownable, Dealable {
       uint withdrawedAmount = super.getWithdrawedFunds(_lockId);
       uint pps = cost / (endTime - startTime);
       uint finalWithdraw = pps * (nowTime - startTime) - withdrawedAmount;
-      lockedFunds -= finalWithdraw;
-      return true;
+      //lockedFunds -= finalWithdraw;
+      return finalWithdraw;
     }
 
 /*
