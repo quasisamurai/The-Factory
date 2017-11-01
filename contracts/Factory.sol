@@ -39,6 +39,7 @@ contract Factory is factory {
     event LogDebug(string message);
     event DebugAddress(address lookup);
     event Acceptance1(address owner, address dao, address Sonm, address token);
+    event Acceptance2(address owner, address dao, address Sonm, address token, bool isHub);
     address fish = 0x0;
 
     function Factory(token TokenAddress, FactoryH _hf, FactoryC _cf){

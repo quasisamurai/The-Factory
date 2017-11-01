@@ -51,6 +51,7 @@ var address
 var hubaddress
 var mineraddress
 var balance
+var clientaddress
 // var tokend;
 
 window.App = {
@@ -184,7 +185,7 @@ window.App = {
     Hub.at(hbdr).then(function (instance) {
       hb = instance;
       console.log('hmm');
-      return hb.Registration({from: account, gas: 3000000});
+      return hb.Registration({from: account});
     }).then(function (tx) {
 
       console.log('tx:');
@@ -205,7 +206,7 @@ window.App = {
     var instance;
     var msg;
     var cli;
-    ClientProfile.at(cliaraddress).then(function (instance) {
+    ClientProfile.at(clientaddress).then(function (instance) {
       cli = instance;
       return cli.Registration({from: account})
     }).then(function (tx) {
@@ -252,7 +253,7 @@ window.App = {
       var fac;
       Factory.deployed().then(function (instance) {
         fac = instance;
-        return fac.createHub({from: account})
+        return fac.createHub({from: account, gas:4000000})
       }).then(function (tx) {
         hubaddress = tx;
         console.log('tx:');
@@ -279,7 +280,7 @@ window.App = {
 
      Factory.deployed().then(function (instance) {
        fac = instance;
-     return fac.createClient({from: account})
+     return fac.createClient({from: account, gas:4000000})
     }).then(function (tx) {
       clientaddress = tx;
       console.log('tx:');
@@ -350,7 +351,8 @@ window.App = {
     var instance;
     var msg;
     var cli;
-    ClientProfile.at(cliaraddress).then(function (instance) {
+    var cliaddress = $('#cli_address').val()
+    Client.at(cliaddress).then(function (instance) {
       cli = instance;
       return cli.checkBug({from: account})
     }).then(function (tx) {
