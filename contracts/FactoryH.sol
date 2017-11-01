@@ -1,24 +1,15 @@
 pragma solidity ^0.4.14;
 
-
-//Raw prototype of Profile factory
-
-
-//TODO - DOCS
-
-
-import './HubProfile.sol';
-
+import './Profile.sol';
 
 contract FactoryH {
 
   event LogCr(address owner);
 
-  function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress) public returns (address) {
-    return address(new HubProfile(_hubowner, dao, Sonm, sharesTokenAddress));
-  //  return address(hp.Reproduce(_hubowner, dao, Sonm, sharesTokenAddress));
-
-      LogCr(_hubowner);
+  function createH(address _profileowner, address dao, address Sonm, address sharesTokenAddress) public returns (address) {
+    bool isHub = true;
+    //LogCr(_profileowner);
+    return address(new Profile(_profileowner, dao, Sonm, sharesTokenAddress, isHub));
   }
 
 }
