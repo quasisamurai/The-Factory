@@ -52,8 +52,6 @@ contract Network{
     return true;
   }
 
-
-
   function DeRegister(address _owner, address _Profile, uint localR) public returns(bool) {
 
     address Profile = ProfilesFactory.getProfile(_owner);

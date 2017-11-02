@@ -118,10 +118,15 @@ contract Profile is Ownable, Dealable {
         isHub = _isHub;
     }
 
-    modifier onlyHub(){require(isHub == true);
-        _;}
-    modifier onlyClient(){require(isHub == false);
-        _;}
+    modifier onlyHub(){
+        require(isHub == true);
+        _;
+    }
+
+    modifier onlyClient(){
+        require(isHub == false);
+        _;
+    }
 
     function OpenExternalDeal() public {
         /*
