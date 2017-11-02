@@ -27,14 +27,14 @@ contract('Factory', async function (accounts) {
   });
 
   it('test createHub', async function () {
-    await factory.createHub({from: hub});
+    await factory.createProfile(true, {from: hub});
     var profile = await factory.getProfile(hub);
     var type = await factory.getType(profile);
     assert.equal(type, 0);
   });
 
   it('test createClient', async function () {
-    await factory.createClient({from: client});
+    await factory.createProfile(false, {from: client});
     var profile = await factory.getProfile(client);
     var type = await factory.getType(profile);
     assert.equal(type, 1);

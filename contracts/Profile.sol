@@ -128,26 +128,6 @@ contract Profile is Ownable, Dealable {
         _;
     }
 
-    function OpenExternalDeal() public {
-        /*
-        //  id of concrete deal
-        uint id;
-        Profile seller = Profile(_sellerAddress);
-        require(token(sharesTokenAddress).approve(_sellerAddress, cost)) ;
-        id = seller.OpenDeal(cost, _endTime);
-        mydeals[_sellerAddress].push(id);
-        deals_count++;
-        return true;
-        */
-        LogDebug("bla");
-    }
-
-    function checkBug() public returns (bool success)
-    {
-        return true;
-    }
-
-
     function GetDeals(address _contragentAddress) constant returns (uint256[]){
         return mydeals[_contragentAddress];
     }
