@@ -50,21 +50,15 @@ contract Dealable{
   function start(uint _lockId, uint _amount, address _buyer, uint _endTime) internal returns (bool success){
     //create default Deal struct or access existing
     DealInfo memory info = deals[_lockId];
-
     //lock only once for a given id
-    if(info.lockedFunds > 0) revert();
-
+    //require(info.lockedFunds > 0);
     info.buyer = _buyer;
     info.lockedFunds = _amount;
     info.status = DealStatus.Open;
     info.startTime = block.timestamp;
     info.endTime = _endTime;
     info.withdrawedFunds = 0;
-
     buyers[_buyer] = true;
-    //Start order to event log
-    // TODO make events for this
-    //  LogEvent(_lockId, _dataInfo, _version, Start, msg.sender, msg.value);
     deals[_lockId] = info;
 
     return true;
@@ -113,6 +107,12 @@ contract Dealable{
     return _withdrawedFunds;
   }
 
+  function updateWithdrawedFunds(uint _lockId, uint _amount) internal returns (uint){
+    DealInfo memory info = getInfo(_lockId);
+    info.withdrawedFunds+=_amount;
+    return info.withdrawedFunds;
+  }
+
   function accept(uint _lockId) internal returns (bool success){
 
     DealInfo memory info = deals[_lockId];
@@ -135,7 +135,7 @@ contract Dealable{
   function cancel(uint _lockId,address _buyer) internal returns (bool success){
     DealInfo memory info = deals[_lockId];
     require(info.status == DealStatus.Open);
-    require(info.buyer==_buyer);
+    //require(info.buyer==_buyer);
     info.status = DealStatus.Cancelled;
     deals[_lockId] = info;
     return true;
