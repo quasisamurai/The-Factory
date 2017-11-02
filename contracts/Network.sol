@@ -1,4 +1,5 @@
-pragma solidity ^0.4.14;
+pragma solidity ^0.4.13;
+
 
 //Sonm social network contract
 ///@author Sergey Ponomarev
@@ -8,79 +9,72 @@ import './Declaration.sol';
 
 
 // SONM social network
-contract Network{
+contract Network {
 
-  factory ProfilesFactory;
+    factory ProfilesFactory;
 
-  mapping (address => bool) public isRegistred;
-  mapping (address => uint) public globalRate;
+    mapping (address => bool) public isRegistred;
 
-
-/* TODO - make indexed events
-*/
-  event Registred(address _owner,address Profile, uint64 time, factory.TypeW _type);
-  event unRegistred(address _owner,address Profile, uint64 time, factory.TypeW _type, uint Diff);
+    mapping (address => uint) public globalRate;
 
 
-
-  //-----------------------------------func------------------------------------
-
-  function Network(factory Factory){
-
-    ProfilesFactory = factory(Factory);
-
-  }
-
-
-  function Register(address _owner, address _Profile, uint64 time) public returns(bool) {
-
-    address Profile = ProfilesFactory.getProfile(_owner);
-    // Check that call comes from our Profile
-    require(Profile == msg.sender);
-    isRegistred[Profile]=true;
-
-    factory.TypeW _type;
-    _type=ProfilesFactory.getType(_Profile);
-/*
-    if (globalRate[_Profile]==null){
-      globalRate[_Profile]=0;
-    }
+    /* TODO - make indexed events
     */
+    event Registred(address _owner, address Profile, uint64 time, factory.TypeW _type);
 
-    //Appendix event
-    Registred(_owner,Profile,time,_type);
-    return true;
-  }
+    event unRegistred(address _owner, address Profile, uint64 time, factory.TypeW _type, uint Diff);
 
+    function Network(factory Factory){
+        ProfilesFactory = factory(Factory);
+    }
 
+    function Register(address _owner, address _Profile, uint64 time) public returns (bool) {
 
-  function DeRegister(address _owner, address _Profile, uint localR) public returns(bool) {
+        address Profile = ProfilesFactory.getProfile(_owner);
+        // Check that call comes from our Profile
+        require(Profile == msg.sender);
+        isRegistred[Profile] = true;
 
-    address Profile = ProfilesFactory.getProfile(_owner);
-    // Check that call comes from our Profile
-    require(Profile == msg.sender);
-    isRegistred[Profile]=false;
+        factory.TypeW _type;
+        _type = ProfilesFactory.getType(_Profile);
+        /*
+            if (globalRate[_Profile]==null){
+              globalRate[_Profile]=0;
+            }
+            */
 
-    uint64 time;
-    time=uint64(now);
-    factory.TypeW _type;
-    _type=ProfilesFactory.getType(_Profile);
+        //Appendix event
+        Registred(_owner, Profile, time, _type);
+        return true;
+    }
 
-    uint g = globalRate[_Profile];
-    uint diff = g - localR;
-    globalRate[_Profile]= g + localR;
+    function DeRegister(address _owner, address _Profile, uint localR) public returns (bool) {
 
-    //Appendix event
-    unRegistred(_owner,Profile,time,_type, diff);
+        address[] Profile = ProfilesFactory.getProfiles(_owner);
+        // Check that call comes from our Profile
+        require(Profile[0] == msg.sender);
+        isRegistred[Profile] = false;
+
+        uint64 time;
+        time = uint64(now);
+        factory.TypeW _type;
+        _type = ProfilesFactory.getType(_Profile);
+
+        uint g = globalRate[_Profile];
+        uint diff = g - localR;
+        globalRate[_Profile] = g + localR;
+
+        //Appendix event
+        unRegistred(_owner, Profile, time, _type, diff);
 
     }
 
     function getGlobalRate(address _owner, address _Profile) public returns (uint) {
-      address Profile = ProfilesFactory.getProfile(_owner);
-      // Check that call comes from our Profile
-      require(Profile == msg.sender);
-      uint g = globalRate[_Profile];
-      return g;
+        address[] Profile = ProfilesFactory.getProfiles(_owner);
+        // Check that call comes from our Profile
+        require(Profile[0] == msg.sender);
+        uint g = globalRate[_Profile];
+        return g;
     }
 
 }

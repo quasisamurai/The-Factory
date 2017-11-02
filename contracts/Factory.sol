@@ -1,99 +1,60 @@
-pragma solidity ^0.4.14;
+pragma solidity ^0.4.13;
 
 
-//Raw prototype of Profile MEGAFACTORY
+//Raw prototype of Profile Factory
 //TODO - DOCS
 
 import './Declaration.sol';
-
-
-contract FactoryH{
-  function createH(address _hubowner, address dao, network Sonm, token sharesTokenAddress) public returns (address);
-}
-
-contract FactoryC{
-  function createC(address , address dao, network Sonm, token sharesTokenAddress) public returns (address);
-}
+import './Profile.sol';
 
 
 contract Factory is factory {
 
-    token sharesTokenAddress;
+    address sharesTokenAddress;
 
     address dao;
 
-    network Sonm;
-
-    FactoryH hf;
-    FactoryC cf;
-
-    TypeW public ProfileType;
-
+    address Sonm;
 
     // owner => Profile
-    mapping (address => address) public Profiles;
+    mapping (address => address[]) public Profiles;
 
     //Profile types
     // Profile => type
     mapping (address => TypeW) public types;
 
-    event LogCreate(address Profile, address owner);
+    event ProfileCreated(address owner, address profile, bool isHub);
 
-    event LogCr(address owner);
-    event LogDebug(string message);
-    event DebugAddress(address lookup);
-    // remove after debug
-    // we gonna check if changeAdresses was runned (it's really necessary!)
     address fish = 0x0;
-    //  event Weird(string thing);
 
-    function Factory(token TokenAddress, FactoryH _hf, FactoryC _cf){
+    function Factory(address TokenAddress){
         sharesTokenAddress = TokenAddress;
         dao = msg.sender;
-        hf = _hf;
-        cf = _cf;
     }
 
     modifier onlyDao(){
         if (msg.sender != dao) {
-        LogDebug("msg.sender!= dao");
-        DebugAddress(msg.sender);
-        DebugAddress(dao);
-        revert();
-      }
+            revert();
+        }
         _;
     }
 
     function changeAdresses(address _dao, address _Sonm) public onlyDao {
         //network _Sonm
         dao = _dao;
-        Sonm = network(_Sonm);
+        Sonm = _Sonm;
     }
 
-
-
-    function createHub() public returns (address) {
+    function createProfile(bool isHub) returns (address){
         require(Sonm != fish);
-        address _hubowner = msg.sender;
-    //    address hubProfile = createH(_hubowner,_privat);
-        address hubProfile = hf.createH(_hubowner, dao, Sonm, sharesTokenAddress);
-        Profiles[_hubowner] = hubProfile;
-        types[hubProfile] = TypeW.Hub;
-
-        LogCreate(hubProfile, _hubowner);
+        var profile = address(new Profile(msg.sender, dao, Sonm, sharesTokenAddress, isHub));
+        //TODO: getting profile type from array
+        Profiles[msg.sender].push(profile);
+        ProfileCreated(msg.sender, profile , isHub);
+        return profile;
     }
 
-    function createClient() public returns (address) {
-      require(Sonm != fish);
-      address _clientowner = msg.sender;
-      address clientProfile = cf.createC(_clientowner, dao, Sonm, sharesTokenAddress);
-      Profiles[_clientowner] = clientProfile;
-      types[_clientowner] = TypeW.Client;
-      LogCreate(clientProfile, _clientowner);
-    }
-
-    function getProfile(address _owner) constant returns (address _Profile) {
-        if (Profiles[_owner]==0) LogDebug("Address has not have profile!");
+    function getProfiles(address _owner) constant returns (address[] _Profile) {
         return Profiles[_owner];
     }
 

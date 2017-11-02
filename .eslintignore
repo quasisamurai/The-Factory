@@ -4,4 +4,6 @@ node_modules/**
 contracts/**
 migrations/1_initial_migration.js
 migrations/2_deploy_contracts.js
-test/metacoin.js
+migrations/3_deploy_factory.js
+migrations/4_deploy_network.js
+test/**
