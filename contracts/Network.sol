@@ -24,16 +24,9 @@ contract Network {
 
     event unRegistred(address _owner, address Profile, uint64 time, factory.TypeW _type, uint Diff);
 
-
-
-    //-----------------------------------func------------------------------------
-
     function Network(factory Factory){
-
         ProfilesFactory = factory(Factory);
-
     }
-
 
     function Register(address _owner, address _Profile, uint64 time) public returns (bool) {
 
@@ -57,9 +50,9 @@ contract Network {
 
     function DeRegister(address _owner, address _Profile, uint localR) public returns (bool) {
 
-        address Profile = ProfilesFactory.getProfile(_owner);
+        address[] Profile = ProfilesFactory.getProfiles(_owner);
         // Check that call comes from our Profile
-        require(Profile == msg.sender);
+        require(Profile[0] == msg.sender);
         isRegistred[Profile] = false;
 
         uint64 time;
@@ -77,9 +70,9 @@ contract Network {
     }
 
     function getGlobalRate(address _owner, address _Profile) public returns (uint) {
-        address Profile = ProfilesFactory.getProfile(_owner);
+        address[] Profile = ProfilesFactory.getProfiles(_owner);
         // Check that call comes from our Profile
-        require(Profile == msg.sender);
+        require(Profile[0] == msg.sender);
         uint g = globalRate[_Profile];
         return g;
     }
