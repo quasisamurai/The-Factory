@@ -1,4 +1,4 @@
-pragma solidity ^0.4.14;
+pragma solidity ^0.4.13;
 
 
 //Declaration contains declaretion of existed contracts and their functions
@@ -30,13 +30,6 @@ contract factory{
     Client
     }
 
-    mapping (address => address) public Profiles;
-    mapping (address => TypeW) public types;
-
-    function getProfile(address _owner) constant returns (address _Profile);
+    function getProfiles(address _owner) constant returns (address[] _Profile);
     function getType(address _Profile) constant returns (TypeW _type);
-}
-
-contract Declaration {
-
 }
