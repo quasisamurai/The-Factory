@@ -21,7 +21,7 @@ contract Profile is Ownable, Dealable {
 
 
       //Fee's
-      uint daoFee;
+      uint daoFee = 1;
       uint daoCollect;
       address public dao;
       address public Factory;
@@ -75,7 +75,7 @@ contract Profile is Ownable, Dealable {
       isHub = _isHub;
     }
 
-    modifier onlyDao()     { if(msg.sender != dao) revert(); _; }
+    modifier onlyDao(){ if(msg.sender != dao) revert(); _; }
     modifier onlyHub(){require (isHub==true); _;}
     modifier onlyClient(){require(isHub==false); _;}
 
@@ -86,38 +86,39 @@ contract Profile is Ownable, Dealable {
 
     // Deals-------------------------------------------------------------------
 
-    function OpenExternalDeal(address _sellerAddress,uint cost, uint _endTime) public onlyOwner onlyClient returns (bool success){
+    function OpenExternalDeal(address _sellerAddress,uint cost, uint _endTime) public onlyClient returns (bool success){
       //  id of concrete deal
-      uint id;
-      Profile seller = Profile(_sellerAddress);
-      require(token(sharesTokenAddress).approve(_sellerAddress, cost)) ;
-      id = seller.OpenDeal(cost, _endTime);
-      mydeals[_sellerAddress].push(id);
+      uint lockId;
+      profile seller = profile(_sellerAddress);
+      require(token(sharesTokenAddress).approve(_sellerAddress, cost));
+      seller.OpenDeal(cost, _endTime);
+      mydeals[_sellerAddress].push(lockId);
       deals_count++;
       return true;
       }
 
-    function OpenDeal(uint cost, uint _endTime) external onlyClient returns (uint lockId){
+
+    function OpenDeal(uint cost, uint _endTime) public returns (uint lockId){
       DebugAddress(this);
       //require(currentPhase==Phase.Registred);
+      address buyer = msg.sender;
       lockId= deals_count;
-      address _buyer = msg.sender;
-      require(super.start(lockId,cost,_buyer, _endTime));
-      pullMoney(_buyer, cost);
+      require(super.start(lockId,cost, buyer, _endTime));
+      pullMoney(buyer, cost);
       lockedFunds+=cost;
-      mydeals[_buyer].push(lockId);
+      mydeals[buyer].push(lockId);
       deals_count++;
       DealOpened(msg.sender, this, cost, lockId);
       return lockId;
     }
 
-    function CancelDeal(uint _lockId) public returns (bool success) {
+    function CancelDeal(uint _lockId) public  returns (bool success) {
       DebugAddress(this);
       //require(currentPhase==Phase.Registred);
       require(super.cancel(_lockId,msg.sender));
       uint cost = super.getCost(_lockId);
       lockedFunds -= cost;
-      transfer(msg.sender, cost);
+      //transfer(msg.sender, cost);
       DealCanceled(msg.sender, this, cost, _lockId);
       return true;
     }
@@ -141,7 +142,7 @@ contract Profile is Ownable, Dealable {
       return true;
     }
 
-      // count funds hub to reciev, in proportion to time worked
+      // count funds hub to recieve, in proportion to time worked
     function PayAsYouGo(uint _lockId) public onlyOwner returns (bool success){
       uint nowTime = block.timestamp;
       uint cost = super.getCost(_lockId);
@@ -164,8 +165,9 @@ contract Profile is Ownable, Dealable {
     //------TOKEN ITERACTION-------------------------------------------------------
 
     function transfer(address _to, uint _value) internal returns (bool success){
-      require(currentPhase==Phase.Registred);
-      uint lockFee = _value * daoFee / 1000;
+      //require(currentPhase==Phase.Registred);
+      //uint lockFee = _value * daoFee / 1000;
+      uint lockFee = 1;
       uint lock = lockedFunds + lockFee;
       uint value=_value - lockFee;
       require(token(sharesTokenAddress).balanceOf(msg.sender) < lock + value);
