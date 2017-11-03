@@ -1,7 +1,12 @@
 pragma solidity ^0.4.13;
 
 
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+//sonm profile abstraction
+
+
+//import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+// ^ uncomment this after debug
+import "./Ownable.sol";
 import "./Dealable.sol";
 import "./Declaration.sol";
 
@@ -14,33 +19,33 @@ contract Profile is Ownable, Dealable {
 
 
     //Fee's
-    uint daoFee;
+    uint daoFee = 1;
 
-    uint DaoCollect;
+    uint daoCollect;
 
-    address public DAO;
+    address public dao;
 
     address public Factory;
-    //address public Network;
-    address public Network;
+
+    address Network;
 
     bool public isHub;
 
     address public sharesTokenAddress;
 
-    uint public deals_count = 0;
+    uint deals_count = 0;
 
     uint public lockedFunds = 0;
 
-    address public owner;
+    address owner;
 
     //adress of seller(for client profile)/ buyer (for hub profile) =>  lockid
     mapping (address => uint[]) mydeals;
 
-    modifier onlyDao()     {if (msg.sender != DAO) revert();
-        _;}
 
-    // Profile state
+    /*/
+     *  Profile state
+    /*/
 
     enum Phase {
     Created,
@@ -52,9 +57,9 @@ contract Profile is Ownable, Dealable {
     Phase public currentPhase;
 
 
-
-    // Events
-
+    /*/
+     *  Events
+    /*/
     event LogPhaseSwitch(Phase newPhase);
 
     event LogDebug(string message);
@@ -75,27 +80,25 @@ contract Profile is Ownable, Dealable {
 
     event DealIsDone(address buyer, address seller, uint cost, uint lockid);
 
-    event DealAppealed(address buyer, address selle, uint cost, uint lockid);
+    event DealAppealed(address buyer, address seller, uint cost, uint lockid);
 
     // constructor
 
     function Profile(address _profileowner, address _dao, address Sonm, address _sharesTokenAddress, bool _isHub){
         owner = _profileowner;
-        DAO = _dao;
+        dao = _dao;
         Network = Sonm;
         sharesTokenAddress = _sharesTokenAddress;
         isHub = _isHub;
     }
 
-    modifier onlyHub(){
-        require(isHub == true);
-        _;
-    }
+    modifier onlyDao(){if (msg.sender != dao) revert();
+        _;}
+    modifier onlyHub(){require(isHub == true);
+        _;}
+    modifier onlyClient(){require(isHub == false);
+        _;}
 
-    modifier onlyClient(){
-        require(isHub == false);
-        _;
-    }
 
     function GetDeals(address _contragentAddress) constant returns (uint256[]){
         return mydeals[_contragentAddress];
@@ -103,15 +106,27 @@ contract Profile is Ownable, Dealable {
 
     // Deals-------------------------------------------------------------------
 
-    function OpenDeal(uint cost, uint _endTime) external returns (uint lockId){
+    function OpenExternalDeal(address _sellerAddress, uint cost, uint _endTime) public onlyClient returns (bool success){
+        //  id of concrete deal
+        uint lockId;
+        profile seller = profile(_sellerAddress);
+        require(token(sharesTokenAddress).approve(_sellerAddress, cost));
+        seller.OpenDeal(cost, _endTime);
+        mydeals[_sellerAddress].push(lockId);
+        deals_count++;
+        return true;
+    }
+
+
+    function OpenDeal(uint cost, uint _endTime) public returns (uint lockId){
         DebugAddress(this);
         //require(currentPhase==Phase.Registred);
+        address buyer = msg.sender;
         lockId = deals_count;
-        address _buyer = msg.sender;
-        require(super.start(lockId, cost, _buyer, _endTime));
-        pullMoney(_buyer);
+        require(super.start(lockId, cost, buyer, _endTime));
+        pullMoney(buyer, cost);
         lockedFunds += cost;
-        mydeals[_buyer].push(lockId);
+        mydeals[buyer].push(lockId);
         deals_count++;
         DealOpened(msg.sender, this, cost, lockId);
         return lockId;
@@ -119,28 +134,18 @@ contract Profile is Ownable, Dealable {
 
     function CancelDeal(uint _lockId) public returns (bool success) {
         DebugAddress(this);
-        require(currentPhase == Phase.Registred);
+        //require(currentPhase==Phase.Registred);
         require(super.cancel(_lockId, msg.sender));
         uint cost = super.getCost(_lockId);
-        DealCanceled(msg.sender, this, cost, _lockId);
-        return true;
-    }
-
-    function AbortDeal(uint _lockId) public returns (bool success) {
-        DebugAddress(this);
-        require(currentPhase == Phase.Registred);
-        require(super.abort(_lockId, msg.sender));
         lockedFunds -= cost;
-        uint cost = super.getCost(_lockId);
-        //address buyer = super.getBuyer(_lockId);
-        transfer(msg.sender, cost);
-        DealAborted(msg.sender, this, cost, _lockId);
+        //transfer(msg.sender, cost);
+        DealCanceled(msg.sender, this, cost, _lockId);
         return true;
     }
 
     function AcceptDeal(uint _lockId) public onlyOwner onlyHub returns (bool success){
         DebugAddress(this);
-        require(currentPhase == Phase.Registred);
+        //require(currentPhase==Phase.Registred);
         require(super.accept(_lockId));
         uint cost = super.getCost(_lockId);
         address buyer = super.getBuyer(_lockId);
@@ -148,383 +153,59 @@ contract Profile is Ownable, Dealable {
         return true;
     }
 
-    function RejectDeal(uint _lockId) public onlyOwner returns (bool success) {
-        require(currentPhase == Phase.Registred);
-        require(super.reject(_lockId));
+    function CloseDeal(uint _lockId) public onlyClient returns (bool success) {
+        //require(currentPhase==Phase.Registred);
         uint cost = super.getCost(_lockId);
-        address buyer = super.getBuyer(_lockId);
-        transfer(buyer, cost);
-        DealRejected(buyer, msg.sender, cost, _lockId);
-        return true;
-    }
-
-
-    function ReadyDeal(uint _lockId) public onlyOwner returns (bool success) {
-        require(currentPhase == Phase.Registred);
-        require(super.ready(_lockId));
-        uint cost = super.getCost(_lockId);
-        address buyer = super.getBuyer(_lockId);
-        DealIsReady(buyer, msg.sender, cost, _lockId);
-        return true;
-    }
-
-    function DoneDeal(uint _lockId) onlyClient public returns (bool success) {
-        require(currentPhase == Phase.Registred);
-        uint cost = super.getCost(_lockId);
-        //uint lockFee = cost * daoFee / 1000;
-        lockedFunds -= cost;
-        //DaoCollect += lockFee;
-        //require(plusRate(cost));
         require(super.done(_lockId, msg.sender));
+        require(PayAsYouGo(_lockId));
         DealIsDone(msg.sender, this, cost, _lockId);
         return true;
     }
 
-    function Donehard(uint _lockId) internal returns (bool success){
-        uint cost = super.getCost(_lockId);
-        uint lockFee = cost * daoFee / 1000;
-        lockedFunds -= cost;
-        DaoCollect += lockFee;
-        //require(plusRate(cost));
-        require(super.hardDone(_lockId));
-        return true;
-
-    }
-
-    function AppealDeal(uint _lockId) public returns (bool success) {
-        require(currentPhase == Phase.Registred);
-        uint cost = super.getCost(_lockId);
-        uint lockFee = cost * daoFee / 1000;
-        lockedFunds -= cost;
-        DaoCollect += lockFee;
-        require(super.appeal(_lockId, msg.sender));
-        //require(minusRate(cost));
-        DealAppealed(msg.sender, this, cost, _lockId);
-        return true;
-    }
-
-    // hub receives funds, in proportion to time worked
-    function PayAsYouGo(uint _lockId) onlyOwner returns (bool success){
+    // count funds hub to recieve, in proportion to time worked
+    function PayAsYouGo(uint _lockId) public onlyOwner returns (bool success){
         uint nowTime = block.timestamp;
         uint cost = super.getCost(_lockId);
         uint endTime = super.getEndTime(_lockId);
         uint startTime = super.getStartTime(_lockId);
-        uint withdrawAmount = super.getWithdrawedFunds(_lockId);
+        uint withdrawedAmount = super.getWithdrawedFunds(_lockId);
         //pps is the price per second;
         uint pps = cost / (endTime - startTime);
-        withdrawAmount = (nowTime - startTime) * pps - withdrawAmount;
-        transfer(msg.sender, withdrawAmount);
+        uint withdrawAmount = (nowTime - startTime) * pps - withdrawedAmount;
+        lockedFunds -= withdrawAmount;
+        updateWithdrawedFunds(_lockId, withdrawAmount);
         return true;
     }
 
-    /*
-
-    I DUNNO WHY THIS IS STILL HERE
-        // Should it be onlyOwner?
-        // NOTICE - this and next functions are actually call functions, which returns data
-        // from smart-contract, but does not change the state, therefore it is not consume gas
-        function getOpened() public returns (bool success, uint id){
-          require(currentPhase==Phase.Registred);
-          uint _id;
-          DealStatus s = DealStatus.None;
-          uint i=0;
-
-            do{
-              s = super.getStatus(i);
-              _id = i;
-              i++;
-            }
-            while(s!=DealStatus.Open || i<=d_count);
-
-          if (s!=DealStatus.Open) {
-            return (false,_id);
-          } else {
-          return (true, _id);
-          }
-        }
-
-        function getAccepted() public returns (bool success, uint id){
-          uint _id;
-          DealStatus s = DealStatus.None;
-          uint i=0;
-
-            do{
-              s = super.getStatus(i);
-              _id = i;
-              i++;
-            }
-            while(s!=DealStatus.Accepted || i<=d_count);
-
-          if (s!=DealStatus.Accepted) {
-            return (false,_id);
-          } else {
-          return (true, _id);
-          }
-        }
-
-        function getReady() public returns (bool sucess, uint id){
-          uint _id;
-          DealStatus s = DealStatus.None;
-          uint i=0;
-
-            do{
-              s = super.getStatus(i);
-              _id = i;
-              i++;
-            }
-            while(s!=DealStatus.Ready || i<=d_count);
-
-          if (s!=DealStatus.Accepted) {
-            return (false,_id);
-          } else {
-          return (true, _id);
-          }
-
-        }
-
-        function checkAccepted() public returns (bool flag){
-          var(a,b) = getAccepted();
-          if (a==true){
-            LogDebug("You have non ready but accepted deals!");
-          }
-          return a;
-        }
-
-        function checkReady() public returns (bool flag){
-          var(a,b) = getReady();
-          if (a==true){
-            LogDebug("You have non closed but ready deals!");
-          }
-          return a;
-        }
-
-       This function close all ready but not accepted by buyer deals
-        function hodor() public onlyOwner returns (bool success){
-            require(currentPhase==Phase.Registred);
-            require(now >= (frozenTime + freezePeriod));
-            require(checkReady() == true);
-            do {
-              var(a,b) = getReady();
-              require(Donehard(b) == true);
-            }
-            while(checkReady() == true);
-            return true;
-        }
-
-    */
-    //-------------------------------------------------------------------------
-
-    /*    //Register in Network
-        function CheckIn() internal returns (bool success){
-
-            // double check
-            require(currentPhase==Phase.Idle);
-
-          frozenTime=uint64(now);
-          //Appendix to call register function from Network contract and check it.
-          Network.Register(owner,this,frozenTime);
-
-          currentPhase=Phase.Registred;
-          LogPhaseSwitch(currentPhase);
-          return true;
-        }
-
-
-        //DeRegister in Network
-        function CheckOut() internal returns (bool success){
-
-
-            //double check
-            require(currentPhase==Phase.Registred);
-            bool accepted = checkAccepted();
-            require(accepted == false);
-            bool ready = checkReady();
-            require(ready == false);
-
-            // Comment it for test usage.
-          require(now >= (frozenTime + freezePeriod));
-
-          //Appendix to call register function from Network contract and check it.
-          Network.DeRegister(owner,this,localRate);
-
-          currentPhase=Phase.Idle;
-          LogPhaseSwitch(currentPhase);
-          return true;
-        }
-
-
-        // RATINGS --------------------------------------------------------------
-
-        function plusRate(uint amount) internal returns (bool success){
-
-            localRate += amount;
-            return true;
-            }
-
-        function minusRate(uint amount) internal returns (bool success){
-            localRate -= amount;
-            return true;
-            }
-
-        function getRate() public returns (uint localR){
-          uint r=localRate;
-          return r;
-          }
-
-
-        // Stake is a temprary value of tokens, which owner could hold on his accounts
-        // Stake has influence to the total score
-        function putStake(uint amount) public onlyOwner {
-          require(currentPhase==Phase.Registred);
-          uint lock = lockedFunds + amount;
-
-          if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
-
-          uint l = stake + lock;
-          uint s = stake + amount;
-          stake = s;
-          lockedFunds = l;
-        }
-
-        function takeStake() internal {
-          // double chek of state here, may been improved
-          require(currentPhase==Phase.Registred);
-          uint l = lockedFunds;
-          lockedFunds = l - stake;
-          stake = 0;
-        }
-
-
-        function buyRate(uint amount) public onlyOwner {
-
-          require(currentPhase==Phase.Registred);
-
-          uint g = Network.getGlobalRate(owner,this);
-          // Check this with intence in test stage
-          uint p = g / 100;
-          // Rates cannot be increased more than for 10% at one buy.
-          p = p * 10;
-
-          if (amount > p) revert();
-          uint lock = lockedFunds + amount;
-
-          if(sharesTokenAddress.balanceOf(msg.sender)< (lock)) revert();
-
-          lockedFunds = lock;
-          DaoCollect += amount;
-          if(!plusRate(amount)) revert();
-
-        }
-    */
-
+    function Withdrawl(address _whom, uint _amount) public onlyOwner returns (bool success){
+        require(transfer(_whom, _amount));
+        return true;
+    }
 
     //------TOKEN ITERACTION-------------------------------------------------------
 
-    function transfer(address _to, uint _value) internal {
-
-        require(currentPhase == Phase.Registred);
-        uint lockFee = _value * daoFee / 1000;
+    function transfer(address _to, uint _value) internal returns (bool success){
+        //require(currentPhase==Phase.Registred);
+        //uint lockFee = _value * daoFee / 1000;
+        uint lockFee = 1;
         uint lock = lockedFunds + lockFee;
         uint value = _value - lockFee;
-        if (token(sharesTokenAddress).balanceOf(msg.sender) < (lock + value)) revert();
+        require(token(sharesTokenAddress).balanceOf(msg.sender) < lock + value);
         lockedFunds = lock;
-        DaoCollect += lockFee;
+        daoCollect += lockFee;
         token(sharesTokenAddress).transfer(_to, value);
-
-    }
-
-
-    function pullMoney(address profile) public returns (bool success){
-        //require(currentPhase==Phase.Registred);
-        uint val = token(sharesTokenAddress).allowance(profile, this);
-        require(token(sharesTokenAddress).transferFrom(profile, this, val));
         return true;
     }
 
-    //------------------------------------------------------------------------------
-    /*
 
-    function give(address _to, uint value) internal {
-
-
-      require(currentPhase==Phase.Registred);
-
-        //  uint lockFee = _value * daoFee / 1000;
-        //  uint lock = lockedFunds + lockFee;
-          uint lock = lockedFunds;
-        //  uint value=_value - lockFee;
-
-          if(sharesTokenAddress.balanceOf(msg.sender)< (lock + value)) revert();
-
-        //  lockedFunds=lock;
-        //  DaoCollect += lockFee;
-          sharesTokenAddress.approve(_to,value);
+    function pullMoney(address profile, uint amount) public returns (bool success){
+        //require(currentPhase==Phase.Registred);
+        require(token(sharesTokenAddress).transferFrom(profile, this, amount));
+        return true;
     }
 
-        function PayDay() public onlyOwner {
-
-            require(currentPhase==Phase.Registred);
-
-            takeStake();
-
-            //uint balance = sharesTokenAddress.balanceOf(msg.sender);
-
-            // !CONCEPTUAL
-            // should we take a fee from turn?
-            //  uint turn = balance * daoFee / 1000;
-          //  DaoCollect = lockedFunds;
-            //DaoCollect = DaoCollect + turn;
-            lockedFunds= 0;
-
-            // Comment it if you gonna run tests.
-            if(now < (frozenTime + freezePeriod)) revert();
-
-
-
-            //dao got's 0.5% in such terms.
-              sharesTokenAddress.transfer(DAO,DaoCollect);
-              if (!CheckOut()) revert();
-
-              DaoCollect = 0;
-
-          }
-
-        function withdraw(address to, uint amount) public onlyOwner {
-
-          require(currentPhase==Phase.Idle);
-          sharesTokenAddress.transfer(to,amount);
-        }
-
-
-
-        function suspect() public onlyDao {
-          require(currentPhase==Phase.Registred);
-          frozenTime = 0;
-          CheckOut();
-          frozenTime = uint64(now);
-          currentPhase = Phase.Suspected;
-          LogPhaseSwitch(currentPhase);
-          freezePeriod = 120 days;
-
-        }
-
-        function punish() public onlyDao {
-          require(currentPhase==Phase.Suspected);
-          if (now < (frozenTime + freezePeriod)) revert();
-          lockedFunds=sharesTokenAddress.balanceOf(this);
-          uint amount = lockedFunds + stake;
-          sharesTokenAddress.transfer(DAO,amount);
-          currentPhase = Phase.Punished;
-          LogPhaseSwitch(currentPhase);
-
-        }
-
-        function rehub() public onlyDao {
-          require(currentPhase==Phase.Suspected);
-          lockedFunds = 0;
-          currentPhase = Phase.Idle;
-          LogPhaseSwitch(currentPhase);
-        }
-
-    */
+    function getComission() public onlyDao returns (bool success){
+        require(transfer(dao, daoCollect));
+        return true;
+    }
 }
