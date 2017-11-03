@@ -4,9 +4,7 @@ pragma solidity ^0.4.13;
 //sonm profile abstraction
 
 
-//import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-// ^ uncomment this after debug
-import "./Ownable.sol";
+import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import "./Dealable.sol";
 import "./Declaration.sol";
 
