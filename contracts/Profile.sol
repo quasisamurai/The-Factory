@@ -1,15 +1,7 @@
 pragma solidity ^0.4.13;
 
 
-//sonm profile abstraction
-
-
-//import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-// ^ uncomment this after debug
-import "./Ownable.sol";
-
-
-//import "./SDT.sol";
+import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import "./Dealable.sol";
 import "./Declaration.sol";
 
@@ -21,27 +13,6 @@ contract Profile is Ownable, Dealable {
     /*/
 
 
-    /*
-          // FreezeQuote - it is defined amount of tokens need to be frozen on  this contract.
-          // TODO - remove this
-          //uint public freezeQuote;
-
-
-          //lockedFunds - it is lockedFunds in percentage, which will be locked for every payday period.
-          //uint public lockPercent;
-
-
-          //TIMELOCK
-
-          uint64 public frozenTime;
-          uint public freezePeriod;
-          uint64 public genesisTime;
-
-
-
-          uint public localRate = 0;
-          uint public stake = 0;
-          */
     //Fee's
     uint daoFee;
 
@@ -69,9 +40,7 @@ contract Profile is Ownable, Dealable {
     modifier onlyDao()     {if (msg.sender != DAO) revert();
         _;}
 
-    /*/
-     *  Profile state
-    /*/
+    // Profile state
 
     enum Phase {
     Created,
@@ -83,9 +52,9 @@ contract Profile is Ownable, Dealable {
     Phase public currentPhase;
 
 
-    /*/
-     *  Events
-    /*/
+
+    // Events
+
     event LogPhaseSwitch(Phase newPhase);
 
     event LogDebug(string message);

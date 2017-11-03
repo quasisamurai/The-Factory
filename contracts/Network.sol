@@ -11,7 +11,7 @@ import './Declaration.sol';
 // SONM social network
 contract Network {
 
-    factory ProfilesFactory;
+    FactoryInterface ProfilesFactory;
 
     mapping (address => bool) public isRegistred;
 
