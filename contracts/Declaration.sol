@@ -39,18 +39,41 @@ contract FactoryInterface {
 
     function getProfiles(address _owner) constant returns (address[] _Profile);
 
-    function getType(address _Profile) constant returns (bool _type);
+    function getType(address _Profile) constant returns (uint _type);
+}
+
+
+contract NetworkInterface {
+    function GetProfiles(address owner) constant returns (address[]);
+
+    function GetType(address profile) constant returns (uint);
+
+    function GetGlobalRate() constant returns (uint);
 }
 
 
 contract ProfileInterface {
-    function OpenDeal();
+    function GetDeals() returns (uint[]);
 
-    function AcceptDeal();
-
-    function CloseDeal();
-
-    function GetDeals(address addr) returns (uint[]);
-
-    function GetDealInfo(uint id);
+    function GetRate() constant returns (uint[]);
 }
+
+
+contract DealInterface {
+    function OpenDeal(address hub, address client, uint specificationHash, uint256 price, uint workTime, uint previousDealId) returns (uint);
+
+    event DealOpened(address hub, address client, uint id);
+
+    function AcceptDeal(uint id) returns (bool);
+
+    event DealAccepted(address hub, address client, uint id);
+
+    function CloseDeal(uint id) returns (bool);
+
+    event DealClosed(address hub, address client, uint id);
+
+    function GetDeals(address addr) constant returns (uint[]);
+
+    function GetDealInfo(uint id) constant returns (address client, address hub, uint256 price, uint startTime, uint workTime, uint endTime, uint status);
+}
+

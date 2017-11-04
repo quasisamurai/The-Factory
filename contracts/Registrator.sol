@@ -26,7 +26,7 @@ contract Registrator {
     bytes32 fcb; // facebook
     bytes32 vk;  // vk
     bytes32 git; // github
-    bytes32 eml; // email
+    bytes32 eml; // email //TODO: delete email
     bytes32 tlgr;// telegram
     }
 
@@ -92,7 +92,7 @@ contract Registrator {
         return true;
     }
 
-    function getLinks(address profile) public returns (bytes32 f, bytes32 v, bytes32 g, bytes32 e, bytes32 t) {
+    function GetLinks(address profile) public returns (bytes32 f, bytes32 v, bytes32 g, bytes32 e, bytes32 t) {
         SocLinks memory links = entangled[profile];
         f = links.fcb;
         v = links.vk;
