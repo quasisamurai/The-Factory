@@ -11,7 +11,7 @@ import './Declaration.sol';
 // SONM social network
 contract Network {
 
-    factory ProfilesFactory;
+    FactoryInterface ProfilesFactory;
 
     mapping (address => bool) public isRegistred;
 
@@ -49,7 +49,7 @@ contract Network {
     }
 
     function DeRegister(address _owner, address _Profile, uint localR) public returns (bool) {
-
+        // TODO: remind to this
         address[] Profile = ProfilesFactory.getProfiles(_owner);
         // Check that call comes from our Profile
         require(Profile[0] == msg.sender);

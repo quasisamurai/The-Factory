@@ -8,7 +8,7 @@ import './Declaration.sol';
 import './Profile.sol';
 
 
-contract Factory is factory {
+contract Factory is FactoryInterface {
 
     address sharesTokenAddress;
 
